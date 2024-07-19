@@ -28,18 +28,31 @@
     schedule: string;
   }
 
-  let users: User[] = [
-    { name: 'Jan Kowalski', role: 'Kierownik', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-    { name: 'Aneta Przybyła', role: 'Menadżer', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-    { name: 'Janusz Palikot', role: 'Szef', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-    { name: 'Włodzmierz Biały', role: 'Pracownik', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-    { name: 'Jeremiasz Różowy-Człowiek', role: 'Pracownik', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-    { name: 'Anna Kozieł', role: 'Pracownik', tag: 'Biuro', hours: '9:00-17:00', schedule: 'Biuro' },
-  ];
+  interface Pracownik {
+    imie: string;
+    nazwisko: string;
+    stanowisko: string;
+  }
 
-  let selectedUser: User | null = null;
+  let pracownicy: Pracownik[] = [];
+  let error: string | null = null;
+  
+  onMount(async() => {
+    try{
+      const response = await fetch('pracownicy');
+      if (response.ok) {
+        pracownicy = await response.json();
+      } else {
+        error = 'Nie'
+      }
+    } catch (err) {
+      error = 'Błąd podczas ładowania pracowników'
+    }
+  });
 
-  function selectUser(user: User) {
+  let selectedUser: Pracownik | null = null;
+
+  function selectUser(user: Pracownik) {
     selectedUser = user;
   }
 </script>
@@ -77,12 +90,12 @@
     <div class="flex space-x-4">
       <!-- Users List -->
       <div class="w-64">
-        {#each users as user}
+        {#each pracownicy as user}
           <button type="button" class="flex items-center w-full p-2 space-x-2 border-b cursor-pointer text-left" on:click={() => selectUser(user)}>
             <img src="/user.png" alt="person" class="w-10 h-10 rounded-full bg-gray-300">
             <div>
-              <div class="text-sm font-semibold">{user.name}</div>
-              <div class="text-xs text-gray-500">{user.role}</div>
+              <div class="text-sm font-semibold">{user.imie} {user.nazwisko}</div>
+              <div class="text-xs text-gray-500">{user.stanowisko}</div>
             </div>
           </button>
         {/each}
@@ -97,19 +110,19 @@
   <!-- Right Sidebar -->
   <div class="w-64 p-4 border-l">
     {#if selectedUser}
-      <h2 class="text-lg font-semibold">{selectedUser.tag}</h2>
+      <h2 class="text-lg font-semibold">Biuro</h2>
       <div>
         <div class="mb-4">
-          <h3 class="text-sm font-semibold">{selectedUser.name}</h3>
-          <div class="text-xs text-gray-500">{selectedUser.role}</div>
+          <h3 class="text-sm font-semibold">{selectedUser.imie} {selectedUser.nazwisko}</h3>
+          <div class="text-xs text-gray-500">{selectedUser.stanowisko}</div>
         </div>
         <div class="mb-4">
           <h4 class="text-sm font-semibold">Grafiki pracy</h4>
-          <div class="text-sm">{selectedUser.hours} {selectedUser.schedule}</div>
+          <div class="text-sm">7-15 Pierwsza zmiana</div>
         </div>
         <div>
           <h4 class="text-sm font-semibold">Wnioski</h4>
-          <div class="text-sm">2022/29 ZAAKCEPTOWANY</div>
+          <div class="text-sm"></div>
         </div>
       </div>
     {:else}

@@ -1,6 +1,8 @@
 import { getDB } from '$db/mongo';
 const db = getDB();
 
+export const pracownicy = db.collection('pracownicy')
+
 export async function getCollection(collection_name:string, skip:number, limit:number): Promise<JSON>
 {
     // get repositories from MongoDB with skip and limit
