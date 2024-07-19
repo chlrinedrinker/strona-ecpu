@@ -62,18 +62,12 @@
   <div class="w-64 p-4 border-r">
     <h2 class="mb-4 text-lg font-semibold">Zakres dat</h2>
     <div class="space-y-2">
-      <button class="btn">Dzisiaj</button>
-      <button class="btn">Tydzień</button>
-      <button class="btn">Miesiąc</button>
-      <button class="btn">Okres rozl.</button>
-      <button class="btn">Niestandardowy</button>
-    </div>
-    <h2 class="mt-8 mb-4 text-lg font-semibold">Grafiki pracy</h2>
-    <div class="space-y-2">
-      <button class="btn">Wszystkie</button>
-      <button class="btn">Grafik normowany</button>
-      <button class="btn">Grafik nienormowany</button>
-      <button class="btn">Grafik nadgodzinowy</button>
+      <ul class="">
+        <li><button class="btn">Dzisiaj</button></li>
+        <li><button class="btn">Tydzień</button></li>
+        <li><button class="btn">Miesiąc</button></li>
+        <li><button class="btn">Niestandardowy</button></li>
+      </ul>
     </div>
   </div>
 

@@ -128,3 +128,6 @@ dist
 
 # SvelteKit
 /.svelte-kit
+
+# VSCode
+/.vscode

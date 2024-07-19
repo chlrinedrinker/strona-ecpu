@@ -11,10 +11,8 @@
         <div>Gmina Łubnice</div>
       </div>
       <div class="flex items-center space-x-4">
-        <button class="btn">Zespół</button>
+        <button class="btn">Organizacja</button>
         <button class="btn">Kalendarz</button>
-        <button class="btn">Wnioski</button>
-        <button class="btn">RCP</button>
         <button class="btn">Raporty</button>
         <div class="flex items-center space-x-2">
           <div class="text-sm">Czas pracy</div>
@@ -31,7 +29,6 @@
     <p>&copy; 2024 Gmina Łubnice. Wszelkie prawa zastrzeżone.</p>
   </div>
   
-
 </container>
 
 <style>
