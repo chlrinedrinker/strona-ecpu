@@ -23,7 +23,7 @@
   
         if (result.success) {
           // Przekierowanie na nową stronę po zalogowaniu
-          goto('/uzytkownik');
+          goto('../');
         } else {
           error = result.message;
         }
