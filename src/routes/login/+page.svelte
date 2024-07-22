@@ -1,11 +1,18 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-  
+    import { isLoggedIn } from '../stores/stores';
+    import LoginStatus from '../komponenty/LoginStatus.svelte';
+
     let username = '';
     let password = '';
     let error: string | null = null;
-  
+
+    let loggedIn
+    
+    function login() {
+      isLoggedIn.set(true);
+    }
+
     async function handleSubmit(event: Event) {
       event.preventDefault();
       error = null;
@@ -20,9 +27,10 @@
         });
   
         const result = await response.json();
-  
+
         if (result.success) {
           // Przekierowanie na nową stronę po zalogowaniu
+          login()
           goto('../');
         } else {
           error = result.message;
@@ -50,4 +58,3 @@
       {/if}
     </form>
   </main>
-  

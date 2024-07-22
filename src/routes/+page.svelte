@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { isLoggedIn } from './stores/stores';
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
+  import { goto } from '$app/navigation';
+
   let currentTime = '';
 
    let miesiace : String[] = new Array("styczeń", "luty", "marzec", "kwiecień", "maj",
@@ -27,9 +30,25 @@
     year = String(now.getFullYear()).padStart(2, '0');
     currentTime = `${hours}:${minutes}:${seconds}`;
   }
+  
+  let loggedIn: boolean;
+
+  const unsubscribe = isLoggedIn.subscribe(value => {
+    loggedIn = value;
+    console.log(loggedIn)
+  });
+
+  function goToLogin(value: boolean) {
+    if(!value) {
+      goto('/login')
+    }
+  }
 
   onMount(() => {
+    unsubscribe();
     getCurrentTime();
+    goToLogin(loggedIn)
+
     const interval = setInterval(getCurrentTime, 1000);
 
     return () => {
