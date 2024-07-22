@@ -48,9 +48,8 @@
     unsubscribe();
     getCurrentTime();
     goToLogin(loggedIn)
-
     const interval = setInterval(getCurrentTime, 1000);
-
+    
     return () => {
       clearInterval(interval);
     };
@@ -63,7 +62,6 @@ function selectUser(user: Pracownik) {
 }
   
 </script>
-
 <div class="flex flex-grow">
   <ZakresDat/>
 
