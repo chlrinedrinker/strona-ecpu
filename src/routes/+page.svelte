@@ -3,6 +3,7 @@
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
+  import ShowLogs from './komponenty/ShowLogs.svelte';
   let currentTime = '';
 
    let miesiace : String[] = new Array("styczeń", "luty", "marzec", "kwiecień", "maj",
