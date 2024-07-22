@@ -1,7 +1,6 @@
 <script>
 </script>
 
-
     <div class="flex items-center justify-between p-4 bg-gray-100 border-b">
       <div class="flex items-center space-x-4">
         <img src="/herb.png" alt="Logo" class="h-8">
@@ -19,7 +18,4 @@
       </div>
     </div>
 <style>
-    .btn {
-    @apply px-4 py-2 bg-blue-500 text-white rounded;
-  }
 </style>

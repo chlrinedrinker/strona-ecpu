@@ -1,7 +1,16 @@
-import { getDB } from '$db/mongo';
-const db = getDB();
+import { getPracownicyDB } from '$db/mongo';
+import { json } from '@sveltejs/kit';
+const db = getPracownicyDB();
 
-export const pracownicy = db.collection('pracownicy')
+interface Pracownik { 
+    imie: string;
+    nazwisko: string;
+    stanowisko: string;
+  }
+
+console.log("\n Nowe logi")
+
+
 
 export async function getCollection(collection_name:string, skip:number, limit:number): Promise<JSON>
 {
@@ -12,7 +21,9 @@ export async function getCollection(collection_name:string, skip:number, limit:n
     return data;
 }
 
-export async function searchCollection(collection_name:string, search:string): Promise<JSON>
+console.log()
+
+export async function searchCollection(collection_name:string, search:string)
 {
     // get repositories from MongoDB with search query and regex options
     const data = await db.collection(collection_name).find({title:{$regex:search, $options:'i'}}).project({_id:0}).toArray();

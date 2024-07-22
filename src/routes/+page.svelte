@@ -3,6 +3,12 @@
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
+
+	/** @type {import('./$types').PageData} */
+	export let data : any;
+
+  console.log(data)
+
   let currentTime = '';
 
    let miesiace : String[] = new Array("styczeń", "luty", "marzec", "kwiecień", "maj",
@@ -12,11 +18,6 @@
   let year : String;
   let month : String;
 
-  interface Pracownik { 
-    imie: string;
-    nazwisko: string;
-    stanowisko: string;
-  }
 
   function getCurrentTime() {
     const now = new Date();
@@ -54,7 +55,7 @@ function selectUser(user: Pracownik) {
     </div>
     <div class="flex space-x-4">
       <!-- Users List -->
-      <Uzytkownicy/>
+      <Uzytkownicy Pracownicy={data}/>
       <!-- Schedule -->
       <div class="flex-grow">
         <!-- Render schedule based on the user's data -->
