@@ -5,9 +5,24 @@
 
   export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[];
 
+  // Function to eliminate duplicates from logowania
+  const removeDuplicates = (logs) => {
+    const uniqueLogs = new Map();
+    logs.forEach(log => {
+      const key = `${log.date}-${log.entrence_time}-${log.exit_time}`;
+      if (!uniqueLogs.has(key)) {
+        uniqueLogs.set(key, log);
+      }
+    });
+    return Array.from(uniqueLogs.values());
+  };
+
+  logowania = removeDuplicates(logowania);
+
   let filteredLogowania = logowania;
   let customStartDate = "";
   let customEndDate = "";
+  let isDateRangeApplied = false; // Flag to track date range application
 
   const filterLogs = (range: string) => {
     const now = new Date();
@@ -16,14 +31,23 @@
 
     if (range === "today") {
       startDate = new Date(now.setHours(0, 0, 0, 0));
+      isDateRangeApplied = true;
     } else if (range === "week") {
       const startOfWeek = now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1);
       startDate = new Date(now.setDate(startOfWeek));
+      isDateRangeApplied = true;
     } else if (range === "month") {
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      isDateRangeApplied = true;
     } else if (range === "custom") {
       startDate = new Date(customStartDate);
       endDate = new Date(customEndDate);
+      isDateRangeApplied = true;
+    } else {
+      // Default case to show all logs
+      filteredLogowania = logowania;
+      isDateRangeApplied = false;
+      return;
     }
 
     filteredLogowania = logowania.filter(log => {
@@ -47,10 +71,19 @@
 
   onMount(() => {
     setupDatePickers();
+    // Show all logs by default on mount
+    filterLogs(""); 
   });
 
   const applyCustomDateFilter = () => {
     filterLogs("custom");
+  };
+
+  // Function to show all logs if no date range is applied
+  const showAllLogsIfNoDateRange = () => {
+    if (!isDateRangeApplied) {
+      filteredLogowania = logowania;
+    }
   };
 </script>
 
