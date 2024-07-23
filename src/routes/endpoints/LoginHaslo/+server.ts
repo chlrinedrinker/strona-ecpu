@@ -1,22 +1,24 @@
-import { MongoClient } from 'mongodb';
 import { json } from '@sveltejs/kit';
 import dotenv from 'dotenv';
+import { _pracownicy } from '$db/mongo.js';
 
 dotenv.config();
 
-const mongo_url = process.env.MONGO_URL;
-const client = new MongoClient(mongo_url);
+let projections = {
+    _id: 0,
+    imie: 1,
+    nazwisko: 1,
+}
 
 export async function POST({ request }) {
     const { username, password } = await request.json();
 
     try {
-        await client.connect();
-        const db = client.db('pracownicy');
+        const db = _pracownicy;
         const collection = db.collection('PracownicyID');
         
-        const user = await collection.findOne({ imie: username, nazwisko: password });
-
+        const user = await collection.findOne({ imie: username, nazwisko: password }, {projections});
+        console.log(user)
         if (user) {
             return json({ success: true, message: 'Logowanie udane' });
         } else {

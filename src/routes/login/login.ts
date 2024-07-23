@@ -16,7 +16,7 @@ export async function handleSubmit(event: Event) {
   error.set(null);
 
   try {
-    const response = await fetch('/login', {
+    const response = await fetch('/endpoints/LoginHaslo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
