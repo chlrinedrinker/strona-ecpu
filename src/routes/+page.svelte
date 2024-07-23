@@ -1,13 +1,23 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { isLoggedIn } from './stores/stores';
+  import { goto } from '$app/navigation';
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
-  import ShowLogs from './komponenty/ShowLogs.svelte';
-  import { goto } from '$app/navigation';
+
+	/** @type {import('./$types').PageData} */
+	export let data : any;
+
+  console.log(data)
 
   let currentTime = '';
+
+  interface Pracownik { 
+    imie: string;
+    nazwisko: string;
+    stanowisko: string;
+  }
 
    let miesiace : String[] = new Array("styczeń", "luty", "marzec", "kwiecień", "maj",
   "czerwiec", "lipiec", "sierpnień", "wrzesień", "październik", "listopad",
@@ -16,11 +26,6 @@
   let year : String;
   let month : String;
 
-  interface Pracownik { 
-    imie: string;
-    nazwisko: string;
-    stanowisko: string;
-  }
 
   function getCurrentTime() {
     const now = new Date();
@@ -31,7 +36,7 @@
     year = String(now.getFullYear()).padStart(2, '0');
     currentTime = `${hours}:${minutes}:${seconds}`;
   }
-  
+
   let loggedIn: boolean;
 
   const unsubscribe = isLoggedIn.subscribe(value => {
@@ -63,6 +68,7 @@ function selectUser(user: Pracownik) {
 }
   
 </script>
+
 <div class="flex flex-grow">
   <ZakresDat/>
 
@@ -72,7 +78,7 @@ function selectUser(user: Pracownik) {
     </div>
     <div class="flex space-x-4">
       <!-- Users List -->
-      <Uzytkownicy/>
+      <Uzytkownicy />
       <!-- Schedule -->
       <div class="flex-grow">
         <!-- Render schedule based on the user's data -->

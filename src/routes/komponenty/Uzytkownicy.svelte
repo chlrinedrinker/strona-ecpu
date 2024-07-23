@@ -17,7 +17,7 @@
 
   onMount(async () => {
       try {
-          const response = await fetch('/pracownicy');
+          const response = await fetch('/endpoints/ImieNazStanow');
           if (response.ok) {
               pracownicy = await response.json();
           } else {
@@ -33,7 +33,7 @@
 
     if (selectedUser) {
         try {
-            const response = await fetch(`/api?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
+            const response = await fetch(`/endpoints/CzasPracy?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error(`Failed to fetch logs: ${response.status} ${response.statusText} - ${errorText}`);
