@@ -1,4 +1,6 @@
 <script>
+  let loggedIn;
+
 </script>
 
 

@@ -6,11 +6,6 @@
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
 
-	/** @type {import('./$types').PageData} */
-	export let data : any;
-
-  console.log(data)
-
   let currentTime = '';
 
   interface Pracownik { 
@@ -41,7 +36,6 @@
 
   const unsubscribe = isLoggedIn.subscribe(value => {
     loggedIn = value;
-    console.log(loggedIn)
   });
 
   function goToLogin(value: boolean) {

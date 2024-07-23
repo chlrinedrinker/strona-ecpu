@@ -18,7 +18,6 @@ export async function POST({ request }) {
         const collection = db.collection('PracownicyID');
         
         const user = await collection.findOne({ imie: username, nazwisko: password }, {projections});
-        console.log(user)
         if (user) {
             return json({ success: true, message: 'Logowanie udane' });
         } else {
