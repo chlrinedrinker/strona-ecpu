@@ -30,12 +30,15 @@
   
     async function handleSelect(event: CustomEvent<Pracownik>) {
       const selected = event.detail;
-      
-      if (selectedUser && selectedUser._id === selected._id) {
-          // Toggle off if the same user is clicked
-          selectedUser = null;
-          logowania = [];
+  
+      if (selectedUser) {
+        if(selectedUser.nazwisko == selected.nazwisko){
+            selectedUser = null;
+            logowania = [];
           return;
+        }
+          // Jeśli ten sam użytkownik został kliknięty ponownie, zamknij tabelę logów
+         
       }
   
       selectedUser = selected;

@@ -1,11 +1,11 @@
 <script>
-  export let miesiac;
-  export let rok;
+  //export let miesiac;
+  //export let rok;
 </script>
 
 <div class="outer-container">
   <div class="header-container">
-    <h1 class="text-sm font-semibold">Kalendarz {miesiac} {rok}</h1>
+    
     <div class="right-buttons">
       <button class="btn">Publikuj</button>
       <button class="btn">Akcje grupowe</button>
