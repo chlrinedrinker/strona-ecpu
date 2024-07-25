@@ -5,7 +5,7 @@
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
   import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
-
+  import { enhance } from "$app/forms";
 	/** @type {import('./$types').PageData} */
 	export let data : any;
 
@@ -37,30 +37,6 @@
     currentTime = `${hours}:${minutes}:${seconds}`;
   }
 
-  let loggedIn: boolean;
-
-  const unsubscribe = isLoggedIn.subscribe(value => {
-    loggedIn = value;
-    console.log(loggedIn)
-  });
-
-  function goToLogin(value: boolean) {
-    if(!value) {
-      goto('/login')
-    }
-  }
-
-  onMount(() => {
-    unsubscribe();
-    getCurrentTime();
-    goToLogin(loggedIn)
-    const interval = setInterval(getCurrentTime, 1000);
-    
-    return () => {
-      clearInterval(interval);
-    };
-  });
-
   let selectedUser: Pracownik | null = null;
 
 function selectUser(user: Pracownik) {
@@ -70,6 +46,9 @@ function selectUser(user: Pracownik) {
 </script>
 
 <div class="flex flex-grow">
+  <form method="post" use:enhance>
+    <button>Sign out</button>
+  </form>
   <ZakresDat/>
 
   <!-- Main Content -->
