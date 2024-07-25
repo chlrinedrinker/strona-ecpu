@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
 
   export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[];
-
+  export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
   let filteredLogowania = logowania;
   let customStartDate = "";
   let customEndDate = "";
@@ -65,8 +65,31 @@
   };
 
   const saveComment = async (log) => {
-    // dodaj komentarze do bazy
-  };
+  try {
+    console.log(selectedUser.imie,selectedUser.nazwisko)
+    const response = await fetch('/endpoints/SaveComment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: selectedUser, // Przekazanie danych użytkownika
+        date: log.date,
+        comment: log.comment,
+        logId: log._id // Unikalny identyfikator logu, jeśli dostępny
+      }),
+    });
+
+    if (response.ok) {
+      console.log('Komentarz zapisany');
+    } else {
+      console.error('Nie udało się zapisać komentarza');
+    }
+  } catch (error) {
+    console.error('Błąd podczas zapisywania komentarza:', error);
+  }
+};
+
 </script>
 
 <div class="p-4">
