@@ -11,6 +11,7 @@ model User {
   id       String    @id @map("_id")
   sessions Session[]
   role Int
+  name String
   username String @unique
   hash_password String
 }
