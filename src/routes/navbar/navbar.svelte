@@ -1,4 +1,5 @@
 <script>
+  import { enhance } from "$app/forms";
 </script>
 
 
@@ -12,6 +13,9 @@
         <button class="btn">Kalendarz</button>
         <button class="btn">Raporty</button>
         <div class="flex items-center space-x-2">
+          <form method="post" use:enhance>
+            <button>Sign out</button>
+          </form>
           <div class="text-sm">Czas pracy</div>
           <div class="text-lg font-semibold"></div>
         </div>
