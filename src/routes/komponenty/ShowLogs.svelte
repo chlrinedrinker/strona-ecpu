@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
-  import { onMount } from "svelte";
 
-  export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[];
+  export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
   let filteredLogowania = logowania;
   let customStartDate = "";
@@ -14,7 +14,7 @@
     const now = new Date();
     let startDate: Date;
     let endDate: Date = new Date(now);
-
+    
     if (range === "today") {
       startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     } else if (range === "week") {
@@ -27,6 +27,9 @@
     } else if (range === "custom") {
       startDate = new Date(customStartDate);
       endDate = new Date(customEndDate);
+    } else {
+      // Domyślne filtrowanie do bieżącego miesiąca
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
     filteredLogowania = logowania.filter(log => {
@@ -58,6 +61,7 @@
 
   onMount(() => {
     setupDatePickers();
+    filterLogs("month"); // Domyślne filtrowanie logów dla bieżącego miesiąca
   });
 
   const applyCustomDateFilter = () => {
@@ -65,31 +69,29 @@
   };
 
   const saveComment = async (log) => {
-  try {
-    console.log(selectedUser.imie,selectedUser.nazwisko)
-    const response = await fetch('/endpoints/SaveComment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user: selectedUser, // Przekazanie danych użytkownika
-        date: log.date,
-        comment: log.comment,
-        logId: log._id // Unikalny identyfikator logu, jeśli dostępny
-      }),
-    });
+    try {
+      const response = await fetch('/endpoints/SaveComment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: selectedUser,
+          date: log.date,
+          comment: log.comment,
+          logId: log._id
+        }),
+      });
 
-    if (response.ok) {
-      console.log('Komentarz zapisany');
-    } else {
-      console.error('Nie udało się zapisać komentarza');
+      if (response.ok) {
+        console.log('Komentarz zapisany');
+      } else {
+        console.error('Nie udało się zapisać komentarza');
+      }
+    } catch (error) {
+      console.error('Błąd podczas zapisywania komentarza:', error);
     }
-  } catch (error) {
-    console.error('Błąd podczas zapisywania komentarza:', error);
-  }
-};
-
+  };
 </script>
 
 <div class="p-4">
@@ -143,34 +145,42 @@
 
 <style>
   .btn {
-      @apply px-4 py-2 bg-blue-500 text-white rounded;
+    @apply px-4 py-2 bg-blue-500 text-white rounded;
   }
   .input {
-      @apply w-full px-4 py-2 border rounded;
+    @apply w-full px-4 py-2 border rounded;
   }
   table {
-      width: 100%;
-      border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
   }
   th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
+    border: 1px solid #ddd;
+    padding: 8px;
   }
   th {
-      background-color: #f4f4f4;
+    background-color: #f4f4f4;
   }
   .ml-2 {
-      margin-left: 0.5rem;
+    margin-left: 0.5rem;
   }
   .comment-container {
-      display: flex;
-      align-items: center;
+    display: flex;
+    align-items: center;
   }
   .input {
-      margin-right: 0.5rem;
-      flex: 1;
+    margin-right: 0.5rem;
+    flex: 1;
   }
   .date-filters {
-      margin-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .logs-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+  }
+  .logs-container.show {
+    max-height: auto; /* Adjust based on expected content height */
   }
 </style>
