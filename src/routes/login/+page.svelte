@@ -1,6 +1,11 @@
 <!-- src/routes/login.svelte -->
 <script lang="ts">
 import { enhance } from "$app/forms";
+import { onMount } from "svelte";
+import { isLoggedIn } from "../stores/stores";
+onMount(() => {
+  $isLoggedIn = false;
+})
 </script>
 
 <main class="flex flex-col items-center justify-center h-screen bg-gray-100">

@@ -14,6 +14,9 @@ export const actions: Actions = {
 		const formData = await event.request.formData();
 		const username = formData.get("username");
 		const password = formData.get("password");
+		const imie = formData.get("imie")
+		const nazwisko = formData.get('nazwisko')
+		
 		console.log(typeof username)
 		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
 		// keep in mind some database (e.g. mysql) are case insensitive

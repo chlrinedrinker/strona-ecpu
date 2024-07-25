@@ -1,6 +1,8 @@
 // +page.server.ts
 import { lucia } from "$lib/server/auth";
 import { fail, redirect } from "@sveltejs/kit";
+import { isLoggedIn } from "./stores/stores";
+import { writable } from 'svelte/store';
 
 import type { Actions, PageServerLoad } from "./$types";
 
@@ -11,7 +13,6 @@ export const load: PageServerLoad = async (event) => {
 		console.log("Login Page Redirect")
 		throw redirect(308, "/login");
 	}
-	console.log(event.locals.user)
 	return  {
 		user: event.locals.user
 	}
@@ -29,6 +30,7 @@ export const actions: Actions = {
 			path: ".",
 			...sessionCookie.attributes
 		});
+		isLoggedIn.set(false)
 		return redirect(302, "/login");
 	}
 };

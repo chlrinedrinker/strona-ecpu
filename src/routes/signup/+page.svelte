@@ -1,10 +1,12 @@
 <!-- routes/signup/+page.svelte -->
 <script lang="ts">
 	import { enhance } from "$app/forms";
+    import { onMount } from "svelte";
+	import { isLoggedIn } from "../stores/stores";
 </script>
 
 <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
-	<h1 class="text-2xl font-bold mb-4">Signup</h1>
+	<h1 class="text-2xl font-bold mb-4">Rejestracja</h1>
 	<form class="flex flex-col gap-4 p-8 bg-white rounded-lg shadow-md" method="post" use:enhance>
 		<div>
 			<label for="imie" class="block mb-2">Imie:</label>

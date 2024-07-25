@@ -42,13 +42,13 @@
 function selectUser(user: Pracownik) {
   selectedUser = user;
 }
-  
+ 
+ onMount(() => {
+  $isLoggedIn = true;
+ })
 </script>
 
 <div class="flex flex-grow">
-  <form method="post" use:enhance>
-    <button>Sign out</button>
-  </form>
   <ZakresDat/>
 
   <!-- Main Content -->
