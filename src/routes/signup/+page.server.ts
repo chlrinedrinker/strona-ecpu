@@ -23,6 +23,15 @@ export const actions: Actions = {
 		const karta = formData.get('cardID');
 		const name = imie + '_' + nazwisko;
 
+		const insertIntoPracownicy = {
+			cardID: karta,
+			FingerID: palec,
+			imie: imie,
+			nazwisko: nazwisko,
+			stanowisko: stanowisko
+		}
+		console.log(insertIntoPracownicy)
+
 		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
 		// keep in mind some database (e.g. mysql) are case insensitive
 		if (
@@ -63,13 +72,6 @@ export const actions: Actions = {
 			});
 		}
 		
-		const insertIntoPracownicy = {
-			cardID: karta,
-			FingerID: palec,
-			imie: imie,
-			nazwisko: nazwisko,
-			stanowisko: stanowisko
-		}
 
 		_pracownicy.collection('PracownicyID').insertOne(insertIntoPracownicy)
 		
