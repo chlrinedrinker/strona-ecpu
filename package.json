@@ -9,6 +9,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
+		"@event-calendar/core": "^3.2.2",
+		"@event-calendar/time-grid": "^3.2.2",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -23,6 +25,7 @@
 		"postcss": "^8.4.40",
 		"prisma": "^5.17.0",
 		"svelte": "^4.2.7",
+		"svelte-calendar": "^3.1.6",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.6",
 		"tslib": "^2.4.1",

@@ -87,7 +87,7 @@
     }
 </script>
 
-<div class="w-64">
+<div class="w-64 overflow-scroll h-screen">
   {#each pracownicy as user}
     <Uzytkownik 
       imie={user.imie} 
@@ -100,7 +100,7 @@
 </div>
 
 {#if selectedUser}
-  <div class="logs-container" transition:slide={{ duration: 200 }}>
+  <div class="overflow-scroll h-screen" transition:slide={{ duration: 200 }}>
     <ShowLogs {logowania} {selectedUser} />
   </div>
 {/if}
@@ -109,8 +109,3 @@
   <div class="text-red-500">{error}</div>
 {/if}
 
-<style>
-  .logs-container {
-    overflow: hidden;
-  }
-</style>
