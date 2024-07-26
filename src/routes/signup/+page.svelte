@@ -17,15 +17,11 @@
 			<input type="text" id="nazwisko" name="nazwisko" required class="w-full p-2 border border-gray-300 rounded" />
 	  </div>
 	  	<label for="ranga">Wybierz typ uytkownika</label>
-	  	<select name="ranga" id="ranga" required>
-			<option value=0>Administrator</option>
-			<option value=1>boss</option>
-			<option value=2>Użytkownik</option>
+	  	<select name="ranga" id="ranga">
+			<option value="Administrator">Administrator</option>
+			<option value="boss">boss</option>
+			<option value="Uzytkownik">Użytkownik</option>
 		</select>
-		<div>
-			<label for="stanowisko" class="block mb-2">Stanowisko:</label>
-			<input type="text" name="stanowisko" id="stanowisko" class="w-full p-2 border border-gray-300 rounded">
-		</div>
 	  <div>
 		<label for="cardID" class="block mb-2">Kod Karty:</label>
 		<input type="text" id="cardID" name="cardID" class="w-full p-2 border border-gray-300 rounded" />

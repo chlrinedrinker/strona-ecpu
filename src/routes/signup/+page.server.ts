@@ -8,6 +8,7 @@ import { PrismaClient, Prisma } from '@prisma/client'
 import { _pracownicy } from "$db/mongo";
 
 export const actions: Actions = {
+    // Define default action for signup
 	default: async (event) => {
 		let prisma = new PrismaClient()
 		const formData = await event.request.formData();
@@ -34,6 +35,8 @@ export const actions: Actions = {
 				message: "Invalid username"
 			});
 		}
+
+        // Validate the password
 		if (typeof password !== "string" || password.length < 6 || password.length > 255) {
 			return fail(400, {
 				message: "Invalid password"
@@ -72,7 +75,6 @@ export const actions: Actions = {
 		
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		const passwordHash = await hash(password, {
-			// recommended minimum parameters
 			memoryCost: 19456,
 			timeCost: 2,
 			outputLen: 32,
@@ -98,6 +100,7 @@ export const actions: Actions = {
 			...sessionCookie.attributes
 		});
 
+        // Redirect to the home page
 		redirect(302, "/");
 	}
 };
