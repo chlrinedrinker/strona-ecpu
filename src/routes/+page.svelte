@@ -51,23 +51,20 @@ function selectUser(user: Pracownik) {
 <div class="flex flex-grow">
   <ZakresDat/>
 
+  <div class="flex space-x-4">
+    <!-- Users List -->
+    <Uzytkownicy />
+    <!-- Schedule -->
+    <div class="flex-grow">
+      <!-- Render schedule based on the user's data -->
+    </div>
+  </div>
   <!-- Main Content -->
   <div class="flex-grow p-4">
       <NavbarKalendarz miesiac={month}, rok={year}/>
     </div>
-    <div class="flex space-x-4">
-      <!-- Users List -->
-      <Uzytkownicy />
-      <!-- Schedule -->
-      <div class="flex-grow">
-        <!-- Render schedule based on the user's data -->
-      </div>
-    </div>
   </div>
 
-  <!-- Right Sidebar -->
-  <div class="w-64 p-4 border-l">
 
-  </div>
 <style>
 </style>

@@ -92,24 +92,23 @@
   }
 </script>
 
-<!-- User list -->
-<div class="w-64">
-{#each pracownicy as user}
-  <Uzytkownik 
-    imie={user.imie} 
-    nazwisko={user.nazwisko} 
-    stanowisko={user.stanowisko} 
-    on:select={handleSelect}
-    selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
-  />
-{/each}
+<div class="w-64 overflow-scroll h-screen">
+  {#each pracownicy as user}
+    <Uzytkownik 
+      imie={user.imie} 
+      nazwisko={user.nazwisko} 
+      stanowisko={user.stanowisko} 
+      on:select={handleSelect}
+      selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
+    />
+  {/each}
 </div>
 
 <!-- Show logs section if a user is selected -->
 {#if selectedUser}
-<div class="logs-container" transition:slide={{ duration: 200 }}>
-  <ShowLogs {logowania} {selectedUser} />
-</div>
+  <div class="overflow-scroll h-screen" transition:slide={{ duration: 200 }}>
+    <ShowLogs {logowania} {selectedUser} />
+  </div>
 {/if}
 
 <!-- Show error message if any error occurs -->
@@ -117,8 +116,3 @@
 <div class="text-red-500">{error}</div>
 {/if}
 
-<style>
-.logs-container {
-  overflow: hidden;
-}
-</style>

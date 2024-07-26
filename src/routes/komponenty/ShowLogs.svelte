@@ -124,7 +124,7 @@
     <button class="btn" on:click={applyCustomDateFilter}>Apply</button>
   </div>
 
-  <h2>Logs</h2>
+  <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
   <table>
     <thead>
       <tr>
