@@ -1,8 +1,8 @@
 <!-- routes/signup/+page.svelte -->
 <script lang="ts">
 	import { enhance } from "$app/forms";
-    import { onMount } from "svelte";
-	import { isLoggedIn } from "../stores/stores";
+    
+	
 </script>
 
 <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
@@ -17,14 +17,14 @@
 			<input type="text" id="nazwisko" name="nazwisko" required class="w-full p-2 border border-gray-300 rounded" />
 	  </div>
 	  	<label for="ranga">Wybierz typ uytkownika</label>
-	  	<select name="ranga" id="ranga" required>
-			<option value=0>Administrator</option>
-			<option value=1>boss</option>
-			<option value=2>Użytkownik</option>
+	  	<select name="ranga" id="ranga">
+			<option value="0">Administrator</option>
+			<option value="1">boss</option>
+			<option value="2">Użytkownik</option>
 		</select>
 		<div>
 			<label for="stanowisko" class="block mb-2">Stanowisko:</label>
-			<input type="text" name="stanowisko" id="stanowisko" class="w-full p-2 border border-gray-300 rounded">
+			<input type="text" id="stanowisko" name="stanowisko" class="w-full p-2 border border-gray-300 rounded" />
 		</div>
 	  <div>
 		<label for="cardID" class="block mb-2">Kod Karty:</label>
