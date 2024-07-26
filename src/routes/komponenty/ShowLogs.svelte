@@ -3,21 +3,18 @@
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
 
-  // Exported properties for logs and selected user
   export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
+  let filteredLogowania = logowania;
+  let customStartDate = "";
+  let customEndDate = "";
 
-  let filteredLogowania = logowania; // Filtered logs
-  let customStartDate = ""; // Custom start date
-  let customEndDate = ""; // Custom end date
-
-  // Function to filter logs based on the selected range
   const filterLogs = (range: string) => {
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
     let endDate: Date = new Date(now);
-
+    
     if (range === "today") {
       startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     } else if (range === "week") {
@@ -31,18 +28,16 @@
       startDate = new Date(customStartDate);
       endDate = new Date(customEndDate);
     } else {
-      // Default filter to current month
+      // Domyślne filtrowanie do bieżącego miesiąca
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
-    // Filter logs based on the start and end date
     filteredLogowania = logowania.filter(log => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
   };
 
-  // Function to setup date pickers
   const setupDatePickers = () => {
     flatpickr("#customStartDate", {
       onChange: (selectedDates) => {
@@ -56,28 +51,23 @@
     });
   };
 
-  // Function to show custom date range inputs
   const showCustomDateRange = () => {
     document.getElementById('customDateRange').style.display = 'block';
   };
 
-  // Function to hide custom date range inputs
   const hideCustomDateRange = () => {
     document.getElementById('customDateRange').style.display = 'none';
   };
 
-  // Setup date pickers and default filter to current month on mount
   onMount(() => {
     setupDatePickers();
-    filterLogs("month");
+    filterLogs("month"); // Domyślne filtrowanie logów dla bieżącego miesiąca
   });
 
-  // Apply custom date filter
   const applyCustomDateFilter = () => {
     filterLogs("custom");
   };
 
-  // Function to save comment for a log
   const saveComment = async (log) => {
     try {
       const response = await fetch('/endpoints/SaveComment', {
@@ -94,45 +84,44 @@
       });
 
       if (response.ok) {
-        console.log('Comment saved');
+        console.log('Komentarz zapisany');
       } else {
-        console.error('Failed to save comment');
+        console.error('Nie udało się zapisać komentarza');
       }
     } catch (error) {
-      console.error('Error saving comment:', error);
+      console.error('Błąd podczas zapisywania komentarza:', error);
     }
   };
 </script>
 
 <div class="p-4">
   <div class="date-filters mb-4">
-    <h2 class="mb-4 text-lg font-semibold">Select a date range to view logs</h2>
+    <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
     <ul class="flex space-x-2">
-      <li><button class="btn" on:click={() => filterLogs("today")}>Today</button></li>
-      <li><button class="btn" on:click={() => filterLogs("week")}>Week</button></li>
-      <li><button class="btn" on:click={() => filterLogs("month")}>Month</button></li>
-      <li><button class="btn" on:click={() => showCustomDateRange()}>Custom</button></li>
+      <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
+      <li><button class="btn" on:click={() => filterLogs("week")}>Tydzień</button></li>
+      <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
+      <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
   </div>
-
-  <!-- Custom date range inputs, initially hidden -->
+  
   <div id="customDateRange" style="display: none;" class="mt-4">
-    <label for="customStartDate">Start:</label>
+    <label for="customStartDate">Początek:</label>
     <input id="customStartDate" type="text" class="input mb-2" />
-    <label for="customEndDate">End:</label>
+    <label for="customEndDate">Koniec:</label>
     <input id="customEndDate" type="text" class="input mb-2" />
-    <button class="btn" on:click={applyCustomDateFilter}>Apply</button>
+    <button class="btn" on:click={applyCustomDateFilter}>Zastosuj</button>
   </div>
 
   <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
   <table>
     <thead>
       <tr>
-        <th>Date</th>
-        <th>Entrance Time</th>
-        <th>Exit Time</th>
-        <th>Hours</th>
-        <th>Comment</th>
+        <th>Data</th>
+        <th>Godzina wejścia</th>
+        <th>Godzina wyjścia</th>
+        <th>Godziny</th>
+        <th>Komentarz</th>
       </tr>
     </thead>
     <tbody>
@@ -144,8 +133,8 @@
           <td>{log.hours}</td>
           <td>
             <div class="comment-container">
-              <input type="text" class="input" bind:value={log.comment} placeholder="Add comment" />
-              <button class="btn ml-2" on:click={() => saveComment(log)}>Save</button>
+              <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
+              <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
             </div>
           </td>
         </tr>
@@ -156,42 +145,42 @@
 
 <style>
   .btn {
-    @apply px-4 py-2 bg-blue-500 text-white rounded; /* Button styles */
+    @apply px-4 py-2 bg-blue-500 text-white rounded;
   }
   .input {
-    @apply w-full px-4 py-2 border rounded; /* Input styles */
+    @apply w-full px-4 py-2 border rounded;
   }
   table {
     width: 100%;
-    border-collapse: collapse; /* Table styles */
+    border-collapse: collapse;
   }
   th, td {
     border: 1px solid #ddd;
-    padding: 8px; /* Table cell styles */
+    padding: 8px;
   }
   th {
-    background-color: #f4f4f4; /* Header cell styles */
+    background-color: #f4f4f4;
   }
   .ml-2 {
-    margin-left: 0.5rem; /* Margin left for spacing */
+    margin-left: 0.5rem;
   }
   .comment-container {
     display: flex;
-    align-items: center; /* Flexbox styles for comment container */
+    align-items: center;
   }
   .input {
     margin-right: 0.5rem;
-    flex: 1; /* Flexbox styles for input */
+    flex: 1;
   }
   .date-filters {
-    margin-bottom: 1rem; /* Margin bottom for date filters */
+    margin-bottom: 1rem;
   }
   .logs-container {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease-out; /* Transition for logs container */
+    transition: max-height 0.5s ease-out;
   }
   .logs-container.show {
-    max-height: auto; /* Show logs container */
+    max-height: auto; /* Adjust based on expected content height */
   }
 </style>
