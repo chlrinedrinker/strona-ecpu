@@ -5,9 +5,7 @@ import { _czas_pracy } from '$db/mongo';
 dotenv.config();
 
 // Define projections to exclude _id field from the response
-let projections = {
-    _id: 0,
-}
+
 
 // Convert decimal hours to HH:MM format
 function convertDecimalHoursToTime(decimalHours) {
@@ -34,7 +32,7 @@ export async function GET({ url }: { url: URL }) {
         const collection = db.collection(katalog);
         
         // Retrieve logs from the collection and project the necessary fields
-        const logi = await collection.find().project(projections).sort({ date: -1 }).toArray();
+        const logi = await collection.find().sort({ date: -1 }).toArray();
         
         // Remove duplicates based on the 'date' field
         const uniqueLogi = [];

@@ -3,7 +3,7 @@
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
 
-  export let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
+  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: number; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
   let filteredLogowania = logowania;
   let customStartDate = "";
@@ -14,7 +14,7 @@
     const now = new Date();
     let startDate: Date;
     let endDate: Date = new Date(now);
-    
+
     if (range === "today") {
       startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     } else if (range === "week") {
@@ -70,6 +70,7 @@
 
   const saveComment = async (log) => {
     try {
+      console.log(log);
       const response = await fetch('/endpoints/SaveComment', {
         method: 'POST',
         headers: {

@@ -14,7 +14,7 @@
 
     let pracownicy: Pracownik[] = [];
     let selectedUser: Pracownik | null = null;
-    let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
+    let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
     let error: string | null = null;
 
     // Create a store to control visibility of ShowLogs

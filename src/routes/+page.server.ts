@@ -5,7 +5,7 @@ import { isLoggedIn } from "./stores/stores";
 import { writable } from 'svelte/store';
 
 import type { Actions, PageServerLoad } from "./$types";
-// Store to manage login state
+
 export const load: PageServerLoad = async (event) => {
 	console.log("Hello")
 	console.log(!event.locals.user)
