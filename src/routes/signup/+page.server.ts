@@ -73,7 +73,7 @@ export const actions: Actions = {
 		}
 		
 
-		_pracownicy.collection('PracownicyID').insertOne(insertIntoPracownicy)
+
 		
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 		const passwordHash = await hash(password, {
@@ -85,13 +85,7 @@ export const actions: Actions = {
 
 
 
-		let user: Prisma.UserCreateInput = {
-			id: userId,
-            role: +ranga,
-			username: username,
-			name: name,
-			hash_password: passwordHash
-		};
+
 		// TODO: check if username is already used
 		const User = await prisma.user.create({ data: user})
 		console.log("Przypisane do Bazy")
@@ -101,6 +95,8 @@ export const actions: Actions = {
 			path: ".",
 			...sessionCookie.attributes
 		});
+
+		_pracownicy.collection('PracownicyID').insertOne(insertIntoPracownicy)
 
         // Redirect to the home page
 		redirect(302, "/");

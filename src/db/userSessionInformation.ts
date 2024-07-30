@@ -1,0 +1,1 @@
+const sesssionRanga = 0;

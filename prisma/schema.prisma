@@ -20,6 +20,8 @@ model Session {
   id        String   @id @map("_id")
   userId    String
   expiresAt DateTime
+  ranga Int
+  imieNazwisko String
 
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }

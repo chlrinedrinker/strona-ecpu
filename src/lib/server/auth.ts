@@ -2,6 +2,7 @@ import { Lucia } from "lucia";
 import { dev } from "$app/environment";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { PrismaClient } from "@prisma/client";
+import { imieNazwisko } from "../../routes/stores/stores";
 
 const client = new PrismaClient();
 
@@ -19,17 +20,29 @@ export const lucia = new Lucia(adapter, {
 			// attributes has the type of DatabaseUserAttributes
 			username: attributes.username
 		};
+	},
+	getSessionAttributes: (attributes) => {
+		return {
+			ranga: attributes.ranga,
+			imieNazwisko: attributes.imieNazwisko
+		}
 	}
-
 });
 
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
         DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseSessionAttributes: DatabaseSessionAttributes
+	}
+	interface DatabaseSessionAttributes {
+		ranga: number;
+		imieNazwisko: string;
 	}
 }
 
 interface DatabaseUserAttributes {
 	username: string;
+
 }
+

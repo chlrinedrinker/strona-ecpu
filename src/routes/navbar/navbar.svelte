@@ -1,10 +1,8 @@
 <script>
   import { enhance } from "$app/forms"; // SvelteKit form enhancement
-  import { isLoggedIn } from "../stores/stores"; // Store for login state
-
+  import { isLoggedIn, userType } from "../stores/stores"; // Store for login state
   const logged = isLoggedIn // Get the login state
-  console.log(logged)
-</script>
+  </script>
 
 <div class="flex items-center justify-between p-4 bg-gray-100 border-b">
   <div class="flex items-center space-x-4">
@@ -17,10 +15,12 @@
     <button class="btn">Kalendarz</button>
     <button class="btn">Raporty</button>
     <div class="flex items-center space-x-2">
-      <form method="post" use:enhance>
-        <button class="btn">Wyloguj się</button>
-      </form>
+    <form method="post" use:enhance>
+      <button class="btn">Wyloguj się</button>  
+    </form>
+      {#if $userType == 0}
       <a href="/signup"><button class="btn">Zarejestruj użytkownika</button></a>
+      {/if}
     </div>
     <div class="w-10 h-10 rounded-full bg-gray-300"><img src="user.png" alt="User"></div>
   </div>

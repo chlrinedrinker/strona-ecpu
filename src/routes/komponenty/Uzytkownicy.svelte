@@ -4,6 +4,8 @@
   import ShowLogs from './ShowLogs.svelte';
   import { writable } from 'svelte/store';
   import { fade, slide } from 'svelte/transition';
+  import { userType, imieNazwisko} from '../stores/stores';
+  export let pracownicy;
 
   interface Pracownik {
     _id: string;
@@ -12,27 +14,14 @@
     stanowisko: string;
   }
 
-  let pracownicy: Pracownik[] = []; // Array to hold employees
-  let selectedUser: Pracownik | null = null; // Currently selected user
-  let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = []; // Array to hold logs
-  let error: string | null = null; // Error message
+  let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
 
+  let selectedUser: Pracownik | null = null; // Currently selected user
+  let error: string | null = null; // Error message
   // Create a store to control visibility of ShowLogs
   const showLogs = writable(false);
 
   // Fetch employees on component mount
-  onMount(async () => {
-    try {
-      const response = await fetch('/endpoints/ImieNazStanow');
-      if (response.ok) {
-        pracownicy = await response.json(); // Store the fetched employees
-      } else {
-        error = 'Failed to load employees'; // Set error message if the request fails
-      }
-    } catch (err) {
-      error = 'Error loading employees'; // Set error message if an exception occurs
-    }
-  });
 
   // Handle user selection
   async function handleSelect(event: CustomEvent<Pracownik>) {
@@ -84,15 +73,22 @@
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
-    // Filter logs based on the start and end date
+
+        // Filter logs based on the start and end date
     logowania = logowania.filter(log => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
   }
+
+  console.log($imieNazwisko)
+
+
+
 </script>
 
 <div class="w-64 overflow-scroll h-screen">
+  
   {#each pracownicy as user}
     <Uzytkownik 
       imie={user.imie} 
