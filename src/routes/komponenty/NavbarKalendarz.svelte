@@ -73,5 +73,6 @@
     margin: 0 auto; /* Center the calendar horizontally */
     position: relative;
     left: -10%; /* Adjust the left position to compensate for the increased width */
+    
   }
 </style>
