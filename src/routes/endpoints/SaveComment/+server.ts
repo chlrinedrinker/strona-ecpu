@@ -3,8 +3,9 @@ import { _czas_pracy } from '$db/mongo';
 
 export async function POST({ request }) {
     // Parse the request body to get user, date, comment, and logId
+    console.log("jdjdjjd")
     const { user, date, comment, logId } = await request.json();
-    console.log(date)
+    
 
     // Return an error if any of the required fields are missing
     if (!user || !date || !logId) {

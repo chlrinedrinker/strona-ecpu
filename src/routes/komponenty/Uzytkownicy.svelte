@@ -23,11 +23,9 @@
 
   // Fetch employees on component mount
 
-  // Handle user selection
   async function handleSelect(event: CustomEvent<Pracownik>) {
     const selected = event.detail;
 
-    // If the same user is selected again, collapse the logs section
     if (selectedUser && selectedUser.imie === selected.imie && selectedUser.nazwisko === selected.nazwisko) {
       showLogs.set(false); // Collapse the logs section
       selectedUser = null;
@@ -35,7 +33,7 @@
       return;
     }
 
-    selectedUser = selected; // Set the selected user
+    selectedUser = selected;
     showLogs.set(true); // Expand the logs section
 
     if (selectedUser) {
@@ -44,19 +42,18 @@
         if (!response.ok) {
           const errorText = await response.text();
           console.error(`Failed to fetch logs: ${response.status} ${response.statusText} - ${errorText}`);
-          error = 'Failed to load logs'; // Set error message if the request fails
+          error = 'Nie udało się załadować logów';
           return;
         }
-        logowania = await response.json(); // Store the fetched logs
-        filterLogs("month"); // Automatically filter logs for the current month
+        logowania = await response.json();
+        filterLogs("month"); // Automatycznie filtruje logi po bieżącym miesiącu
       } catch (err) {
-        console.error('Error loading logs:', err);
-        error = 'Error loading logs'; // Set error message if an exception occurs
+        console.error('Błąd podczas ładowania logów:', err);
+        error = 'Błąd podczas ładowania logów';
       }
     }
   }
 
-  // Function to filter logs based on the selected range
   function filterLogs(range: string) {
     const now = new Date();
     let startDate: Date;
@@ -100,15 +97,18 @@
   {/each}
 </div>
 
-<!-- Show logs section if a user is selected -->
 {#if selectedUser}
-  <div class="overflow-scroll h-screen" transition:slide={{ duration: 200 }}>
-    <ShowLogs {logowania} {selectedUser} />
+<div class="overflow-scroll h-screen" transition:slide={{ duration: 200 }}>
+  <ShowLogs {logowania} {selectedUser} />
+</div>
+<div class="outer-container flex flex-col min-h-screen">
+  <div class="header-container flex items-center justify-between p-4 relative bg-white">
+    <NavbarKalendarz {logowania} /> <!-- Pass logowania to Navbar -->
   </div>
+</div>
+
 {/if}
 
-<!-- Show error message if any error occurs -->
 {#if error}
 <div class="text-red-500">{error}</div>
 {/if}
-
