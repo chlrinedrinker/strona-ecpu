@@ -8,8 +8,10 @@
   let filteredLogowania = logowania;
   let customStartDate = "";
   let customEndDate = "";
+  let showFiltered = false; // Track whether to show filtered logs
 
   const filterLogs = (range: string) => {
+    showFiltered= true
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
@@ -28,7 +30,6 @@
       startDate = new Date(customStartDate);
       endDate = new Date(customEndDate);
     } else {
-      // Domyślne filtrowanie do bieżącego miesiąca
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
@@ -36,6 +37,7 @@
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
+    
   };
 
   const setupDatePickers = () => {
@@ -53,6 +55,7 @@
 
   const showCustomDateRange = () => {
     document.getElementById('customDateRange').style.display = 'block';
+    
   };
 
   const hideCustomDateRange = () => {
@@ -61,7 +64,7 @@
 
   onMount(() => {
     setupDatePickers();
-    filterLogs("month"); // Domyślne filtrowanie logów dla bieżącego miesiąca
+    
   });
 
   const applyCustomDateFilter = () => {
@@ -93,15 +96,17 @@
       console.error('Błąd podczas zapisywania komentarza:', error);
     }
   };
+
+  
 </script>
 
 <div class="p-4">
   <div class="date-filters mb-4">
     <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
     <ul class="flex space-x-2">
-      <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
-      <li><button class="btn" on:click={() => filterLogs("week")}>Tydzień</button></li>
-      <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("today"); showAllLogs(); }}>Dzisiaj</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("week"); showAllLogs(); }}>Tydzień</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("month"); showAllLogs(); }}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
   </div>
@@ -126,20 +131,37 @@
       </tr>
     </thead>
     <tbody>
-      {#each filteredLogowania as log}
-        <tr>
-          <td>{log.date}</td>
-          <td>{log.entrence_time}</td>
-          <td>{log.exit_time}</td>
-          <td>{log.hours}</td>
-          <td>
-            <div class="comment-container">
-              <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
-              <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
-            </div>
-          </td>
-        </tr>
-      {/each}
+      {#if showFiltered}
+        {#each filteredLogowania as log}
+          <tr>
+            <td>{log.date}</td>
+            <td>{log.entrence_time}</td>
+            <td>{log.exit_time}</td>
+            <td>{log.hours}</td>
+            <td>
+              <div class="comment-container">
+                <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
+                <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      {:else}
+        {#each logowania as log}
+          <tr>
+            <td>{log.date}</td>
+            <td>{log.entrence_time}</td>
+            <td>{log.exit_time}</td>
+            <td>{log.hours}</td>
+            <td>
+              <div class="comment-container">
+                <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
+                <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      {/if}
     </tbody>
   </table>
 </div>

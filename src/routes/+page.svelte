@@ -60,9 +60,9 @@ function selectUser(user: Pracownik) {
     </div>
   </div>
   <!-- Main Content -->
-  <div class="flex-grow p-4">
-      <NavbarKalendarz miesiac={month}, rok={year}/>
-    </div>
+  <!-- <div class="flex-grow p-4">
+      <NavbarKalendarz />
+    </div> -->
   </div>
 
 
