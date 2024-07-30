@@ -1,36 +1,33 @@
-// routes/signup/+page.server.ts
 import { lucia } from "$lib/server/auth";
 import { fail, redirect } from "@sveltejs/kit";
 import { generateIdFromEntropySize } from "lucia";
 import { hash } from "@node-rs/argon2";
 import type { Actions } from "./$types";
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client';
 import { _pracownicy } from "$db/mongo";
 
 export const actions: Actions = {
-    // Define default action for signup
 	default: async (event) => {
-		let prisma = new PrismaClient()
-		const formData = await event.request.formData();
-		const username = formData.get("username");
-		const password = formData.get("password");
-		const imie = formData.get("imie");
-		const nazwisko = formData.get('nazwisko');
-		const stanowisko = formData.get('stanowisko');
-		console.log(stanowisko)
-		const ranga = formData.get('ranga');
-		const palec = formData.get('fingerID');
-		const karta = formData.get('cardID');
-		const name = imie + '_' + nazwisko;
+		let prisma = new PrismaClient();
+		try {
+			const formData = await event.request.formData();
+			const username = formData.get("username");
+			const password = formData.get("password");
+			const imie = formData.get("imie");
+			const nazwisko = formData.get('nazwisko');
+			const stanowisko = formData.get('stanowisko');
+			const ranga = formData.get('ranga');
+			const palec = formData.get('fingerID');
+			const karta = formData.get('cardID');
+			const name = `${imie}_${nazwisko}`;
 
-		const insertIntoPracownicy = {
-			cardID: karta,
-			FingerID: palec,
-			imie: imie,
-			nazwisko: nazwisko,
-			stanowisko: stanowisko
-		}
-		console.log(insertIntoPracownicy)
+			const insertIntoPracownicy = {
+				cardID: karta,
+				FingerID: palec,
+				imie: imie,
+				nazwisko: nazwisko,
+				stanowisko: stanowisko
+			};
 
 		// username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
 		// keep in mind some database (e.g. mysql) are case insensitive
@@ -98,7 +95,14 @@ export const actions: Actions = {
 
 		_pracownicy.collection('PracownicyID').insertOne(insertIntoPracownicy)
 
-        // Redirect to the home page
-		redirect(302, "/");
+			// Użycie funkcji redirect, aby przekierować użytkownika na stronę z parametrem sukcesu
+			throw redirect(302, "/signup?success=true");
+		}
+		catch (error) {
+			console.error("Błąd serwera:", error);
+			return fail(500, { message: "Internal Server Error" });
+		} finally {
+			await prisma.$disconnect();
+		}
 	}
 };

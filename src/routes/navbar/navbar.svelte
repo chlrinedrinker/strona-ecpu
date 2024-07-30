@@ -4,10 +4,16 @@
   const logged = isLoggedIn // Get the login state
   </script>
 
+
 <div class="flex items-center justify-between p-4 bg-gray-100 border-b">
   <div class="flex items-center space-x-4">
-    <img src="/herb.png" alt="Logo" class="h-8">
-    <div>Gmina Łubnice</div>
+    <a href="/">
+      <img src="/herb.png" alt="Logo" class="h-8">
+    </a>
+    <a href="/">
+      <div>Gmina Łubnice</div>
+    </a>
+    
   </div>
   {#if $logged}
   <div class="flex items-center space-x-4">
@@ -26,6 +32,7 @@
   </div>
   {/if}
 </div>
+
 
 <style>
   .btn {
