@@ -8,12 +8,34 @@
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
   let filteredLogowania = [];
+  let totalHours;
   let customStartDate = "";
   let customEndDate = "";
   let showFiltered = false; // Track whether to show filtered logs
 
-  const filterLogs = (range: string) => {
-    showFiltered= true
+  // Funkcja konwertująca czas w formacie hh:mm na godziny w postaci dziesiętnej
+  const parseHours = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours + minutes / 60;
+  };
+  // Funkcja konwertująca godziny w postaci dziesiętnej na format hh:mm
+  const convertDecimalHoursToTime = (decimalHours: number): string => {
+    const hours = Math.floor(decimalHours);
+    const minutes = Math.round((decimalHours - hours) * 60);
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  const showCustomDateRange = () => {
+    document.getElementById('customDateRange').style.display = 'block';
+  };
+
+  const hideCustomDateRange = () => {
+    document.getElementById('customDateRange').style.display = 'none';
+  };
+
+  const filterLogs = async (range: string) => {
+    console.log("Filtering logs with range:", range); // Debugging log
+    showFiltered = true;
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
@@ -46,9 +68,6 @@
     console.log("Total hours:", totalHours); // Debugging log
     console.log("Filtered logs:", filteredLogowania); // Debugging log
 
-    // Wymuszenie aktualizacji komponentu
-    await tick();
-  };
 
   const setupDatePickers = () => {
     flatpickr("#customStartDate", {
@@ -63,14 +82,6 @@
     });
   };
 
-  const showCustomDateRange = () => {
-    document.getElementById('customDateRange').style.display = 'block';
-  };
-
-  const hideCustomDateRange = () => {
-    document.getElementById('customDateRange').style.display = 'none';
-  };
-
   onMount(() => {
     setupDatePickers();
   });
@@ -78,34 +89,8 @@
   const applyCustomDateFilter = () => {
     filterLogs("custom");
   };
-
-  const saveComment = async (log) => {
-    try {
-      console.log(log);
-      const response = await fetch('/endpoints/SaveComment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user: selectedUser,
-          date: log.date,
-          comment: log.comment,
-          logId: log._id
-        }),
-      });
-
-      if (response.ok) {
-        console.log('Komentarz zapisany');
-      } else {
-        console.error('Nie udało się zapisać komentarza');
-      }
-    } catch (error) {
-      console.error('Błąd podczas zapisywania komentarza:', error);
-    }
   };
 
-  
 </script>
 
 <div class="p-4">
@@ -117,7 +102,7 @@
       <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
-    <p class="total-hours mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
+
   </div>
   
   <div id="customDateRange" style="display: none;" class="mt-4">
@@ -125,7 +110,7 @@
     <input id="customStartDate" type="text" class="input mb-2" />
     <label for="customEndDate">Koniec:</label>
     <input id="customEndDate" type="text" class="input mb-2" />
-    <button class="btn" on:click={applyCustomDateFilter}>Zastosuj</button>
+    <button class="btn" on:click={() => applyCustomDateFilter()}>Zastosuj</button>
   </div>
 
   <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
