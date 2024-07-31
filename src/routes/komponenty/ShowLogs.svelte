@@ -1,17 +1,32 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
 
-  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: number; comment?: string }[] = [];
+  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
-  let filteredLogowania = logowania;
+  let filteredLogowania = [];
   let customStartDate = "";
   let customEndDate = "";
-  let showFiltered = false; // Track whether to show filtered logs
+  let showFiltered = false;
+  let totalHours = 0;
 
-  const filterLogs = (range: string) => {
-    showFiltered= true
+  // Funkcja konwertująca czas w formacie hh:mm na godziny w postaci dziesiętnej
+  const parseHours = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours + minutes / 60;
+  };
+
+  // Funkcja konwertująca godziny w postaci dziesiętnej na format hh:mm
+  const convertDecimalHoursToTime = (decimalHours: number): string => {
+    const hours = Math.floor(decimalHours);
+    const minutes = Math.round((decimalHours - hours) * 60);
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  const filterLogs = async (range: string) => {
+    console.log("Filtering logs with range:", range); // Debugging log
+    showFiltered = true;
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
@@ -33,11 +48,19 @@
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
+    // Filtruj logi
     filteredLogowania = logowania.filter(log => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
-    
+
+    // Obliczanie sumy godzin
+    totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+    console.log("Total hours:", totalHours); // Debugging log
+    console.log("Filtered logs:", filteredLogowania); // Debugging log
+
+    // Wymuszenie aktualizacji komponentu
+    await tick();
   };
 
   const setupDatePickers = () => {
@@ -55,7 +78,6 @@
 
   const showCustomDateRange = () => {
     document.getElementById('customDateRange').style.display = 'block';
-    
   };
 
   const hideCustomDateRange = () => {
@@ -64,7 +86,6 @@
 
   onMount(() => {
     setupDatePickers();
-    
   });
 
   const applyCustomDateFilter = () => {
@@ -96,19 +117,27 @@
       console.error('Błąd podczas zapisywania komentarza:', error);
     }
   };
-
-  
+  console.log("czy filtrowane")
+  console.log(showFiltered)
+  // Reaktywne wyrażenie do resetowania filtrowania przy zmianie użytkownika
+  $: {
+    if (logowania.length > 0 && !showFiltered) {
+      filteredLogowania = [...logowania];
+      totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+    }
+  }
 </script>
 
 <div class="p-4">
   <div class="date-filters mb-4">
     <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
     <ul class="flex space-x-2">
-      <li><button class="btn" on:click={() => { filterLogs("today"); showAllLogs(); }}>Dzisiaj</button></li>
-      <li><button class="btn" on:click={() => { filterLogs("week"); showAllLogs(); }}>Tydzień</button></li>
-      <li><button class="btn" on:click={() => { filterLogs("month"); showAllLogs(); }}>Miesiąc</button></li>
+      <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
+      <li><button class="btn" on:click={() => filterLogs("week")}>Tydzień</button></li>
+      <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
+    <p class="total-hours mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
   </div>
   
   <div id="customDateRange" style="display: none;" class="mt-4">
@@ -198,12 +227,7 @@
   .date-filters {
     margin-bottom: 1rem;
   }
-  .logs-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
-  }
-  .logs-container.show {
-    max-height: auto; /* Adjust based on expected content height */
+  .total-hours {
+    font-weight: bold;
   }
 </style>
