@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
   import { enhance } from '$app/forms';
     import { writable } from 'svelte/store';
 
-  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: number; comment?: string }[] = [];
+  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
-  let filteredLogowania = logowania;
+  let filteredLogowania = [];
   let customStartDate = "";
   let customEndDate = "";
   let showFiltered = false; // Track whether to show filtered logs
+
   const filterLogs = (range: string) => {
     showFiltered= true
     hideCustomDateRange();
@@ -34,11 +35,19 @@
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
+    // Filtruj logi
     filteredLogowania = logowania.filter(log => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
-    
+
+    // Obliczanie sumy godzin
+    totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+    console.log("Total hours:", totalHours); // Debugging log
+    console.log("Filtered logs:", filteredLogowania); // Debugging log
+
+    // Wymuszenie aktualizacji komponentu
+    await tick();
   };
 
   const setupDatePickers = () => {
@@ -56,7 +65,6 @@
 
   const showCustomDateRange = () => {
     document.getElementById('customDateRange').style.display = 'block';
-    
   };
 
   const hideCustomDateRange = () => {
@@ -65,11 +73,36 @@
 
   onMount(() => {
     setupDatePickers();
-    
   });
 
   const applyCustomDateFilter = () => {
     filterLogs("custom");
+  };
+
+  const saveComment = async (log) => {
+    try {
+      console.log(log);
+      const response = await fetch('/endpoints/SaveComment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: selectedUser,
+          date: log.date,
+          comment: log.comment,
+          logId: log._id
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Komentarz zapisany');
+      } else {
+        console.error('Nie udało się zapisać komentarza');
+      }
+    } catch (error) {
+      console.error('Błąd podczas zapisywania komentarza:', error);
+    }
   };
 
   
@@ -84,6 +117,7 @@
       <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
+    <p class="total-hours mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
   </div>
   
   <div id="customDateRange" style="display: none;" class="mt-4">
@@ -189,12 +223,7 @@
   .date-filters {
     margin-bottom: 1rem;
   }
-  .logs-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
-  }
-  .logs-container.show {
-    max-height: auto; /* Adjust based on expected content height */
+  .total-hours {
+    font-weight: bold;
   }
 </style>
