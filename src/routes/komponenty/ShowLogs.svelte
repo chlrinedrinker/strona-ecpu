@@ -142,7 +142,7 @@
                 formData.append("data", log.date)
                 formData.append("wejscie", log.entrence_time)
               }}>
-                <input type="text" class="input" placeholder="Dodaj komentarz" name="komentarz" value={form}/>
+                <input type="text" class="input" placeholder="Dodaj komentarz" name="komentarz"/>
                 <button class="btn ml-2" type="submit">Zapisz</button>
               </form>
             </td>
