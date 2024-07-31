@@ -39,6 +39,7 @@
 
     if (selectedUser) {
       try {
+        console.log("selected User")
         const response = await fetch(`/endpoints/CzasPracy?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
         if (!response.ok) {
           const errorText = await response.text();

@@ -2,31 +2,18 @@
   import { onMount, tick } from 'svelte';
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
+  import { enhance } from '$app/forms';
+    import { writable } from 'svelte/store';
 
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
   let filteredLogowania = [];
   let customStartDate = "";
   let customEndDate = "";
-  let showFiltered = false;
-  let totalHours = 0;
+  let showFiltered = false; // Track whether to show filtered logs
 
-  // Funkcja konwertująca czas w formacie hh:mm na godziny w postaci dziesiętnej
-  const parseHours = (time: string): number => {
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours + minutes / 60;
-  };
-
-  // Funkcja konwertująca godziny w postaci dziesiętnej na format hh:mm
-  const convertDecimalHoursToTime = (decimalHours: number): string => {
-    const hours = Math.floor(decimalHours);
-    const minutes = Math.round((decimalHours - hours) * 60);
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
-  };
-
-  const filterLogs = async (range: string) => {
-    console.log("Filtering logs with range:", range); // Debugging log
-    showFiltered = true;
+  const filterLogs = (range: string) => {
+    showFiltered= true
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
@@ -117,24 +104,17 @@
       console.error('Błąd podczas zapisywania komentarza:', error);
     }
   };
-  console.log("czy filtrowane")
-  console.log(showFiltered)
-  // Reaktywne wyrażenie do resetowania filtrowania przy zmianie użytkownika
-  $: {
-    if (logowania.length > 0 && !showFiltered) {
-      filteredLogowania = [...logowania];
-      totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
-    }
-  }
+
+  
 </script>
 
 <div class="p-4">
   <div class="date-filters mb-4">
     <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
     <ul class="flex space-x-2">
-      <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
-      <li><button class="btn" on:click={() => filterLogs("week")}>Tydzień</button></li>
-      <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("today"); showAllLogs(); }}>Dzisiaj</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("week"); showAllLogs(); }}>Tydzień</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("month"); showAllLogs(); }}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
     <p class="total-hours mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
@@ -168,10 +148,18 @@
             <td>{log.exit_time}</td>
             <td>{log.hours}</td>
             <td>
-              <div class="comment-container">
-                <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
-                <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
-              </div>
+              <form class="comment-container" 
+              action="?/saveComment" 
+              method="post"
+              use:enhance={({formData}) => {
+                formData.append("imie", selectedUser.imie)
+                formData.append("nazwisko", selectedUser.nazwisko)
+                formData.append("data", log.date)
+                formData.append("wejscie", log.entrence_time)
+              }}>
+                <input type="text" class="input" placeholder="Dodaj komentarz" name="komentarz" value={form}/>
+                <button class="btn ml-2" type="submit">Zapisz</button>
+              </form>
             </td>
           </tr>
         {/each}
@@ -183,10 +171,18 @@
             <td>{log.exit_time}</td>
             <td>{log.hours}</td>
             <td>
-              <div class="comment-container">
-                <input type="text" class="input" bind:value={log.comment} placeholder="Dodaj komentarz" />
-                <button class="btn ml-2" on:click={() => saveComment(log)}>Zapisz</button>
-              </div>
+              <form class="comment-container" 
+              action="?/saveComment" 
+              method="post" 
+              use:enhance={({formData}) => {
+                formData.append("imie", selectedUser.imie)
+                formData.append("nazwisko", selectedUser.nazwisko)
+                formData.append("data", log.date)
+                formData.append("wejscie", log.entrence_time)
+              }}>
+                <input type="text" class="input" placeholder="Dodaj komentarz" name="komentarz"/>
+                <button class="btn ml-2" type="submit">Zapisz</button>
+              </form>
             </td>
           </tr>
         {/each}
