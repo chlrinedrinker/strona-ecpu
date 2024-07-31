@@ -19,9 +19,12 @@ export const load: PageServerLoad = async (event) => {
 	let imie : string, nazwisko: string;
   	let pracownicy: Pracownik[] = []; // Array to hold employees
 	let tempPracownicy: Pracownik[] = [];
-	imie = event.locals.session.imieNazwisko.split("_")[0]
-	nazwisko = event.locals.session.imieNazwisko.split("_")[1]
+	let imie_Nazwisko = event.locals.session.imieNazwisko.split("_")
+	imie = imie_Nazwisko[0]
+	nazwisko = imie_Nazwisko[1]
 	console.log(imie)
+	console.log(nazwisko)
+	console.log(imie_Nazwisko)
 	console.log(event.locals.session.ranga)
   	 // Array to hold logs
   	let error: string | null = null; // Error message

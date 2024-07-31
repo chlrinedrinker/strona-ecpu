@@ -5,6 +5,7 @@
   import { writable } from 'svelte/store';
   import { fade, slide } from 'svelte/transition';
   import { userType, imieNazwisko} from '../stores/stores';
+  import NavbarKalendarz from './NavbarKalendarz.svelte';
   export let pracownicy;
 
   interface Pracownik {
@@ -38,6 +39,7 @@
 
     if (selectedUser) {
       try {
+        console.log("selected User")
         const response = await fetch(`/endpoints/CzasPracy?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
         if (!response.ok) {
           const errorText = await response.text();
