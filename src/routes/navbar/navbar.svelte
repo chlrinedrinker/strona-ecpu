@@ -39,8 +39,8 @@
             <h1>Panel Administracyjny</h1>
         </button>
         <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 absolute z-100" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded">Item 1</button></li>
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded">Item 2</button></li>
+            <li><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Item 1</button></li>
+            <li><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Item 2</button></li>
         </ul>
     </div>    
       <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
