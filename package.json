@@ -9,7 +9,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@event-calendar/core": "^3.2.2",
+		"@event-calendar/core": "^3.3.0",
 		"@event-calendar/time-grid": "^3.2.2",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@neoconfetti/svelte": "^1.0.0",

@@ -36,12 +36,8 @@
       {#if $userType == 0}
         <div class="dropdown relative" on:focus={handleDropdownFocusLoss}>
           <button class="px-4 py-2 bg-blue-500 text-white rounded m-1" on:click={handleDropdownClick}>
-              <h1>Panel Administracyjny</h1>
+              <h1><a href="zmianaHaseł">Panel Administracyjny</a></h1>
           </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 absolute z-100" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
-            <li><a href="usuwanieUżytkowników"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2 text-xs">Usuwanie Użytkowników</button></a></li>
-            <li><a href="zmianaHaseł"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2 text-xs">Zmiana danych Użytkowników</button></a></li>
-          </ul>
         </div>
       <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
       {/if}
