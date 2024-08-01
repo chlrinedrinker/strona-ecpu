@@ -24,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
 	nazwisko = event.locals.session.imieNazwisko
 	console.log(imie)
 	console.log(nazwisko)
-	console.log(imie_Nazwisko)
+	console.log(event.locals.session.imieNazwisko)
 	console.log(event.locals.session.ranga)
   	 // Array to hold logs
   	let error: string | null = null; // Error message
