@@ -73,7 +73,6 @@ export const actions: Actions = {
 			});
 		}
 		ranga = existingUser.role;
-		console.log(existingUser.role)
         // Create a session for the user
 		const session = await lucia.createSession(existingUser.id, {
 			ranga: ranga,

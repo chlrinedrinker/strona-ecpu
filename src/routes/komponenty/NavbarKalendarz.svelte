@@ -63,8 +63,6 @@
         borderColor: backgroundColor
       };
     });
-
-    console.log('Updated Events:', options.events); // Debug output
   }
 </script>
 

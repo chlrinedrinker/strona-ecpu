@@ -34,7 +34,6 @@
   };
 
   const filterLogs = async (range: string) => {
-    console.log("Filtering logs with range:", range); // Debugging log
     showFiltered = true;
     hideCustomDateRange();
     const now = new Date();
@@ -65,9 +64,6 @@
 
     // Obliczanie sumy godzin
     totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
-    console.log("Total hours:", totalHours); // Debugging log
-    console.log("Filtered logs:", filteredLogowania); // Debugging log
-
 
   const setupDatePickers = () => {
     flatpickr("#customStartDate", {

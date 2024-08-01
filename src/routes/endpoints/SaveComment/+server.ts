@@ -3,7 +3,6 @@ import { _czas_pracy } from '$db/mongo';
 
 export async function POST({ request }) {
     // Parse the request body to get user, date, comment, and logId
-    console.log("jdjdjjd")
     const { user, date, comment, logId } = await request.json();
     
 
