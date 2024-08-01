@@ -28,6 +28,12 @@
           <label for="zmianaStanowiska" class="mb-2">Zmiana Stanowiska</label><br>
           <input type="text" name="zmianiaStanowiska" id="zmianiaStanowiska" class="mb-2" placeholder="{selectedUser.stanowisko}"><br>
           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Zmień Dane</button><br>
+          <select name="zmianaRanga" id="zmianaRanga" class="w-full p-2 border border-gray-300 rounded">
+            <option value="">Brak Zmian</option>
+            <option value="0">Administrator</option>
+            <option value="1">Boss</option>
+            <option value="2">Użytkownik</option>
+        </select>
       </form>
   </div>
 </div>
