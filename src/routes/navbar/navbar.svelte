@@ -15,7 +15,7 @@
   </script>
 
 
-<div class="flex items-center justify-between p-4 bg-gray-100 border-b">
+<div class="flex items-center justify-between p-4 bg-gray-100 border-b z-100">
   <div class="flex items-center space-x-4">
     <a href="/">
       <img src="/herb.png" alt="Logo" class="h-8">
@@ -39,8 +39,8 @@
               <h1>Panel Administracyjny</h1>
           </button>
           <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 absolute z-100" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
-            <li><a href="usuwanieUżytkowników"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Usuwanie Użytkowników</button></a></li>
-            <li><a href="zmianaHaseł"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Zmiana danych Użytkowników</button></a></li>
+            <li><a href="usuwanieUżytkowników"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2 text-xs">Usuwanie Użytkowników</button></a></li>
+            <li><a href="zmianaHaseł"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2 text-xs">Zmiana danych Użytkowników</button></a></li>
           </ul>
         </div>
       <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
