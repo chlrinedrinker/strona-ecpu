@@ -33,27 +33,30 @@
     }
   </script>
   
-  <div class="w-64 overflow-scroll h-screen">
+  <div class="flex w-full h-screen">
+    <div class="w-64 overflow-scroll h-screen">
+      {#each data.pracownicy as user}
+        <Uzytkownik 
+          imie={user.imie} 
+          nazwisko={user.nazwisko} 
+          stanowisko={user.stanowisko} 
+          on:select={handleSelect}
+          selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
+        />
+      {/each}
+    </div>
     
-    {#each data.pracownicy as user}
-      <Uzytkownik 
-        imie={user.imie} 
-        nazwisko={user.nazwisko} 
-        stanowisko={user.stanowisko} 
-        on:select={handleSelect}
-        selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
-      />
-    {/each}
+    {#if selectedUser}
+    <div class="flex-grow" transition:slide={{ duration: 300 }}>
+      <KontoZmiany selectedUser={selectedUser}/>
+    </div>
+    {/if}
+    
+    {#if error}
+    <div class="text-red-500">
+      {error}
+    </div>
+    {/if}
   </div>
   
-  {#if selectedUser}
-  <div class="overflow-scroll h-screen" transition:slide={{ duration: 200 }}>
-    <KontoZmiany selectedUser={selectedUser}/>
-  </div>
-  
-  {/if}
-  
-  {#if error}
-  <div class="text-red-500">{error}</div>
-  {/if}
   
