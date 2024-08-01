@@ -28,7 +28,7 @@
   const convertDecimalHoursToTime = (decimalHours: number): string => {
       const hours = Math.floor(decimalHours);
       const minutes = Math.round((decimalHours - hours) * 60);
-      return `${hours}:${minutes.toString().padStart(2, '0')}`;
+      return ${hours}:${minutes.toString().padStart(2, '0')};
   };
 
   const filterLogs = async (range: string) => {
