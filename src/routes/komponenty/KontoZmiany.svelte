@@ -12,7 +12,6 @@
 </script>
 
 <div class="p-4">
-    <h1 class="text-lg font-semibold">Panel Administratora</h1>
     <h2 class="mb-4">Wybrano: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
     <div class="mb-4">
       <form 

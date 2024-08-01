@@ -46,12 +46,14 @@
       {/each}
     </div>
     
+    <div class="flex-grow items-center justify-center">
+      <h1 class="text-center mb-4 text-lg font-semibold">Panel administratora</h1>
     {#if selectedUser}
-    <div class="flex-grow" transition:slide={{ duration: 300 }}>
+    <div transition:slide={{ duration: 300 }}>
       <KontoZmiany selectedUser={selectedUser}/>
     </div>
     {/if}
-    
+    </div>
     {#if error}
     <div class="text-red-500">
       {error}
