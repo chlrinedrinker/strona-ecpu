@@ -13,7 +13,6 @@ interface Pracownik {
 // Store to manage login state
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
-		console.log("Login Page Redirect")
 		throw redirect(308, "/login");
 	}
 
@@ -21,12 +20,8 @@ export const load: PageServerLoad = async (event) => {
   	let pracownicy: Pracownik[] = []; // Array to hold employees
 	let tempPracownicy: Pracownik[] = [];
 	let imie_Nazwisko = event.locals.session.imieNazwisko.split("_")
-	imie = imie_Nazwisko[0]
-	nazwisko = imie_Nazwisko[1]
-	console.log(imie)
-	console.log(nazwisko)
-	console.log(imie_Nazwisko)
-	console.log(event.locals.session.ranga)
+	imie = imie_Nazwisko[0];
+	nazwisko = imie_Nazwisko[1];o
   	 // Array to hold logs
   	let error: string | null = null; // Error message
 	try {
@@ -60,7 +55,6 @@ export const actions: Actions = {
 		if (!event.locals.user) {
 			throw fail(401);
 		}
-		console.log("Wylogowanie")
 		await lucia.invalidateSession(event.locals.session.id);
 		const sessionCookie = lucia.createBlankSessionCookie();
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
