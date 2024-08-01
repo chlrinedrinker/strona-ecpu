@@ -34,16 +34,16 @@
         <button class="px-4 py-2 bg-blue-500 text-white rounded">Wyloguj się</button>  
       </form>
       {#if $userType == 0}
-        <div class="dropdown" on:focus={handleDropdownFocusLoss}>
-          <button class="btn m-1" on:click={handleDropdownClick}>
+        <div class="dropdown relative" on:focus={handleDropdownFocusLoss}>
+          <button class="px-4 py-2 bg-blue-500 text-white rounded m-1" on:click={handleDropdownClick}>
               <h1>Panel Administracyjny</h1>
           </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
+          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 absolute z-100" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
             <li><a href="usuwanieUżytkowników"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Usuwanie Użytkowników</button></a></li>
             <li><a href="zmianaHaseł"><button class="px-4 py-2 bg-blue-500 text-white rounded mb-2">Zmiana danych Użytkowników</button></a></li>
           </ul>
         </div>
-      <a href="/signup"><button class="btn">Zarejestruj użytkownika</button></a>
+      <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
       {/if}
     </div>
     <div class="w-10 h-10 rounded-full bg-gray-300"><img src="user.png" alt="User"></div>
