@@ -3,7 +3,7 @@
   import flatpickr from "flatpickr";
   import "flatpickr/dist/flatpickr.css";
   import { enhance } from '$app/forms';
-    import { writable } from 'svelte/store';
+  import { writable } from 'svelte/store';
 
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
@@ -25,16 +25,8 @@
     return `${hours}:${minutes.toString().padStart(2, '0')}`;
   };
 
-  const showCustomDateRange = () => {
-    document.getElementById('customDateRange').style.display = 'block';
-  };
-
-  const hideCustomDateRange = () => {
-    document.getElementById('customDateRange').style.display = 'none';
-  };
-
-  const filterLogs = async (range: string) => {
-    showFiltered = true;
+  const filterLogs = (range: string) => {
+    showFiltered= true
     hideCustomDateRange();
     const now = new Date();
     let startDate: Date;
@@ -56,14 +48,12 @@
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     }
 
-    // Filtruj logi
     filteredLogowania = logowania.filter(log => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
-
-    // Obliczanie sumy godzin
-    totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+    
+  };
 
   const setupDatePickers = () => {
     flatpickr("#customStartDate", {
@@ -78,13 +68,22 @@
     });
   };
 
+  const showCustomDateRange = () => {
+    document.getElementById('customDateRange').style.display = 'block';
+    
+  };
+
+  const hideCustomDateRange = () => {
+    document.getElementById('customDateRange').style.display = 'none';
+  };
+
   onMount(() => {
     setupDatePickers();
+    
   });
 
   const applyCustomDateFilter = () => {
     filterLogs("custom");
-  };
   };
 
 </script>
@@ -106,7 +105,7 @@
     <input id="customStartDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
     <label for="customEndDate">Koniec:</label>
     <input id="customEndDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
-    <button class="px-4 py-2 bg-blue-500 text-white rounded" >Zastosuj</button>
+    <button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => applyCustomDateFilter()}>Zastosuj</button>
   </div>
 
   <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>

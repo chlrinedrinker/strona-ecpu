@@ -24,10 +24,5 @@
     </div>
   </div>
   <!-- Main Content -->
-
-
   </div>
 
-
-<style>
-</style>
