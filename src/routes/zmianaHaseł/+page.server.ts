@@ -1,7 +1,8 @@
 import { redirect, fail } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "../$types";
 import { lucia } from "$lib/server/auth";
-
+import { hash } from "@node-rs/argon2";
+import { PrismaClient } from "@prisma/client";
 interface Pracownik {
     _id: string;
     imie: string;
@@ -47,14 +48,28 @@ export const actions: Actions = {
 		return redirect(302, "/login");
 	},
     zmianaDanychUżytkownika: async (event) => {
+        let prisma = new PrismaClient();
         const data = await event.request.formData()
         console.log(data)
         const zmianaLogin = data.get("zmianaLogin")
-        const zmianaHasła = data.get("zmianaHasła")
+        const zmianaHasła = data.get("zmianaHasło")
+        const zmianaRanga = data.get("zmianaRanga")
         const zmianaStanowiska = data.get("zmianaStanowiska")
         const wybranyImie = data.get("imie")
         const wybranyNazwisko = data.get("nazwisko")
-        
+        const name = wybranyImie.toString()+"_"+wybranyNazwisko.toString()
+        let zmianaUSERS: { [key: string]: string} = {};
+        if (zmianaLogin != "" && zmianaLogin != null) {zmianaUSERS['username'] = zmianaLogin.toString()}
+        if (zmianaHasła != "" && zmianaHasła != null) {zmianaUSERS['hash_password'] = await hash(zmianaHasła.toString(),{
+            memoryCost: 19456,
+			timeCost: 2,
+			outputLen: 32,
+			parallelism: 1
+        })}
+        if (zmianaRanga != "" && zmianaRanga != null) {zmianaUSERS['role'] = zmianaRanga.toString()}
+        if(zmianaUSERS) {zmianaUSERS["name"] = name}
+
+        console.log(zmianaUSERS)
 
     }
 };

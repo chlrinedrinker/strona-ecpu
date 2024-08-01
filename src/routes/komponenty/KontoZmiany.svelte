@@ -25,6 +25,12 @@
         <input type="text" name="zmianaHasło" id="zmianaHasło">
         <label for="zmianaStanowiska">Zmiana Stanowiska</label>
         <input type="text" name="zmianiaStanowiska" id="zmianiaStanowiska">
+        <select name="zmianaRanga" id="zmianaRanga" class="w-full p-2 border border-gray-300 rounded">
+            <option value="">Brak Zmian</option>
+            <option value="0">Administrator</option>
+            <option value="1">Boss</option>
+            <option value="2">Użytkownik</option>
+        </select>
         <button type="submit">Zmień Dane</button>
     </form>
 </div>
