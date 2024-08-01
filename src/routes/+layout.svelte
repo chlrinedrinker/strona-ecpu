@@ -1,10 +1,9 @@
 <script>
   import "../app.css";
   import Navbar from './navbar/navbar.svelte'
-  import { enhance } from "$app/forms";
 </script>
 
-<container class="flex flex-col h-screen">
+<container class="flex flex-col h-screen relative">
   <!-- Navbar -->
   <Navbar/>
   <slot />
