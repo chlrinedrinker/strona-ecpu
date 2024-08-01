@@ -3,7 +3,6 @@
   import { isLoggedIn, userType, imieNazwisko } from './stores/stores';
   import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
-  import NavbarKalendarz from './komponenty/NavbarKalendarz.svelte';
 	import type { PageData } from './$types';
 	export let data : PageData;
  

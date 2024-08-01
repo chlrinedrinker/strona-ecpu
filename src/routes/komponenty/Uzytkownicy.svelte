@@ -39,6 +39,7 @@
 
     if (selectedUser) {
       try {
+        console.log("selected User")
         const response = await fetch(`/endpoints/CzasPracy?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
         if (!response.ok) {
           const errorText = await response.text();
@@ -47,7 +48,7 @@
           return;
         }
         logowania = await response.json();
-        filterLogs("month"); // Automatycznie filtruje logi po bieżącym miesiącu
+        
       } catch (err) {
         console.error('Błąd podczas ładowania logów:', err);
         error = 'Błąd podczas ładowania logów';
@@ -55,31 +56,7 @@
     }
   }
 
-  function filterLogs(range: string) {
-    const now = new Date();
-    let startDate: Date;
-    let endDate: Date = new Date(now);
-
-    if (range === "today") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    } else if (range === "week") {
-      const startOfWeek = new Date(now);
-      const dayOfWeek = startOfWeek.getDay() || 7;
-      startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + 1);
-      startDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
-    } else if (range === "month") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    }
-
-
-        // Filter logs based on the start and end date
-    logowania = logowania.filter(log => {
-      const logDate = new Date(log.date);
-      return logDate >= startDate && logDate <= endDate;
-    });
-  }
-
-  console.log($imieNazwisko)
+  
 
 
 

@@ -21,7 +21,7 @@
     <button class="btn">Kalendarz</button>
     <button class="btn">Raporty</button>
     <div class="flex items-center space-x-2">
-    <form method="post" use:enhance>
+    <form method="post" use:enhance action="?/wyloguj">
       <button class="btn">Wyloguj się</button>  
     </form>
       {#if $userType == 0}
