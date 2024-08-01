@@ -162,18 +162,9 @@
             <td>{log.exit_time}</td>
             <td>{log.hours}</td>
             <td>
-              <form class="flex items-center" 
-              action="?/saveComment" 
-              method="post"
-              use:enhance={({formData}) => {
-                formData.append("imie", selectedUser.imie)
-                formData.append("nazwisko", selectedUser.nazwisko)
-                formData.append("data", log.date)
-                formData.append("wejscie", log.entrence_time)
-              }}>
-                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz"/>
-                <button class="btn ml-2" type="submit">Zapisz</button>
-              </form>
+              <div class="comment-container">
+                <button class="btn ml-2" on:click={() => openModal(log)}>Zobacz komentarz</button>
+            </div>
             </td>
           </tr>
         {/each}
