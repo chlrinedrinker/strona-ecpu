@@ -28,6 +28,3 @@
 
   </div>
 
-
-<style>
-</style>

@@ -27,23 +27,23 @@
   </div>
   {#if $logged}
   <div class="flex items-center space-x-4">
-    <button class="btn">Organizacja</button>
-    <button class="btn">Raporty</button>
+    <button class="px-4 py-2 bg-blue-500 text-white rounded">Organizacja</button>
+    <button class="px-4 py-2 bg-blue-500 text-white rounded">Raporty</button>
     <div class="flex items-center space-x-2">
       <form method="post" use:enhance action="?/wyloguj">
-        <button class="btn">Wyloguj się</button>  
+        <button class="px-4 py-2 bg-blue-500 text-white rounded">Wyloguj się</button>  
       </form>
       {#if $userType == 0}
-        <div class="dropdown" on:focus={handleDropdownFocusLoss}>
-          <button class="btn m-1" on:click={handleDropdownClick}>
-              <h1>Panel Administracyjny</h1>
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
-            <li><button class="btn text-slate-300">Item 1</button></li>
-            <li><button class="btn text-slate-300">Item 2</button></li>
-          </ul>
-        </div>
-      <a href="/signup"><button class="btn">Zarejestruj użytkownika</button></a>
+      <div class="dropdown relative" on:focus={handleDropdownFocusLoss}>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded m-1" on:click={handleDropdownClick}>
+            <h1>Panel Administracyjny</h1>
+        </button>
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 absolute z-100" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
+            <li><button class="px-4 py-2 bg-blue-500 text-white rounded">Item 1</button></li>
+            <li><button class="px-4 py-2 bg-blue-500 text-white rounded">Item 2</button></li>
+        </ul>
+    </div>    
+      <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
       {/if}
     </div>
     <div class="w-10 h-10 rounded-full bg-gray-300"><img src="user.png" alt="User"></div>
@@ -51,9 +51,3 @@
   {/if}
 </div>
 
-
-<style>
-  .btn {
-    @apply px-4 py-2 bg-blue-500 text-white rounded;
-  }
-</style>
