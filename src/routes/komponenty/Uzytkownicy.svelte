@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import Uzytkownik from "./Uzytkownik.svelte";
   import ShowLogs from './ShowLogs.svelte';
   import { writable } from 'svelte/store';
-  import { fade, slide } from 'svelte/transition';
-  import { userType, imieNazwisko} from '../stores/stores';
+  import { slide } from 'svelte/transition';
   import NavbarKalendarz from './NavbarKalendarz.svelte';
   export let pracownicy;
 
@@ -22,8 +20,6 @@
   // Create a store to control visibility of ShowLogs
   const showLogs = writable(false);
 
-  // Fetch employees on component mount
-
   async function handleSelect(event: CustomEvent<Pracownik>) {
     const selected = event.detail;
 
@@ -39,7 +35,6 @@
 
     if (selectedUser) {
       try {
-        console.log("selected User")
         const response = await fetch(`/endpoints/CzasPracy?imie=${encodeURIComponent(selectedUser.imie)}&nazwisko=${encodeURIComponent(selectedUser.nazwisko)}`);
         if (!response.ok) {
           const errorText = await response.text();

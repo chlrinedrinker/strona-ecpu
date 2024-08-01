@@ -85,7 +85,7 @@ export const actions: Actions = {
 
 		// TODO: check if username is already used
 		const User = await prisma.user.create({ data: user})
-		console.log("Przypisane do Bazy")
+		console.log("Zarejestrowano użytkownika")
 		const session = await lucia.createSession(userId, {});
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {

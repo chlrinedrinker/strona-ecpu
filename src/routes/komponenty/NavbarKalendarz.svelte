@@ -63,42 +63,13 @@
         borderColor: backgroundColor
       };
     });
-
-    console.log('Updated Events:', options.events); // Debug output
   }
 </script>
 
 <div class="outer-container flex flex-col min-h-screen">
   <div class="header-container flex items-center justify-between p-4 relative bg-white">
-    <div class="calendar-container">
+    <div class="calendar-container w-full max-w-7xl mx-auto my-0 relative -left-1/10">
       <Calendar {plugins} {options} />
     </div>
   </div>
 </div>
-
-<style>
-  .outer-container {
-    @apply flex flex-col min-h-screen;
-  }
-  .header-container {
-    @apply flex items-center justify-between p-4 relative bg-white;
-  }
-  .calendar-container {
-    width: 120%; /* Increase width by 20% */
-    max-width: 1200px; /* Optional: Set a maximum width */
-    margin: 0 auto; /* Center the calendar horizontally */
-    position: relative;
-    left: -10%; /* Adjust the left position to compensate for the increased width */
-  }
-
-  /* Optional: Add styles for event colors */
-  .fc-event-darkblue {
-    background-color: rgb(168, 84, 102) !important;
-    border-color: rgb(168, 84, 102) !important;
-
-  }
-  .fc-event-blue {
-    background-color: blue !important;
-    border-color: blue !important;
-  }
-</style>

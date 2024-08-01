@@ -21,7 +21,6 @@ export async function POST({ request }) {
         
         // Find the user with the provided username and password
         const user = await collection.findOne({ imie: username, nazwisko: password }, { projections });
-        console.log(user);
 
         if (user) {
             // Return success message if the user is found

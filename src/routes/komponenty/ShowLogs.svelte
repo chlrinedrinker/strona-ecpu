@@ -4,6 +4,7 @@
   import "flatpickr/dist/flatpickr.css";
   import { enhance } from '$app/forms';
   import { writable } from 'svelte/store';
+  import { writable } from 'svelte/store';
 
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string, historia_komentarza?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
@@ -121,6 +122,15 @@
 
 
 <div class="p-4">
+  <div class="mb-4">
+    <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
+    <ul class="flex space-x-2">
+      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("today"); }}>Dzisiaj</button></li>
+      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("week"); }}>Tydzień</button></li>
+      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("month"); }}>Miesiąc</button></li>
+      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
+    </ul>
+
   <div class="date-filters mb-4">
       <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
       <ul class="flex space-x-2 justify-center">
@@ -133,14 +143,73 @@
   </div>
   
   <div id="customDateRange" style="display: none;" class="mt-4">
-      <label for="customStartDate">Początek:</label>
-      <input id="customStartDate" type="text" class="input mb-2" />
-      <label for="customEndDate">Koniec:</label>
-      <input id="customEndDate" type="text" class="input mb-2" />
-      <button class="btn" on:click={applyCustomDateFilter}>Zastosuj</button>
+    <label for="customStartDate">Początek:</label>
+    <input id="customStartDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
+    <label for="customEndDate">Koniec:</label>
+    <input id="customEndDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
+    <button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => applyCustomDateFilter()}>Zastosuj</button>
   </div>
 
   <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
+  <table class="wd-100 border-collapse">
+    <thead>
+      <tr>
+        <th class="bg-#f4f4f4">Data</th>
+        <th class="bg-#f4f4f4">Godzina wejścia</th>
+        <th class="bg-#f4f4f4">Godzina wyjścia</th>
+        <th class="bg-#f4f4f4">Godziny</th>
+        <th class="bg-#f4f4f4">Komentarz</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#if showFiltered}
+        {#each filteredLogowania as log}
+          <tr>
+            <td>{log.date}</td>
+            <td>{log.entrence_time}</td>
+            <td>{log.exit_time}</td>
+            <td>{log.hours}</td>
+            <td>
+              <form class="flex items-center" 
+              action="?/saveComment" 
+              method="post"
+              use:enhance={({formData}) => {
+                formData.append("imie", selectedUser.imie)
+                formData.append("nazwisko", selectedUser.nazwisko)
+                formData.append("data", log.date)
+                formData.append("wejscie", log.entrence_time)
+              }}>
+                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz"/>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
+              </form>
+            </td>
+          </tr>
+        {/each}
+      {:else}
+        {#each logowania as log}
+          <tr>
+            <td>{log.date}</td>
+            <td>{log.entrence_time}</td>
+            <td>{log.exit_time}</td>
+            <td>{log.hours}</td>
+            <td>
+              <form class="flex items-center" 
+              action="?/saveComment" 
+              method="post" 
+              use:enhance={({formData}) => {
+                formData.append("imie", selectedUser.imie)
+                formData.append("nazwisko", selectedUser.nazwisko)
+                formData.append("data", log.date)
+                formData.append("wejscie", log.entrence_time)
+              }}>
+                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz"/>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
+              </form>
+            </td>
+          </tr>
+        {/each}
+      {/if}
+    </tbody>
   <table>
       <thead>
           <tr>
