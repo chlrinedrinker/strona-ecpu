@@ -4,7 +4,7 @@
   import "flatpickr/dist/flatpickr.css";
   import { enhance } from '$app/forms';
   import { writable } from 'svelte/store';
-  import { writable } from 'svelte/store';
+  
 
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string, historia_komentarza?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
@@ -123,15 +123,7 @@
 
 <div class="p-4">
   <div class="mb-4">
-    <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
-    <ul class="flex space-x-2">
-      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("today"); }}>Dzisiaj</button></li>
-      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("week"); }}>Tydzień</button></li>
-      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => { filterLogs("month"); }}>Miesiąc</button></li>
-      <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
-    </ul>
-
-  <div class="date-filters mb-4">
+      <div class="date-filters mb-4">
       <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
       <ul class="flex space-x-2 justify-center">
           <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
@@ -154,11 +146,11 @@
   <table class="wd-100 border-collapse">
     <thead>
       <tr>
-        <th class="bg-#f4f4f4">Data</th>
-        <th class="bg-#f4f4f4">Godzina wejścia</th>
-        <th class="bg-#f4f4f4">Godzina wyjścia</th>
-        <th class="bg-#f4f4f4">Godziny</th>
-        <th class="bg-#f4f4f4">Komentarz</th>
+        <th>Data</th>
+        <th>Godzina wejścia</th>
+        <th>Godzina wyjścia</th>
+        <th>Godziny</th>
+        <th>Komentarz</th>
       </tr>
     </thead>
     <tbody>
@@ -180,79 +172,29 @@
                 formData.append("wejscie", log.entrence_time)
               }}>
                 <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz"/>
-                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
+                <button class="btn ml-2" type="submit">Zapisz</button>
               </form>
             </td>
           </tr>
         {/each}
       {:else}
         {#each logowania as log}
-          <tr>
-            <td>{log.date}</td>
-            <td>{log.entrence_time}</td>
-            <td>{log.exit_time}</td>
-            <td>{log.hours}</td>
-            <td>
-              <form class="flex items-center" 
-              action="?/saveComment" 
-              method="post" 
-              use:enhance={({formData}) => {
-                formData.append("imie", selectedUser.imie)
-                formData.append("nazwisko", selectedUser.nazwisko)
-                formData.append("data", log.date)
-                formData.append("wejscie", log.entrence_time)
-              }}>
-                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz"/>
-                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
-              </form>
-            </td>
-          </tr>
+        <tr>
+          <td>{log.date}</td>
+          <td>{log.entrence_time}</td>
+          <td>{log.exit_time}</td>
+          <td>{log.hours}</td>
+          <td>
+              <div class="comment-container">
+                  <button class="btn ml-2" on:click={() => openModal(log)}>Zobacz komentarz</button>
+              </div>
+          </td>
+      </tr>
         {/each}
       {/if}
     </tbody>
-  <table>
-      <thead>
-          <tr>
-              <th>Data</th>
-              <th>Godzina wejścia</th>
-              <th>Godzina wyjścia</th>
-              <th>Godziny</th>
-              <th>Komentarz</th>
-          </tr>
-      </thead>
-      <tbody>
-          {#if showFiltered}
-              {#each filteredLogowania as log}
-                  <tr>
-                      <td>{log.date}</td>
-                      <td>{log.entrence_time}</td>
-                      <td>{log.exit_time}</td>
-                      <td>{log.hours}</td>
-                      <td>
-                          <div class="comment-container justify-center">
-                              <button class="btn ml-2" on:click={() => openModal(log)}>Zobacz komentarz</button>
-                          </div>
-                      </td>
-                  </tr>
-              {/each}
-          {:else}
-              {#each logowania as log}
-                  <tr>
-                      <td>{log.date}</td>
-                      <td>{log.entrence_time}</td>
-                      <td>{log.exit_time}</td>
-                      <td>{log.hours}</td>
-                      <td>
-                          <div class="comment-container justify-center">
-                              <button class="btn ml-2" on:click={() => openModal(log)}>Zobacz komentarz</button>
-                          </div>
-                      </td>
-                  </tr>
-              {/each}
-          {/if}
-      </tbody>
   </table>
-
+  
   {#if $showModal}
     <div class="modal">
         <div class="modal-content">
@@ -292,8 +234,8 @@
             {/if}
         </div>
     </div>
-{/if}
-
+  {/if}
+  </div>
 </div>
 
 <style>
@@ -307,12 +249,12 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      text-align: center; /* Wyśrodkowanie zawartości tabeli */
+      text-align: center;
   }
   th, td {
       border: 1px solid #ddd;
       padding: 8px;
-      text-align: center; /* Wyśrodkowanie zawartości komórek */
+      text-align: center;
   }
   th {
       background-color: #f4f4f4;
@@ -323,7 +265,7 @@
   .comment-container {
       display: flex;
       align-items: center;
-      justify-content: center; /* Wyśrodkowanie przycisków i pola tekstowego */
+      justify-content: center;
   }
   .input {
       margin-right: 0.5rem;
@@ -334,7 +276,7 @@
   }
   .total-hours {
       font-weight: bold;
-      text-align: center; /* Wyśrodkowanie tekstu sumy godzin */
+      text-align: center;
   }
   .modal {
       display: flex;
@@ -374,5 +316,11 @@
       color: black;
       text-decoration: none;
       cursor: pointer;
+  }
+  .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
   }
 </style>
