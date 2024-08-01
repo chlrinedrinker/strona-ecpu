@@ -39,8 +39,8 @@
               <h1>Panel Administracyjny</h1>
           </button>
           <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" style:visibility={isDropdownOpen ? 'visible' : 'hidden'}>
-            <li><button class="btn text-slate-300">Item 1</button></li>
-            <li><button class="btn text-slate-300">Item 2</button></li>
+            <li><a href="usuwanieUżytkowników"><button class="btn text-slate-300">Usuwanie Użytkowników</button></a></li>
+            <li><a href="zmianaHaseł"><button class="btn text-slate-300">Zmiana danych Użytkowników</button></a></li>
           </ul>
         </div>
       <a href="/signup"><button class="btn">Zarejestruj użytkownika</button></a>
