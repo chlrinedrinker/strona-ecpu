@@ -46,13 +46,24 @@
       const endDateTime = `${log.date.split('T')[0]}T${log.exit_time}`;
       
       // Convert hours from hh:mm string to decimal
-      const hoursWorked = parseHoursFromString(log.hours);
-
+      const hoursWorked = Math.round(parseHoursFromString(log.hours));
       const dayOfWeek = new Date(log.date).getDay();
 
       // Determine event color based on hours
-      const backgroundColor = (hoursWorked < 8  && (dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4 )) || (hoursWorked < 9  && dayOfWeek === 1)|| (hoursWorked < 7  && dayOfWeek === 5)? 'darkblue' : 'blue'; // Customize colors as needed
+      let backgroundColor = '#3b82f6'
       
+      if(hoursWorked<8 && (dayOfWeek==2 || dayOfWeek==3 || dayOfWeek==4)) {
+        backgroundColor = '#d12e33'
+      }
+
+      else if(hoursWorked<9 && dayOfWeek==1) {
+        backgroundColor = '#d12e33'
+      }
+
+      else if(hoursWorked<7 && dayOfWeek==5) {
+        backgroundColor = '#d12e33'
+      }
+
       return {
         id: log._id,
         title: `Wejście: ${log.entrence_time} Wyjście: ${log.exit_time}`,
@@ -60,7 +71,6 @@
         end: endDateTime,
         allDay: false,
         backgroundColor: backgroundColor,
-        borderColor: backgroundColor
       };
     });
   }
