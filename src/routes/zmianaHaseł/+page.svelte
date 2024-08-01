@@ -20,9 +20,12 @@
     const showLogs = writable(false);
   
     async function handleSelect(event: CustomEvent<Pracownik>) {
+      console.log(event)
       const selected = event.detail;
+      console.log(event.detail)
+      console.log(selected)
   
-      if (selectedUser && selectedUser.imie === selected.imie && selectedUser.nazwisko === selected.nazwisko) {
+      if (selectedUser && selectedUser.imie === selected.imie && selectedUser.nazwisko === selected.nazwisko && selectedUser._id === selected._id) {
         showLogs.set(false); // Collapse the logs section
         selectedUser = null;
         logowania = [];
@@ -39,9 +42,10 @@
         <Uzytkownik 
           imie={user.imie} 
           nazwisko={user.nazwisko} 
-          stanowisko={user.stanowisko} 
+          stanowisko={user.stanowisko}
+          _id={user._id} 
           on:select={handleSelect}
-          selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
+          selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko && selectedUser._id === user._id} 
         />
       {/each}
     </div>

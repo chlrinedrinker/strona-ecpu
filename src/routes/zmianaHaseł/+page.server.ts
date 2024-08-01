@@ -57,6 +57,8 @@ export const actions: Actions = {
         const zmianaStanowiska = data.get("zmianaStanowiska")
         const wybranyImie = data.get("imie")
         const wybranyNazwisko = data.get("nazwisko")
+        const wybranyID = data.get("_id")
+        console.log(wybranyID)
         const name = wybranyImie.toString()+"_"+wybranyNazwisko.toString()
         let zmianaUSERS: { [key: string]: string} = {};
         if (zmianaLogin != "" && zmianaLogin != null) {zmianaUSERS['username'] = zmianaLogin.toString()}
@@ -67,9 +69,20 @@ export const actions: Actions = {
 			parallelism: 1
         })}
         if (zmianaRanga != "" && zmianaRanga != null) {zmianaUSERS['role'] = zmianaRanga.toString()}
-        if(zmianaUSERS) {zmianaUSERS["name"] = name}
-
-        console.log(zmianaUSERS)
-
+        const stworzUSERS = zmianaUSERS
+        stworzUSERS["id"] = wybranyID.toString() 
+        stworzUSERS["name"] = name
+        if(Object.keys(zmianaUSERS).length !== 0){
+            const updateUser = await prisma.user.upsert(
+                {
+                    where: {
+                        id: wybranyID,
+                        name: name
+                    },
+                    update: zmianaUSERS,
+                    create: zmianaUSERS
+                }
+            )
+        }
     }
 };

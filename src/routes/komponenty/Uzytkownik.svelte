@@ -4,13 +4,14 @@
   export let imie: string; // User's first name
   export let nazwisko: string; // User's last name
   export let stanowisko: string; // User's position
+  export let _id: string;
   export let selected: boolean = false; // Whether the user is selected
 
   const dispatch = createEventDispatcher(); // Event dispatcher for the select event
 
   // Handle user click to select the user
   function handleClick() {
-      dispatch('select', { imie, nazwisko, stanowisko });
+      dispatch('select', { imie, nazwisko, stanowisko, _id });
   }
 </script>
 

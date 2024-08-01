@@ -6,7 +6,7 @@ dotenv.config();
 
 // Define projections to only include specific fields
 let projections = {
-    _id: 0,
+    _id: 1,
     imie: 1,
     nazwisko: 1,
     stanowisko: 1,
