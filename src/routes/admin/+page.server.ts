@@ -8,7 +8,7 @@ export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
 		throw redirect(308, "/login");
 	}
-	else if(event.locals.user.role != 0) {throw redirect(308, "/login")}
+	else if(Number(event.locals.user.role) != 0) {throw redirect(308, "/login")}
 	return  {
 		user: event.locals.user
 	}

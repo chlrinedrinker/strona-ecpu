@@ -11,7 +11,7 @@
 
 </script>
 
-<div class="p-4">
+<div class="p-4 bg-white rounded-lg">
     <h2 class="mb-4">Wybrano: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
     <div class="mb-4">
       <form 
@@ -20,6 +20,7 @@
                 use:enhance={({formData}) => {
                   formData.append("imie", selectedUser.imie)
                   formData.append("nazwisko", selectedUser.nazwisko)
+                  formData.append("_id", selectedUser._id)
           }}>
           <label for="zmianaLogin" class="mb-2">Zmiana Login</label><br>
           <input type="text" name="zmianaLogin" id="zmianaLogin" class="mb-2" placeholder="{selectedUser.imie}"><br>
@@ -27,13 +28,13 @@
           <input type="password" name="zmianaHasło" id="zmianaHasło" class="mb-2" placeholder="********"><br>
           <label for="zmianaStanowiska" class="mb-2">Zmiana Stanowiska</label><br>
           <input type="text" name="zmianiaStanowiska" id="zmianiaStanowiska" class="mb-2" placeholder="{selectedUser.stanowisko}"><br>
-          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Zmień Dane</button><br>
-          <select name="zmianaRanga" id="zmianaRanga" class="w-full p-2 border border-gray-300 rounded">
+          <select name="zmianaRanga" id="zmianaRanga" class="w-100 p-2 border border-gray-300 rounded mb-2">
             <option value="">Brak Zmian</option>
             <option value="0">Administrator</option>
             <option value="1">Boss</option>
             <option value="2">Użytkownik</option>
-        </select>
+        </select><br>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Zmień Dane</button><br>
       </form>
   </div>
 </div>

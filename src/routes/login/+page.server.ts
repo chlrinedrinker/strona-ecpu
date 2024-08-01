@@ -72,7 +72,7 @@ export const actions: Actions = {
 				message: "Incorrect username or password"
 			});
 		}
-		ranga = existingUser.role;
+		ranga = Number(existingUser.role);
         // Create a session for the user
 		const session = await lucia.createSession(existingUser.id, {
 			ranga: ranga,

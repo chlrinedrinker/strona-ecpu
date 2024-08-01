@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { isLoggedIn, userType, imieNazwisko } from './stores/stores';
-  import ZakresDat from './komponenty/ZakresDat.svelte';
   import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
 	import type { PageData } from './$types';
 	export let data : PageData;
@@ -13,7 +12,6 @@
 </script>
 
 <div class="flex flex-grow">
-  <ZakresDat/>
 
   <div class="flex space-x-4">
     <!-- Users List -->
@@ -24,5 +22,7 @@
     </div>
   </div>
   <!-- Main Content -->
+
+
   </div>
 
