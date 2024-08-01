@@ -104,9 +104,9 @@
   <div class="date-filters mb-4">
     <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
     <ul class="flex space-x-2">
-      <li><button class="btn" on:click={() => { filterLogs("today"); showAllLogs(); }}>Dzisiaj</button></li>
-      <li><button class="btn" on:click={() => { filterLogs("week"); showAllLogs(); }}>Tydzień</button></li>
-      <li><button class="btn" on:click={() => { filterLogs("month"); showAllLogs(); }}>Miesiąc</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("today"); }}>Dzisiaj</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("week"); }}>Tydzień</button></li>
+      <li><button class="btn" on:click={() => { filterLogs("month"); }}>Miesiąc</button></li>
       <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
     </ul>
   </div>
@@ -197,13 +197,5 @@
   }
   .date-filters {
     margin-bottom: 1rem;
-  }
-  .logs-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
-  }
-  .logs-container.show {
-    max-height: auto; /* Adjust based on expected content height */
   }
 </style>
