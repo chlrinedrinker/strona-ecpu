@@ -1,28 +1,50 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
 
-  export let imie: string; // User's first name
-  export let nazwisko: string; // User's last name
-  export let stanowisko: string; // User's position
+  export let imie: string;
+  export let nazwisko: string;
+  export let stanowisko: string;
   export let _id: string;
-  export let selected: boolean = false; // Whether the user is selected
+  export let selected: boolean = false;
+  export let active: boolean = false;
 
-  const dispatch = createEventDispatcher(); // Event dispatcher for the select event
+  const dispatch = createEventDispatcher();
 
-  // Handle user click to select the user
   function handleClick() {
-      dispatch('select', { imie, nazwisko, stanowisko, _id });
+    dispatch('select', { imie, nazwisko, stanowisko, _id });
   }
 </script>
 
-<!-- User button -->
 <button 
   type="button" 
   class="flex items-center w-full p-2 space-x-2 border-b cursor-pointer text-left object-fill width {selected ? 'border-blue-500' : ''}" 
   on:click={handleClick}>
-  <img src="/user.png" alt="person" class="w-10 h-10 rounded-full bg-gray-300">
+  <div class="relative">
+    <img src="/user.png" alt="person" class="w-10 h-10 rounded-full bg-gray-300">
+    {#if active}
+      <span class="absolute right-0 bottom-0 w-3 h-3 bg-green-500 rounded-full border border-white"></span>
+    {/if}
+  </div>
   <div>
-      <div class="text-sm font-semibold">{imie} {nazwisko}</div>
-      <div class="text-xs text-gray-500">{stanowisko}</div>
+    <div class="text-sm font-semibold">{imie} {nazwisko}</div>
+    <div class="text-xs text-gray-500">{stanowisko}</div>
   </div>
 </button>
+
+<style>
+  .absolute {
+    position: absolute;
+  }
+  .bg-green-500 {
+    background-color: #48bb78;
+  }
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  .border {
+    border-width: 1px;
+  }
+  .border-white {
+    border-color: #ffffff;
+  }
+</style>
