@@ -13,13 +13,13 @@
 	on:click|self={() => dialog.close()}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click|stopPropagation>
+	<div class="flex flex-col items-center justify-center" on:click|stopPropagation>
 		<slot name="header" />
 		<hr />
 		<slot />
 		<hr />
 		<!-- svelte-ignore a11y-autofocus -->
-		<button autofocus on:click={() => dialog.close()}>Nie</button>
+		<button class="px-4 py-2 bg-blue-500 text-white rounded my-2" autofocus on:click={() => dialog.close()}>Nie</button>
 	</div>
 </dialog>
 

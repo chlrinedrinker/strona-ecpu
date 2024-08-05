@@ -56,16 +56,16 @@
     <div class="flex-grow items-center justify-center bg-gray-100">
       <h1 class="text-center mb-4 text-5xl font-bold p-6">Panel administratora</h1>
     {#if selectedUser}
-    <div transition:slide={{ duration: 300 }} class="flex items-center justify-center">
+    <div transition:slide={{ duration: 300 }} class="flex flex-col items-center justify-center">
       <KontoZmiany selectedUser={selectedUser}/>
-      <button on:click={() => (showModal = true)}>Usuń Użytkownika</button>
+      <button class="px-4 py-2 bg-red-500 text-white rounded my-2" on:click={() => (showModal = true)}>Usuń Użytkownika</button>
       <Modal bind:showModal>
         <h1>Czy na pewno chcesz usunąć użytkownika?</h1>
         <form action="?/Delete" method="post" use:enhance={({formData}) => {
           formData.append("imie", selectedUser.imie)
           formData.append("nazwisko", selectedUser.nazwisko)
         }}>
-          <button type="submit" class="">Tak</button>
+          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded my-2">Tak</button>
         </form>
       </Modal>
     </div>
