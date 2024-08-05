@@ -4,6 +4,8 @@
     import { writable } from 'svelte/store';
     import { slide } from 'svelte/transition';
     import type { PageData } from '../$types';
+    import { enhance } from '$app/forms';
+    import Modal from '../komponenty/Modal.svelte';
     export let data: PageData;
     interface Pracownik {
       _id: string;
@@ -12,6 +14,7 @@
       stanowisko: string;
     }
   
+    let showModal = false
     let logowania: { date: string; entrence_time: string; exit_time: string; hours: number }[] = [];
   
     let selectedUser: Pracownik | null = null; // Currently selected user
@@ -53,11 +56,18 @@
     <div class="flex-grow items-center justify-center bg-gray-100">
       <h1 class="text-center mb-4 text-5xl font-bold p-6">Panel administratora</h1>
     {#if selectedUser}
-    <div transition:slide={{ duration: 300 }} class="flex items-center justify-center">
+    <div transition:slide={{ duration: 300 }} class="flex flex-col items-center justify-center">
       <KontoZmiany selectedUser={selectedUser}/>
-      <form action="?/Delete" method="post">
-        <button type="submit" class="">Usun Użytkownika</button>
-      </form>
+      <button class="px-4 py-2 bg-red-500 text-white rounded my-2" on:click={() => (showModal = true)}>Usuń Użytkownika</button>
+      <Modal bind:showModal>
+        <h1>Czy na pewno chcesz usunąć użytkownika?</h1>
+        <form action="?/Delete" method="post" use:enhance={({formData}) => {
+          formData.append("imie", selectedUser.imie)
+          formData.append("nazwisko", selectedUser.nazwisko)
+        }}>
+          <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded my-2">Tak</button>
+        </form>
+      </Modal>
     </div>
     {/if}
     </div>
