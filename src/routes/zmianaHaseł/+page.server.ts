@@ -2,7 +2,7 @@ import { redirect, fail } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "../$types";
 import { lucia } from "$lib/server/auth";
 import { hash } from "@node-rs/argon2";
-import { _login } from "$db/mongo";
+import { _login, _czas_pracy, _pracownicy } from "$db/mongo";
 interface Pracownik {
     _id: string;
     imie: string;
@@ -56,8 +56,6 @@ export const actions: Actions = {
         const zmianaStanowiska = data.get("zmianaStanowiska")
         const wybranyImie = data.get("imie")
         const wybranyNazwisko = data.get("nazwisko")
-        const wybranyID = data.get("_id")
-        console.log(wybranyID)
         const name = wybranyImie.toString()+"_"+wybranyNazwisko.toString()
         let zmianaUSERS: { [key: string]: string} = {};
         if (zmianaLogin != "" && zmianaLogin != null) {zmianaUSERS['username'] = zmianaLogin.toString()}
@@ -80,5 +78,15 @@ export const actions: Actions = {
                 }
             )
         }
+    },
+    Delete: async (event) => {
+        const data = await event.request.formData()
+        console.log(data)
+        const wybranyImie = data.get("imie")
+        const wybranyNazwisko = data.get("nazwisko")
+        const ImieNazwisko = wybranyImie + "_" + wybranyNazwisko
+        await _czas_pracy.dropCollection(ImieNazwisko)
+        await _pracownicy.collection("PracownicyID").deleteOne({'imie': wybranyImie, 'nazwisko': wybranyNazwisko})
+        await _login.collection("User").deleteOne({'name': ImieNazwisko})
     }
 };

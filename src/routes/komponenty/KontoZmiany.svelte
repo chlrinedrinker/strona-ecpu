@@ -20,7 +20,6 @@
                 use:enhance={({formData}) => {
                   formData.append("imie", selectedUser.imie)
                   formData.append("nazwisko", selectedUser.nazwisko)
-                  formData.append("_id", selectedUser._id)
           }}>
           <label for="zmianaLogin" class="mb-2">Zmiana Login</label><br>
           <input type="text" name="zmianaLogin" id="zmianaLogin" class="mb-2" placeholder="{selectedUser.imie}"><br>
