@@ -24,6 +24,7 @@
   let selectedUser: Pracownik | null = null;
   let error: string | null = null;
   const showLogs = writable(false);
+  const isLoading = writable(true); // Loading state
 
   async function fetchLogsForUser(user: Pracownik) {
     try {
@@ -75,22 +76,27 @@
       allLogs[user._id] = await fetchLogsForUser(user);
     }
     logowaniaStore.set(allLogs);
+    isLoading.set(false); // Set loading to false when done
   }
 
   fetchAllLogs();
 </script>
 
 <div class="w-64 overflow-scroll h-screen">
-  {#each pracownicy as user}
-    <Uzytkownik 
-      imie={user.imie} 
-      nazwisko={user.nazwisko} 
-      stanowisko={user.stanowisko} 
-      on:select={handleSelect}
-      selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
-      active={$logowaniaStore[user._id] && isUserActive($logowaniaStore[user._id])} 
-    />
-  {/each}
+  {#if $isLoading}
+    <div>Loading...</div>
+  {:else}
+    {#each pracownicy as user}
+      <Uzytkownik 
+        imie={user.imie} 
+        nazwisko={user.nazwisko} 
+        stanowisko={user.stanowisko} 
+        on:select={handleSelect}
+        selected={selectedUser && selectedUser.imie === user.imie && selectedUser.nazwisko === user.nazwisko} 
+        active={$logowaniaStore[user._id] && isUserActive($logowaniaStore[user._id])} 
+      />
+    {/each}
+  {/if}
 </div>
 
 {#if selectedUser}
