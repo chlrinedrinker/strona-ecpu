@@ -137,15 +137,15 @@
 
 <div class="p-4">
   <div class="mb-4">
-      <div class="date-filters mb-4">
+      <div class="mb-4">
       <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
       <ul class="flex space-x-2 justify-center">
-          <li><button class="btn" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
-          <li><button class="btn" on:click={() => filterLogs("week")}>Tydzień</button></li>
-          <li><button class="btn" on:click={() => filterLogs("month")}>Miesiąc</button></li>
-          <li><button class="btn" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
+          <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
+          <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("week")}>Tydzień</button></li>
+          <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("month")}>Miesiąc</button></li>
+          <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
       </ul>
-      <p class="total-hours mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
+      <p class="font-bold text-center mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
   </div>
   
   <div id="customDateRange" style="display: none;" class="mt-4">
@@ -157,7 +157,7 @@
   </div>
 
   <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
-  <table class="wd-100 border-collapse">
+  <table class="wd-100 border-collapse mt-4">
     <thead>
       <tr>
         <th>Data</th>
@@ -176,8 +176,8 @@
             <td>{log.exit_time}</td>
             <td>{log.hours}</td>
             <td>
-              <div class="comment-container">
-                <button class="btn comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+              <div class="flex justify-center items-center">
+                <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
               </div>
             </td>
           </tr>
@@ -190,8 +190,8 @@
           <td>{log.exit_time}</td>
           <td>{log.hours}</td>
           <td>
-              <div class="comment-container">
-                  <button class="btn comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+              <div class="flex justify-center items-center">
+                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
               </div>
           </td>
       </tr>
@@ -201,22 +201,22 @@
   </table>
   
   {#if $showModal}
-    <div class="modal">
-        <div class="modal-content">
-            <span class="close" on:click={closeModal}>&times;</span>
-            <h2><strong>Komentarz</strong></h2>
+    <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
+        <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">
+            <span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer" on:click={closeModal}>&times;</span>
+            <h2 class="mt-0"><strong>Komentarz</strong></h2>
             <form action="?/saveComment" method="post" use:enhance={({formData}) => {
                 formData.append("imie", selectedUser.imie);
                 formData.append("nazwisko", selectedUser.nazwisko);
                 formData.append("data", $currentLog.date);
                 formData.append("wejscie", $currentLog.entrence_time);
             }}>
-                <input type="text" class="input" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
-                <button class="btn ml-2" type="submit">Zapisz</button>
+                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
+                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
             </form>
             <h3><strong>Historia komentarzy:</strong></h3>
             {#if $modalHistory}
-                <table>
+                <table class="w-full border-collapse mt-4 text-center">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -235,7 +235,7 @@
                     </tbody>
                 </table>
             {:else}
-                <p>Brak historii komentarzy</p>
+                <p class="mx-2 my-0">Brak historii komentarzy</p>
             {/if}
         </div>
     </div>
@@ -244,88 +244,10 @@
 </div>
 
 <style>
-  .btn {
-      @apply px-4 py-2 bg-blue-500 text-white rounded;
-  }
-  .input {
-      @apply w-full px-4 py-2 border rounded;
-  }
-  table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      text-align: center;
-  }
   th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
+      @apply border border-gray-300 p-2 text-center;
   }
   th {
-      background-color: #f4f4f4;
-  }
-  .ml-2 {
-      margin-left: 0.5rem;
-  }
-  .comment-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-  .input {
-      margin-right: 0.5rem;
-      flex: 1;
-  }
-  .date-filters {
-      margin-bottom: 1rem;
-  }
-  .total-hours {
-      font-weight: bold;
-      text-align: center;
-  }
-  .modal {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-  }
-  .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 300px;
-      border-radius: 8px;
-  }
-  .modal-content h2 {
-      margin-top: 0;
-  }
-  .modal-content p {
-      margin: 0.5rem 0;
-  }
-  .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-  }
-  .close:hover,
-  .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-  }
-  .form-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      @apply bg-gray-200
   }
 </style>

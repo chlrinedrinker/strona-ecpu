@@ -28,8 +28,8 @@
     eventDidMount: (info: any) => {
       // Używamy Tippy.js do wyświetlania tooltipów z niestandardowym stylem
       tippy(info.el, {
-        content: `<div class="tooltip-content">
-                    <h3 class="tooltip-header">Czas pracy</h3>
+        content: `<div class="p-2.5">
+                    <h3 class="text-base font-bold mb-1.5">Czas pracy</h3>
                     <p>Wejście: ${info.event.extendedProps.entrence_time}</p>
                     <p>Wyjście: ${info.event.extendedProps.exit_time}</p>
                   </div>`,
@@ -97,22 +97,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .tippy-box[data-theme~='custom'] {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .tooltip-content {
-    padding: 10px;
-  }
-
-  .tooltip-header {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-</style>
