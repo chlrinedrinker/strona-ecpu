@@ -44,8 +44,8 @@
   }
 
   function isUserActive(logs: Logowanie[]) {
-    const today = '2024-07-29'//new Date().toISOString().split('T')[0];
-    return logs.some(log => log.date === today && log.entrence_time === log.exit_time);
+    const today = new Date().toISOString().split('T')[0];
+    return logs.some(log => log.date === today && log.exit_time === 'Obecny');
   }
 
   async function handleSelect(event: CustomEvent<Pracownik>) {
