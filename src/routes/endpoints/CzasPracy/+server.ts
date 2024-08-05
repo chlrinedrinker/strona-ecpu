@@ -39,13 +39,11 @@ export async function GET({ url }: { url: URL }) {
         const seen = new Set();
         
         for (const log of logi) {
-            if (!seen.has(log.date)) {
-                seen.add(log.date);
-                uniqueLogi.push({
-                    ...log,
-                    hours: convertDecimalHoursToTime(log.hours) // Convert hours format
-                })
-            }
+            
+            uniqueLogi.push({
+                ...log,
+                hours: convertDecimalHoursToTime(log.hours) // Convert hours format
+            })
         }
 
         // Return the unique logs

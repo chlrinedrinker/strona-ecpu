@@ -40,14 +40,13 @@ export const actions: Actions = {
 				message: "Invalid password"
 			});
 		}
-
         // Find user in the database
 		const existingUser = await prisma.user.findUnique({
 			where: {
 				username: username
 			},
 		});
-		
+		console.log(existingUser)
 
         // Check if user exists
 		if (!existingUser) {
@@ -55,7 +54,7 @@ export const actions: Actions = {
 				message: "Incorrect username or password"
 			});
 		}
-		
+	
 
         // Verify the password
 		const validPassword = await verify(existingUser.hash_password, password, {

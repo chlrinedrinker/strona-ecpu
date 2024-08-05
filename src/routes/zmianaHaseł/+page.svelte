@@ -55,6 +55,9 @@
     {#if selectedUser}
     <div transition:slide={{ duration: 300 }} class="flex items-center justify-center">
       <KontoZmiany selectedUser={selectedUser}/>
+      <form action="?/Delete" method="post">
+        <button type="submit" class="">Usun Użytkownika</button>
+      </form>
     </div>
     {/if}
     </div>

@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 const client = new MongoClient(MONGO_URL);
 export const _pracownicy = client.db('pracownicy')
 export const _czas_pracy = client.db('czas_pracy')
+export const _login = client.db('login')
 
 // connect to the database
 export async function connect(): Promise<void> {

@@ -2,7 +2,7 @@ import { redirect, fail } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "../$types";
 import { lucia } from "$lib/server/auth";
 import { hash } from "@node-rs/argon2";
-import { PrismaClient } from "@prisma/client";
+import { _login } from "$db/mongo";
 interface Pracownik {
     _id: string;
     imie: string;
@@ -48,7 +48,6 @@ export const actions: Actions = {
 		return redirect(302, "/login");
 	},
     zmianaDanychUżytkownika: async (event) => {
-        let prisma = new PrismaClient();
         const data = await event.request.formData()
         console.log(data)
         const zmianaLogin = data.get("zmianaLogin")
@@ -69,18 +68,15 @@ export const actions: Actions = {
 			parallelism: 1
         })}
         if (zmianaRanga != "" && zmianaRanga != null) {zmianaUSERS['role'] = zmianaRanga.toString()}
-        const stworzUSERS = zmianaUSERS
-        stworzUSERS["id"] = wybranyID.toString() 
-        stworzUSERS["name"] = name
+        console.log(zmianaUSERS)
         if(Object.keys(zmianaUSERS).length !== 0){
-            const updateUser = await prisma.user.upsert(
+            _login.collection("User").updateOne(
+                {name: name},
                 {
-                    where: {
-                        id: wybranyID,
-                        name: name
-                    },
-                    update: zmianaUSERS,
-                    create: zmianaUSERS
+                    $set: zmianaUSERS
+                },
+                {
+                    upsert: true
                 }
             )
         }
