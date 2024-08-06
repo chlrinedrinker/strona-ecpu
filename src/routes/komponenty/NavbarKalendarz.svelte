@@ -24,6 +24,7 @@
     themeSystem: 'bootstrap',
     editable: true,
     selectable: true,
+    hiddenDays: [0, 6], // Ukryj sobotę (6) i niedzielę (0)
     events: [],
     eventDidMount: (info: any) => {
       // Używamy Tippy.js do wyświetlania tooltipów z niestandardowym stylem
@@ -90,9 +91,28 @@
   }
 </script>
 
-<div class="outer-container flex flex-col min-h-screen">
-  <div class="header-container flex items-center justify-between p-4 relative bg-white">
-    <div class="calendar-container w-full max-w-7xl mx-auto my-0 relative -left-1/10">
+<style>
+  .calendar-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .outer-container {
+    height: 100vh;
+  }
+
+  .fc-timegrid-slot {
+    min-width: 150px; /* Zmieniaj wartość według potrzeb */
+  }
+
+  .fc-daygrid-day {
+    min-width: 150px; /* Zmieniaj wartość według potrzeb */
+  }
+</style>
+
+<div class="outer-container flex flex-col">
+  <div class="header-container flex items-center justify-between p-4 bg-white">
+    <div class="calendar-container">
       <Calendar {plugins} {options} />
     </div>
   </div>
