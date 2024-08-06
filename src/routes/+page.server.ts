@@ -41,7 +41,6 @@ export const load: PageServerLoad = async (event) => {
       activeUsers = tempPracownicy.filter((obj) => {
         return obj.active === "Obecny";
       });
-      console.log(activeUsers);
     } else {
       error = "Failed to load employees"; // Set error message if the request fails
     }

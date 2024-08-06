@@ -5,13 +5,14 @@
     import { slide } from "svelte/transition";
     import NavbarKalendarz from "./NavbarKalendarz.svelte";
     export let pracownicy;
-    export let aktywniPracownicy;
+    export let aktywniPracownicy: Pracownik[];
 
     interface Pracownik {
         _id: string;
         imie: string;
         nazwisko: string;
         stanowisko: string;
+        active: string;
     }
 
     interface Logowanie {
@@ -48,11 +49,10 @@
         }
     }
 
-    function isUserActive(logs: Logowanie[]) {
-        const today = new Date().toISOString().split("T")[0];
-        return logs.some(
-            (log) => log.date === today && log.exit_time === "Obecny",
-        );
+    function isUserActive(user: Pracownik) {
+        return aktywniPracownicy.some((use) => {
+            return use["_id"] == user["_id"];
+        });
     }
 
     async function handleSelect(event: CustomEvent<Pracownik>) {
@@ -79,7 +79,6 @@
             });
         }
     }
-    logowaniaStore.set(aktywniPracownicy);
     // Fetch logs for all users on component load
 </script>
 
@@ -96,7 +95,7 @@
                 selected={selectedUser &&
                     selectedUser.imie === user.imie &&
                     selectedUser.nazwisko === user.nazwisko}
-                active={($logowaniaStore[user._id].active = "Obecny")}
+                active={isUserActive(user)}
             />
         {/each}
     {/if}
