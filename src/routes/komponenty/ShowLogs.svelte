@@ -322,9 +322,6 @@
           </div>
       </div>
       {/if} 
-    </div>
-    </div>
-  </div>
   {/if}
   {#if $showReportModal}
     <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
