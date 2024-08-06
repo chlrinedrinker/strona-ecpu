@@ -10,7 +10,7 @@
   import { generatePDF } from './pdfUtils.js';
 
   
-  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string, historia_komentarza?: string }[] = [];
+  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; komentarz?: string, historia_komentarza?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
 
   // Tablica miesięcy
@@ -42,7 +42,7 @@
     const modalContent = writable("");
     const modalDate = writable("");
     const modalHistory = writable("");
-    const currentLog = writable({ _id: "", date: "", entrence_time: "", exit_time: "", hours: "", comment: "", historia_komentarza: "" });
+    const currentLog = writable({ _id: "", date: "", entrence_time: "", exit_time: "", hours: "", komentarz: "", historia_komentarza: "" });
     const editField = writable("");
     const newValue = writable("");
 
@@ -217,7 +217,7 @@
               <td>{log.hours}</td>
               <td>
                 <div class="flex justify-center items-center">
-                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
                 </div>
               </td>
             </tr>
@@ -231,7 +231,7 @@
             <td>{log.hours}</td>
             <td>
                 <div class="flex justify-center items-center">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.comment || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
                 </div>
             </td>
           </tr>
@@ -242,87 +242,91 @@
 
     {#if $showModal}
     <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
-        <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">
-          <button on:click={closeModal}><span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span></button>
-          <h2 class="mt-0"><strong>Komentarz</strong></h2>
-            <form action="?/saveComment" method="post" use:enhance={({formData}) => {
-                formData.append("imie", selectedUser.imie);
-                formData.append("nazwisko", selectedUser.nazwisko);
-                formData.append("data", $currentLog.date);
-                formData.append("wejscie", $currentLog.entrence_time);
-            }}>
-                <input type="text" class="w-full px-4 py-2 border rounded mr-2 mb-2 flex-1" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
-                <button class="w-fullpx-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-            </form>
-            <h3><strong>Historia komentarzy:</strong></h3>
-            {#if $modalHistory}
-                <table class="w-full border-collapse mt-4 text-center">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Czas</th>
-                            <th>Komentarz</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each parseHistory($modalHistory) as entry}
-                            <tr>
-                                <td>{entry.date}</td>
-                                <td>{entry.time}</td>
-                                <td>{entry.comment}</td>
-                            </tr>
-                        {/each}
-                    </tbody>
-                </table>
-            {:else}
-                <p class="mx-2 my-0">Brak historii komentarzy</p>
-            {/if}
+        <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-full max-w-4xl rounded-lg">
+            <button on:click={closeModal}><span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span></button>
+            <div class="flex mt-4 space-x-4">
+                <div class="w-1/2">
+                        <h2 class="mt-0"><strong>Komentarz</strong></h2>
+                <form action="?/saveComment" method="post" use:enhance={({ formData }) => {
+                    formData.append("imie", selectedUser.imie);
+                    formData.append("nazwisko", selectedUser.nazwisko);
+                    formData.append("data", $currentLog.date);
+                    formData.append("wejscie", $currentLog.entrence_time);
+                }}>
+                    <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-4" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
+                    <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                </form>
+                    <h3><strong>Historia komentarzy:</strong></h3>
+                    {#if $modalHistory}
+                        <table class="w-full border-collapse mt-4 text-center">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Czas</th>
+                                    <th>Komentarz</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {#each parseHistory($modalHistory) as entry}
+                                    <tr>
+                                        <td>{entry.date}</td>
+                                        <td>{entry.time}</td>
+                                        <td>{entry.comment}</td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    {:else}
+                        <p class="mx-2 my-0">Brak historii komentarzy</p>
+                    {/if}
+                </div>
+                {#if $userType == 0}
+                <div class="w-1/2">
+                    <h4><strong>Edycja godzin:</strong></h4>
+                    <div class="mb-4">
+                        <p class="mx-2 my-0">Godzina wejścia</p>
+
+                            <form action="?/editEntrenceHours" method="post" use:enhance={({ formData }) => {
+                                formData.append("imie", selectedUser.imie);
+                                formData.append("nazwisko", selectedUser.nazwisko);
+                                formData.append("data", $currentLog.date);
+                                formData.append("wyjscie", $currentLog.exit_time);
+                            }}>
+                                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="entrance_time" bind:value={$currentLog.entrence_time} />
+                                <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                            </form>
+
+                    </div>
+                    <div class="mb-4">
+                        <p class="mx-2 my-0">Godzina wyjścia</p>
+                        <form action="?/editExitHours" method="post" use:enhance={({ formData }) => {
+                            formData.append("imie", selectedUser.imie);
+                            formData.append("nazwisko", selectedUser.nazwisko);
+                            formData.append("data", $currentLog.date);
+                            formData.append("wejscie", $currentLog.entrence_time);
+                        }}>
+                            <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="exit_time" bind:value={$currentLog.exit_time} />
+                            <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                        </form>
+                    </div>
+                    <div>
+                        <p class="mx-2 my-0">Suma godzin</p>
+                        <form action="?/editHours" method="post" use:enhance={({ formData }) => {
+                            formData.append("imie", selectedUser.imie);
+                            formData.append("nazwisko", selectedUser.nazwisko);
+                            formData.append("data", $currentLog.date);
+                            formData.append("wejscie", $currentLog.entrence_time);
+                        }}>
+                            <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godziny" name="hours" bind:value={$currentLog.hours} />
+                            <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                        </form>
+                    </div>
+                </div>
+                {/if}
+            </div>
         </div>
-      </div>
-      {#if $userType == 0}
-      <div class="w-1/2">
-          <h4><strong>Edycja godzin:</strong></h4>
-          <div class="mb-4">
-              <p class="mx-2 my-0">Godzina wejścia</p>
-              
-                  <form action="?/editEntrenceHours" method="post" use:enhance={({ formData }) => {
-                      formData.append("imie", selectedUser.imie);
-                      formData.append("nazwisko", selectedUser.nazwisko);
-                      formData.append("data", $currentLog.date);
-                      formData.append("wyjscie", $currentLog.exit_time);
-                  }}>
-                      <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="entrance_time" bind:value={$currentLog.entrence_time} />
-                      <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-                  </form>
-              
-          </div>
-          <div class="mb-4">
-              <p class="mx-2 my-0">Godzina wyjścia</p>
-              <form action="?/editExitHours" method="post" use:enhance={({ formData }) => {
-                  formData.append("imie", selectedUser.imie);
-                  formData.append("nazwisko", selectedUser.nazwisko);
-                  formData.append("data", $currentLog.date);
-                  formData.append("wejscie", $currentLog.entrence_time);
-              }}>
-                  <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="exit_time" bind:value={$currentLog.exit_time} />
-                  <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-              </form>
-          </div>
-          <div>
-              <p class="mx-2 my-0">Suma godzin</p>
-              <form action="?/editHours" method="post" use:enhance={({ formData }) => {
-                  formData.append("imie", selectedUser.imie);
-                  formData.append("nazwisko", selectedUser.nazwisko);
-                  formData.append("data", $currentLog.date);
-                  formData.append("wejscie", $currentLog.entrence_time);
-              }}>
-                  <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godziny" name="hours" bind:value={$currentLog.hours} />
-                  <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-              </form>
-          </div>
-      </div>
-      {/if} 
-  {/if}
+    </div>
+{/if}
   {#if $showReportModal}
     <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
         <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">
