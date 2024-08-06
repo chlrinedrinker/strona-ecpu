@@ -48,5 +48,8 @@
 		"nodemailer": "^6.9.13",
 		"pdfmake": "^0.2.10",
 		"tippy.js": "^6.3.7"
+	},
+	"engines": {
+		"node": "18.18.0"
 	}
 }
