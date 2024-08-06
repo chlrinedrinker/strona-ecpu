@@ -1,28 +1,24 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { isLoggedIn, userType, imieNazwisko } from './stores/stores';
-  import Uzytkownicy from './komponenty/Uzytkownicy.svelte'
-	import type { PageData } from './$types';
-	export let data : PageData;
- 
- onMount(() => {
-  $isLoggedIn = true;
-  $userType = data.session.ranga;
- })
+    import { onMount } from "svelte";
+    import { isLoggedIn, userType, imieNazwisko } from "./stores/stores";
+    import Uzytkownicy from "./komponenty/Uzytkownicy.svelte";
+    import type { PageData } from "./$types";
+    export let data: PageData;
+
+    onMount(() => {
+        $isLoggedIn = true;
+        $userType = data.session!.ranga;
+    });
 </script>
 
 <div class="flex flex-grow">
-
-  <div class="flex space-x-4">
-    <!-- Users List -->
-    <Uzytkownicy pracownicy={data.pracownicy} />
-    <!-- Schedule -->
-    <div class="flex-grow">
-      <!-- Render schedule based on the user's data -->
+    <div class="flex space-x-4">
+        <!-- Users List -->
+        <Uzytkownicy pracownicy={data.pracownicy} />
+        <!-- Schedule -->
+        <div class="flex-grow">
+            <!-- Render schedule based on the user's data -->
+        </div>
     </div>
-  </div>
-  <!-- Main Content -->
-
-
-  </div>
-
+    <!-- Main Content -->
+</div>
