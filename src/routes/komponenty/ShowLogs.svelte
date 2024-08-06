@@ -114,7 +114,7 @@
 
   const openModal = (log) => {
       currentLog.set(log);
-      modalContent.set(log.comment || "Brak komentarza");
+      modalContent.set(log.komentarz || "Brak komentarza");
       modalDate.set(log.date);
       modalHistory.set(log.historia_komentarza || "Brak historii komentarzy");
       showModal.set(true);
