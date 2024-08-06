@@ -49,7 +49,6 @@ export const actions: Actions = {
 	},
     zmianaDanychUżytkownika: async (event) => {
         const data = await event.request.formData()
-        console.log(data)
         const zmianaLogin = data.get("zmianaLogin")
         const zmianaHasła = data.get("zmianaHasło")
         const zmianaRanga = data.get("zmianaRanga")
@@ -65,8 +64,7 @@ export const actions: Actions = {
 			outputLen: 32,
 			parallelism: 1
         })}
-        if (zmianaRanga != "" && zmianaRanga != null) {zmianaUSERS['role'] = zmianaRanga.toString()}
-        console.log(zmianaUSERS)
+        if (zmianaRanga != "" && zmianaRanga != null) {zmianaUSERS['role'] = zmianaRanga.toString()}        
         if(Object.keys(zmianaUSERS).length !== 0){
             _login.collection("User").updateOne(
                 {name: name},
@@ -81,7 +79,6 @@ export const actions: Actions = {
     },
     Delete: async (event) => {
         const data = await event.request.formData()
-        console.log(data)
         const wybranyImie = data.get("imie")
         const wybranyNazwisko = data.get("nazwisko")
         const ImieNazwisko = wybranyImie + "_" + wybranyNazwisko
