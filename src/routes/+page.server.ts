@@ -1,8 +1,8 @@
-// +page.server.ts
 import { lucia } from "$lib/server/auth";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageLoad, PageServerLoad } from "./$types";
 import { _pracownicy, _czas_pracy } from "$db/mongo";
+import { ObjectId } from "mongodb";
 
 interface Pracownik {
   _id: string;
@@ -94,4 +94,56 @@ export const actions: Actions = {
       },
     );
   },
+  editEntrenceHours: async (event) => {
+  const data = await event.request.formData();
+      const date = data.get('data');
+      const imie = data.get('imie');
+      const nazwisko = data.get('nazwisko');
+      const wejscie = data.get('entrance_time');
+  const wyjscie = data.get('wyjscie');
+      const db = _czas_pracy.collection(imie + "_" + nazwisko);
+      await db.updateOne(
+          { date: date, exit_time: wyjscie },
+          {
+              $set: {
+                  entrence_time: wejscie
+              }
+          }
+      );
+  },
+editExitHours: async (event) => {
+  const data = await event.request.formData();
+      const date = data.get('data');
+      const imie = data.get('imie');
+      const nazwisko = data.get('nazwisko');
+      const wyjscie = data.get('exit_time');
+  const wejscie = data.get('wejscie');
+      const db = _czas_pracy.collection(imie + "_" + nazwisko);
+      await db.updateOne(
+          { date: date, entrence_time: wejscie },
+          {
+              $set: {
+                  exit_time: wyjscie
+              }
+          }
+      );
+  },
+editHours: async (event) => {
+  const data = await event.request.formData();
+      const date = data.get('data');
+      const imie = data.get('imie');
+      const nazwisko = data.get('nazwisko');
+  const wejscie = data.get('wejscie');
+  const godziny = parseFloat(data.get('hours'));
+      const db = _czas_pracy.collection(imie + "_" + nazwisko);
+      await db.updateOne(
+          { date: date, entrence_time: wejscie },
+          {
+              $set: {
+                  hours: godziny
+              }
+          }
+      );
+  }
 };
+
