@@ -6,9 +6,30 @@
   import 'tippy.js/dist/tippy.css'; // Import Tippy.js CSS
   import { enhance } from '$app/forms';
   import { writable } from 'svelte/store';
-  
+  import { generatePDF } from './pdfUtils.js';
+
   export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; comment?: string, historia_komentarza?: string }[] = [];
   export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
+
+  // Tablica miesięcy
+  const months = [
+        { value: '0', name: 'Styczeń' },
+        { value: '1', name: 'Luty' },
+        { value: '2', name: 'Marzec' },
+        { value: '3', name: 'Kwiecień' },
+        { value: '4', name: 'Maj' },
+        { value: '5', name: 'Czerwiec' },
+        { value: '6', name: 'Lipiec' },
+        { value: '7', name: 'Sierpień' },
+        { value: '8', name: 'Wrzesień' },
+        { value: '9', name: 'Październik' },
+        { value: '10', name: 'Listopad' },
+        { value: '11', name: 'Grudzień' }
+    ];
+
+  // Wybrany miesiąc
+  export let selectedMonth: string = '1'; // Domyślnie Styczeń
+
   let filteredLogowania = [];
   let customStartDate = "";
   let customEndDate = "";
@@ -16,6 +37,7 @@
   let totalHours = 0;
 
   const showModal = writable(false);
+  const showReportModal = writable(false);
   const modalContent = writable("");
   const modalDate = writable("");
   const modalHistory = writable("");
@@ -93,11 +115,20 @@
       modalDate.set(log.date);
       modalHistory.set(log.historia_komentarza || "Brak historii komentarzy");
       showModal.set(true);
-  };
+    };
+    
+    const closeModal = () => {
+        showModal.set(false);
+    };
+    
+    const openReportModal = () => {
+      modalContent.set("Raport");
+      showReportModal.set(true);
+    };
 
-  const closeModal = () => {
-      showModal.set(false);
-  };
+    const closeReportModal = () => {
+        showReportModal.set(false);
+    };
 
   const parseHistory = (history) => {
       return history.split('\n').filter(line => line).map(line => {
@@ -145,6 +176,9 @@
           <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("month")}>Miesiąc</button></li>
           <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
       </ul>
+      <div class="flex space-x-2 justify-center">
+        <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openReportModal}>Wygeneruj raport</button>
+      </div>
       <p class="font-bold text-center mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
   </div>
   
@@ -203,7 +237,7 @@
   {#if $showModal}
     <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
         <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">
-            <span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer" on:click={closeModal}>&times;</span>
+            <button on:click={closeModal}><span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span></button>
             <h2 class="mt-0"><strong>Komentarz</strong></h2>
             <form action="?/saveComment" method="post" use:enhance={({formData}) => {
                 formData.append("imie", selectedUser.imie);
@@ -211,8 +245,8 @@
                 formData.append("data", $currentLog.date);
                 formData.append("wejscie", $currentLog.entrence_time);
             }}>
-                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
-                <button class="px-4 py-2 bg-blue-500 text-white rounded ml-2" type="submit">Zapisz</button>
+                <input type="text" class="w-full px-4 py-2 border rounded mr-2 mb-2 flex-1" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
+                <button class="px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
             </form>
             <h3><strong>Historia komentarzy:</strong></h3>
             {#if $modalHistory}
@@ -237,6 +271,24 @@
             {:else}
                 <p class="mx-2 my-0">Brak historii komentarzy</p>
             {/if}
+        </div>
+    </div>
+  {/if}
+
+  {#if $showReportModal}
+    <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
+        <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">
+            <button on:click={closeReportModal}><span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span></button>
+            <h2 class="mt-0"><strong>Pobierz Raport użytkownika&nbsp; </strong>{selectedUser.imie} {selectedUser.nazwisko}</h2>
+            <div class="mt-2">
+              <label for="months">Wybierz Miesiąc</label><br>
+              <select bind:value={selectedMonth}>
+                {#each months as { value, name }}
+                    <option value={value}>{name}</option>
+                {/each}
+            </select><br>
+              <button class="px-4 py-2 mt-4 bg-blue-500 text-white rounded" on:click={() => generatePDF(selectedUser, logowania, 2024, Number(selectedMonth))}>Pobierz Raport</button>
+            </div>
         </div>
     </div>
   {/if}
