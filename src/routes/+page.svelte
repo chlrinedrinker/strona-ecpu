@@ -14,7 +14,10 @@
 <div class="flex flex-grow">
     <div class="flex space-x-4">
         <!-- Users List -->
-        <Uzytkownicy pracownicy={data.pracownicy} />
+        <Uzytkownicy
+            pracownicy={data.pracownicy}
+            aktywniPracownicy={data.active}
+        />
         <!-- Schedule -->
         <div class="flex-grow">
             <!-- Render schedule based on the user's data -->
