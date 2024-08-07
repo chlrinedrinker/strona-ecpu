@@ -8,9 +8,6 @@ import { PrismaClient, Prisma } from '@prisma/client'; // Prisma client for data
 let prisma = new PrismaClient(); // Initialize Prisma client
 let ranga = 3;
 
-
-
-
 export const actions: Actions = {
     // Define default action for login
 	default: async (event) => {
@@ -46,7 +43,7 @@ export const actions: Actions = {
 				username: username
 			},
 		});
-		console.log(existingUser)
+		
 
         // Check if user exists
 		if (!existingUser) {
