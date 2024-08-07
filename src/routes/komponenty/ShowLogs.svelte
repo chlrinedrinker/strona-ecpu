@@ -253,7 +253,7 @@
                     formData.append("data", $currentLog.date);
                     formData.append("wejscie", $currentLog.entrence_time);
                 }}>
-                    <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-4" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.comment} />
+                    <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-4" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.komentarz} />
                     <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
                 </form>
                     <h3><strong>Historia komentarzy:</strong></h3>
