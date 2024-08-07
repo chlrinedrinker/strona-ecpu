@@ -92,7 +92,7 @@
 </script>
 
 <div class="flex flex-col h-screen">
-  <div class="header-container flex items-center justify-between p-4 bg-white">
+  <div class="flex items-center justify-between p-4 bg-white">
     <div class="h-full w-full">
       <Calendar {plugins} {options} />
     </div>
