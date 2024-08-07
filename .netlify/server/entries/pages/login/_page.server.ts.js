@@ -25,7 +25,6 @@ const actions = {
         username
       }
     });
-    console.log(existingUser);
     if (!existingUser) {
       return fail(400, {
         message: "Incorrect username or password"
