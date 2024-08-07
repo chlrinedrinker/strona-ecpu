@@ -7,8 +7,8 @@ const config = {
 
   kit: {
     adapter: adapter({
-      edge: true,
-      split: false
+      edge: false,
+      split: true
     }),
     alias: {
       $db: "./src/db",
