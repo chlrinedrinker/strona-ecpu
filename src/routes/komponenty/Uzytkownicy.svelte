@@ -50,7 +50,7 @@
     }
 
     function isUserActive(user: Pracownik) {
-        return aktywniPracownicy.some((use) =>
+        return aktywniPracownicy.some((use) =>{
             return use["_id"] == user["_id"];
         });
     }
