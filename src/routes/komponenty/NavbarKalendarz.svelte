@@ -91,28 +91,9 @@
   }
 </script>
 
-<style>
-  .calendar-container {
-    height: 100%;
-    width: 100%;
-  }
-
-  .outer-container {
-    height: 100vh;
-  }
-
-  .fc-timegrid-slot {
-    min-width: 150px; /* Zmieniaj wartość według potrzeb */
-  }
-
-  .fc-daygrid-day {
-    min-width: 150px; /* Zmieniaj wartość według potrzeb */
-  }
-</style>
-
-<div class="outer-container flex flex-col">
+<div class="flex flex-col h-screen">
   <div class="header-container flex items-center justify-between p-4 bg-white">
-    <div class="calendar-container">
+    <div class="h-full w-full">
       <Calendar {plugins} {options} />
     </div>
   </div>
