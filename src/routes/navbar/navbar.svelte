@@ -36,7 +36,7 @@
       {#if $userType == 0}
         <div class="dropdown relative" on:focus={handleDropdownFocusLoss}>
           <button class="px-4 py-2 bg-blue-500 text-white rounded m-1" on:click={handleDropdownClick}>
-              <h1><a href="zmianaHaseł">Panel Administracyjny</a></h1>
+              <h1><a href="zmianaHasel">Panel Administracyjny</a></h1>
           </button>
         </div>
       <a href="/signup"><button class="px-4 py-2 bg-blue-500 text-white rounded">Zarejestruj użytkownika</button></a>
