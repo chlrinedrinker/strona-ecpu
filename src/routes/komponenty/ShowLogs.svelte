@@ -152,7 +152,16 @@
       });
     };
 
-    
+     // Zmienna dla nowego modala
+     const showAddLogModal = writable(false);
+
+    const openAddLogModal = () => {
+        showAddLogModal.set(true);
+    };
+
+    const closeAddLogModal = () => {
+        showAddLogModal.set(false);
+    };
 
     
 
@@ -184,9 +193,12 @@
         </ul>
       <div class="flex space-x-2 justify-center">
         <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openReportModal}>Wygeneruj raport</button>
+        <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openAddLogModal}>Dodaj Log</button>
       </div>
         <p class="font-bold text-center mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
     </div>
+    
+    
 
     <div id="customDateRange" style="display: none;" class="mt-4">
       <label for="customStartDate">Początek:</label>
@@ -344,6 +356,47 @@
         </div>
     </div>
   {/if}
+  {#if $showAddLogModal}
+    <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
+        <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-full max-w-4xl rounded-lg">
+            <button on:click={closeAddLogModal}>
+                <span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span>
+            </button>
+            <h2 class="mt-0 py-5 text-center text-2xl font-bold"><strong>Dodaj Nowy Log</strong></h2>
+            <form action="?/addLog" method="post" use:enhance={({ formData }) => {
+                formData.append("imie", selectedUser.imie);
+                formData.append("nazwisko", selectedUser.nazwisko);
+            }}>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="date">Data</label>
+                        <input type="date" class="w-full px-4 py-2 border rounded" name="date" required />
+                    </div>
+                    <div>
+                        <label for="entrance_time">Godzina wejścia</label>
+                        <input type="time" class="w-full px-4 py-2 border rounded" name="entrance_time" required />
+                    </div>
+                    <div>
+                        <label for="exit_time">Godzina wyjścia</label>
+                        <input type="time" class="w-full px-4 py-2 border rounded" name="exit_time" required />
+                    </div>
+                    <div>
+                        <label for="hours">Godziny</label>
+                        <input type="number" step="0.1" class="w-full px-4 py-2 border rounded" name="hours" required />
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="komentarz">Komentarz</label>
+                    <textarea class="w-full px-4 py-2 border rounded" name="komentarz">Log dodany ręcznie</textarea>
+                </div>
+                <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Dodaj Log</button>
+            </form>
+        </div>
+    </div>
+{/if}
+
+
+
 </div>
 
 <style>
