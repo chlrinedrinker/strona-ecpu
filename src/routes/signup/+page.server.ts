@@ -7,7 +7,7 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import { _pracownicy } from "$db/mongo";
 
 export const actions: Actions = {
-  default: async (event) => {
+  signup: async (event) => {
     let prisma = new PrismaClient();
     try {
       const formData = await event.request.formData();
@@ -101,5 +101,17 @@ export const actions: Actions = {
     } finally {
       await prisma.$disconnect();
     }
+  },
+  wyloguj: async (event) => {
+    if (!event.locals.user) {
+      throw fail(401);
+    }
+    await lucia.invalidateSession(event.locals.session!.id);
+    const sessionCookie = lucia.createBlankSessionCookie();
+    event.cookies.set(sessionCookie.name, sessionCookie.value, {
+      path: ".",
+      ...sessionCookie.attributes,
+    });
+    return redirect(302, "/login");
   },
 };

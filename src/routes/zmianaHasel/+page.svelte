@@ -76,7 +76,6 @@
             </div>
         {/if}
     </div>
-    {}
     {#if error}
         <div class="text-red-500">
             {error}
