@@ -174,4 +174,26 @@ export const actions: Actions = {
       return [];
     }
   },
+  addLog: async (event) => {
+    const data = await event.request.formData();
+    const date = data.get("date");
+    const entrance_time = data.get("entrance_time");
+    const exit_time = data.get("exit_time");
+    const hours = parseFloat(data.get("hours"));
+    const komentarz = data.get("komentarz");
+    const imie = data.get("imie")
+    const nazwisko = data.get("nazwisko")
+    const db = _czas_pracy.collection(imie + "_" + nazwisko);
+
+    await db.insertOne({
+      date,
+      entrence_time: entrance_time,
+      exit_time,
+      hours,
+      komentarz,
+      historia_komentarza: komentarz ? new Date().toLocaleString() + " " + komentarz : ""
+    });
+
+    return { success: true };
+  },
 };
