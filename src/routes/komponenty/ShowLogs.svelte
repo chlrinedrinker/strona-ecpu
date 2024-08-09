@@ -113,22 +113,31 @@
       0
     );
 
-    await tick();
-    setupTooltips();
-  };
+        await tick();
+        setupTooltips();
+    };
+    function extractLastPart(text: string): string {
+  // Usuń białe znaki na początku i końcu ciągu
+  const trimmedText = text.trim();
 
-  const setupDatePickers = () => {
-    flatpickr("#customStartDate", {
-      onChange: (selectedDates) => {
-        customStartDate = selectedDates[0].toISOString();
-      },
-    });
-    flatpickr("#customEndDate", {
-      onChange: (selectedDates) => {
-        customEndDate = selectedDates[0].toISOString();
-      },
-    });
-  };
+  // Znajdź pozycję ostatniej spacji w ciągu
+  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
+
+  // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
+  return lastSpaceIndex !== -1 ? trimmedText.substring(lastSpaceIndex + 1) : "";
+}
+    const setupDatePickers = () => {
+        flatpickr("#customStartDate", {
+            onChange: (selectedDates) => {
+                customStartDate = selectedDates[0].toISOString();
+            },
+        });
+        flatpickr("#customEndDate", {
+            onChange: (selectedDates) => {
+                customEndDate = selectedDates[0].toISOString();
+            },
+        });
+    };
 
   const showCustomDateRange = () => {
     document.getElementById("customDateRange").style.display = "block";
@@ -277,62 +286,70 @@
     >
   </div>
 
-  <h2 class="text-center text-xs md:text-sm">
-    Logowania użytkownika: <span
-      class="underline decoration-2 decoration-sky-600"
-      >{selectedUser.imie} {selectedUser.nazwisko}</span
-    >
-  </h2>
-  <div class="overflow-x-auto">
-    <table class="w-full border-collapse mt-2 text-xs md:text-sm pr-5">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Godzina wejścia</th>
-          <th>Godzina wyjścia</th>
-          <th>Godziny</th>
-          <th>Komentarz</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#if showFiltered}
-          {#each filteredLogowania as log}
+    <h2 class="text-center text-xs md:text-sm">
+        Logowania użytkownika: <span
+            class="underline decoration-2 decoration-sky-600"
+            >{selectedUser.imie} {selectedUser.nazwisko}</span
+        >
+    </h2>
+    <div class="overflow-x-auto">
+
+    <table class="class=w-full border-collapse mt-2 text-xs md:text-sm pr-5">
+        <thead>
             <tr>
-              <td>{log.date}</td>
-              <td>{log.entrence_time}</td>
-              <td>{log.exit_time}</td>
-              <td>{log.hours}</td>
-              <td>
-                <div class="flex justify-center items-center">
-                  <button
-                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
-                    data-comment={log.komentarz || "Brak komentarza"}
-                    on:click={() => openModal(log)}>Zobacz komentarz</button
-                  >
-                </div>
-              </td>
+                <th>Data</th>
+                <th>Godzina wejścia</th>
+                <th>Godzina wyjścia</th>
+                <th>Godziny</th>
+                <th>Komentarz</th>
+                <th>Edycja</th>
             </tr>
-          {/each}
-        {:else}
-          {#each logowania as log}
-            <tr>
-              <td>{log.date}</td>
-              <td>{log.entrence_time}</td>
-              <td>{log.exit_time}</td>
-              <td>{log.hours}</td>
-              <td>
-                <div class="flex justify-center items-center">
-                  <button
-                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
-                    data-comment={log.komentarz || "Brak komentarza"}
-                    on:click={() => openModal(log)}>Zobacz komentarz</button
-                  >
-                </div>
-              </td>
-            </tr>
-          {/each}
-        {/if}
-      </tbody>
+        </thead>
+        <tbody>
+            {#if showFiltered}
+                {#each filteredLogowania as log}
+                    <tr>
+                        <td>{log.date}</td>
+                        <td>{log.entrence_time}</td>
+                        <td>{log.exit_time}</td>
+                        <td>{log.hours}</td>
+                        <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
+                        <td>
+                            <div class="flex justify-center items-center">
+                                <button
+                                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
+                                    data-comment={log.komentarz ||
+                                        "Brak komentarza"}
+                                    on:click={() => openModal(log)}
+                                    >Zobacz komentarz</button
+                                >
+                            </div>
+                        </td>
+                    </tr>
+                {/each}
+            {:else}
+                {#each logowania as log}
+                    <tr>
+                        <td>{log.date}</td>
+                        <td>{log.entrence_time}</td>
+                        <td>{log.exit_time}</td>
+                        <td>{log.hours}</td>
+                        <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
+                        <td>
+                            <div class="flex justify-center items-center">
+                                <button
+                                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
+                                    data-comment={log.komentarz ||
+                                        "Brak komentarza"}
+                                    on:click={() => openModal(log)}
+                                    >Zobacz komentarz</button
+                                >
+                            </div>
+                        </td>
+                    </tr>
+                {/each}
+            {/if}
+        </tbody>
     </table>
   </div>
 
@@ -462,6 +479,7 @@
       </div>
     </div>
   {/if}
+
 </div>
 
 <style>

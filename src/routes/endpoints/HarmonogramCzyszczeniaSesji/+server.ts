@@ -1,10 +1,10 @@
-import { CronJob } from "quirrel/sveltekit";
-import { lucia } from "$lib/server/auth";
+// import { CronJob } from "quirrel/sveltekit";
+// import { lucia } from "$lib/server/auth";
 
-export default CronJob(
-  "endpoints/HarmonogramCzyszczeniaSesji/+server.ts",
-  ["0 2 * * *", "Europe/Berlin"],
-  async () => {
-    await lucia.deleteExpiredSessions();
-  },
-);
+// export default CronJob(
+  // "endpoints/HarmonogramCzyszczeniaSesji/+server.ts",
+  // ["0 2 * * *", "Europe/Berlin"],
+  // async () => {
+    // await lucia.deleteExpiredSessions();
+  // },
+// );
