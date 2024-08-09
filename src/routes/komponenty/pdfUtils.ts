@@ -1,7 +1,13 @@
-import pdfMake from 'pdfmake/build/pdfmake';
-//import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-//pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
+import pdfMake from "pdfmake/build/pdfmake";
+pdfMake.fonts = {
+  // download default Roboto font from cdnjs.com
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
+  },
+}
 interface User {
   imie: string;
   nazwisko: string;
@@ -18,8 +24,12 @@ interface LogEntry {
   historia_komentarza?: string;
 }
 
-function filterLogsByMonth(logs: LogEntry[], year: number, month: number): LogEntry[] {
-  return logs.filter(log => {
+function filterLogsByMonth(
+  logs: LogEntry[],
+  year: number,
+  month: number,
+): LogEntry[] {
+  return logs.filter((log) => {
     const logDate = new Date(log.date);
     return logDate.getFullYear() === year && logDate.getMonth() === month;
   });
@@ -27,60 +37,90 @@ function filterLogsByMonth(logs: LogEntry[], year: number, month: number): LogEn
 
 function sumHours(logs: LogEntry[]): string {
   let totalMinutes = logs.reduce((sum, log) => {
-    const [hours, minutes] = log.hours.split(':').map(Number);
+    const [hours, minutes] = log.hours.split(":").map(Number);
     return sum + hours * 60 + minutes;
   }, 0);
 
   const totalHours = Math.floor(totalMinutes / 60);
   const remainingMinutes = totalMinutes % 60;
 
-  return `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
+  return `${totalHours}:${remainingMinutes.toString().padStart(2, "0")}`;
 }
 
-export function generatePDF(selectedUser: User, logowania: LogEntry[], year: number, month: number) {
+export function generatePDF(
+  selectedUser: User,
+  logowania: LogEntry[],
+  year: number,
+  month: number,
+) {
   const filteredLogs = filterLogsByMonth(logowania, year, month);
   const totalHours = sumHours(filteredLogs);
 
   const docDefinition = {
     content: [
-      { text: `Łubnice, dnia ${new Date().toLocaleDateString()}`, alignment: 'right', margin: [0, 0, 0, 10] },
-      { text: 'Raport miesięczny', fontSize: 16, margin: [0, 0, 0, 10] },
-      { text: `Użytkownik: ${selectedUser.imie} ${selectedUser.nazwisko}`, margin: [0, 0, 0, 5] },
+      {
+        text: `Łubnice, dnia ${new Date().toLocaleDateString()}`,
+        alignment: "right",
+        margin: [0, 0, 0, 10],
+      },
+      { text: "Raport miesięczny", fontSize: 16, margin: [0, 0, 0, 10] },
+      {
+        text: `Użytkownik: ${selectedUser.imie} ${selectedUser.nazwisko}`,
+        margin: [0, 0, 0, 5],
+      },
       { text: `Stanowisko: ${selectedUser.stanowisko}`, margin: [0, 0, 0, 10] },
       {
         table: {
           headerRows: 1,
-          widths: [100, '*', '*', '*', '*'],
+          widths: [100, "*", "*", "*", "*"],
           body: [
-            ['Data', 'Godzina wejścia', 'Godzina wyjścia', 'Godziny', 'Komentarz'],
-            ...filteredLogs.map(log => [
+            [
+              "Data",
+              "Godzina wejścia",
+              "Godzina wyjścia",
+              "Godziny",
+              "Komentarz",
+            ],
+            ...filteredLogs.map((log) => [
               log.date,
               log.entrence_time,
               log.exit_time,
               log.hours,
-              log.comment || ''
-            ])
-          ]
+              log.comment || "",
+            ]),
+          ],
         },
-        layout: 'lightHorizontalLines'
+        layout: "lightHorizontalLines",
       },
       {
-        text: '_______________________________________________________________________________________________',
-        margin: [0, 10, 0, 10]
+        text: "_______________________________________________________________________________________________",
+        margin: [0, 10, 0, 10],
       },
-      { text: `Suma godzin: ${totalHours}`, alignment: 'right', margin: [0, 0, 0, 50] },
-      { text: ' ', margin: [0, 100, 0, 0] }, // Adds a blank space to push the footer to the bottom
+      {
+        text: `Suma godzin: ${totalHours}`,
+        alignment: "right",
+        margin: [0, 0, 0, 50],
+      },
+      { text: " ", margin: [0, 100, 0, 0] }, // Adds a blank space to push the footer to the bottom
     ],
-    footer: function(currentPage, pageCount) {
+    footer: function (currentPage, pageCount) {
       return {
         columns: [
-          { text: '___________________________________________________________________________________________________________________', margin: [0, 10, 0, 10] },
-          { text: 'Raport generowany automatycznie', fontSize: 10, alignment: 'center', margin: [0, 10, 0, 0] }
+          {
+            text: "___________________________________________________________________________________________________________________",
+            margin: [0, 10, 0, 10],
+          },
+          {
+            text: "Raport generowany automatycznie",
+            fontSize: 10,
+            alignment: "center",
+            margin: [0, 10, 0, 0],
+          },
         ],
-        margin: [0, 0, 0, 10] // Adjusts the bottom margin of the footer
+        margin: [0, 0, 0, 10], // Adjusts the bottom margin of the footer
       };
-    }
+    },
   };
 
-  pdfMake.createPdf(docDefinition).download('logowania.pdf');
+  pdfMake.createPdf(docDefinition).download("Raport " + selectedUser.imie + " " + selectedUser.nazwisko + " " + month +".pdf");
 }
