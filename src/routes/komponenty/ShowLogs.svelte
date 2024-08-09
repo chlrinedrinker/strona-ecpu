@@ -90,7 +90,16 @@
         await tick();
         setupTooltips();
     };
+    function extractLastPart(text: string): string {
+  // Usuń białe znaki na początku i końcu ciągu
+  const trimmedText = text.trim();
 
+  // Znajdź pozycję ostatniej spacji w ciągu
+  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
+
+  // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
+  return lastSpaceIndex !== -1 ? trimmedText.substring(lastSpaceIndex + 1) : "";
+}
     const setupDatePickers = () => {
         flatpickr("#customStartDate", {
             onChange: (selectedDates) => {
@@ -217,6 +226,7 @@
           <th>Godzina wyjścia</th>
           <th>Godziny</th>
           <th>Komentarz</th>
+          <th>Edycja</th>
         </tr>
       </thead>
       <tbody>
@@ -227,9 +237,10 @@
               <td>{log.entrence_time}</td>
               <td>{log.exit_time}</td>
               <td>{log.hours}</td>
+              <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
               <td>
                 <div class="flex justify-center items-center">
-                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
                 </div>
               </td>
             </tr>
@@ -241,9 +252,10 @@
             <td>{log.entrence_time}</td>
             <td>{log.exit_time}</td>
             <td>{log.hours}</td>
+            <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
             <td>
                 <div class="flex justify-center items-center">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
                 </div>
             </td>
           </tr>
@@ -257,17 +269,18 @@
         <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-full max-w-4xl rounded-lg">
             <button on:click={closeModal}><span class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer">&times;</span></button>
             <div class="flex mt-4 space-x-4">
-                <div class="w-1/2">
-                        <h2 class="mt-0"><strong>Komentarz</strong></h2>
-                <form action="?/saveComment" method="post" use:enhance={({ formData }) => {
-                    formData.append("imie", selectedUser.imie);
-                    formData.append("nazwisko", selectedUser.nazwisko);
-                    formData.append("data", $currentLog.date);
-                    formData.append("wejscie", $currentLog.entrence_time);
-                }}>
-                    <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-4" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.komentarz} />
-                    <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-                </form>
+                <div class={$userType == 0 ? "w-1/2" : "w-full"}>
+                    
+                    <h2 class="mt-0 py-2"><strong>Komentarz</strong></h2>
+                    <form action="?/saveComment" method="post" use:enhance={({ formData }) => {
+                        formData.append("imie", selectedUser.imie);
+                        formData.append("nazwisko", selectedUser.nazwisko);
+                        formData.append("data", $currentLog.date);
+                        formData.append("wejscie", $currentLog.entrence_time);
+                    }}>
+                        <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-4" placeholder="Dodaj komentarz" name="komentarz" bind:value={$currentLog.komentarz} />
+                        <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                    </form>
                     <h3><strong>Historia komentarzy:</strong></h3>
                     {#if $modalHistory}
                         <table class="w-full border-collapse mt-4 text-center">
@@ -297,17 +310,15 @@
                     <h4><strong>Edycja godzin:</strong></h4>
                     <div class="mb-4">
                         <p class="mx-2 my-0">Godzina wejścia</p>
-
-                            <form action="?/editEntrenceHours" method="post" use:enhance={({ formData }) => {
-                                formData.append("imie", selectedUser.imie);
-                                formData.append("nazwisko", selectedUser.nazwisko);
-                                formData.append("data", $currentLog.date);
-                                formData.append("wyjscie", $currentLog.exit_time);
-                            }}>
-                                <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="entrance_time" bind:value={$currentLog.entrence_time} />
-                                <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
-                            </form>
-
+                        <form action="?/editEntrenceHours" method="post" use:enhance={({ formData }) => {
+                            formData.append("imie", selectedUser.imie);
+                            formData.append("nazwisko", selectedUser.nazwisko);
+                            formData.append("data", $currentLog.date);
+                            formData.append("wyjscie", $currentLog.exit_time);
+                        }}>
+                            <input type="text" class="w-full px-4 py-2 border rounded mr-2 flex-1 mb-2" placeholder="Edytuj godzinę" name="entrance_time" bind:value={$currentLog.entrence_time} />
+                            <button class="w-full px-4 py-2 bg-blue-500 text-white rounded" type="submit">Zapisz</button>
+                        </form>
                     </div>
                     <div class="mb-4">
                         <p class="mx-2 my-0">Godzina wyjścia</p>
@@ -339,6 +350,7 @@
         </div>
     </div>
 {/if}
+
   {#if $showReportModal}
     <div class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40">
         <div class="bg-white my-20 mx-auto p-5 border border-gray-400 w-72 rounded-lg">

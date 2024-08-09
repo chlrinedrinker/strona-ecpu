@@ -34,9 +34,9 @@
                     >Zmień Hasło</button
                 ></a
             >
-            <button class="px-4 py-2 bg-blue-500 text-white rounded"
-                >Raporty</button
-            >
+            <!-- <button class="px-4 py-2 bg-blue-500 text-white rounded"
+                >Raporty</button -->
+            <!-- > -->
             <div class="flex items-center space-x-2">
                 <form method="post" use:enhance action="?/wyloguj">
                     <button class="px-4 py-2 bg-blue-500 text-white rounded"
