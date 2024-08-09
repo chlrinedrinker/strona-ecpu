@@ -117,8 +117,12 @@
     <!-- Przycisk powrotu -->
     <button
       on:click={handleBack}
-      class="lg:hidden absolute top-2 left-2 bg-blue-500 text-white p-0.5 rounded shadow-md text-xs m-1"
-    >Wróć
+      class="lg:hidden bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
+      style="position: sticky; top: 0px; -left: 1px;"
+    >
+      <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
+        <span class="text-lg">&gt;</span>
+      </div>
     </button>
 
     <!-- Sekcja ShowLogs na dużych ekranach -->
