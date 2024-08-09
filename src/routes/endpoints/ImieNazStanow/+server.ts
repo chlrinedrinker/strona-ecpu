@@ -19,7 +19,7 @@ export async function GET() {
     const collection = db.collection("PracownicyID");
 
     // Retrieve the list of employees and project the necessary fields
-    const pracownicy = await collection.find().project(projections).toArray();
+    const pracownicy = await collection.find({},{sort: {imie: 1, nazwisko: 1}, projection: projections}).toArray();
 
     // Return the list of employees
     return json(pracownicy);

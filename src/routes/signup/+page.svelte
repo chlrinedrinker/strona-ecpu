@@ -79,7 +79,7 @@
             event.preventDefault();
         } else {
             // If no errors, redirect to the success page
-            window.location.href = "/signup?success=true";
+            // window.location.href = "/signup?success=true";
         }
     }
 </script>
