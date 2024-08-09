@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex flex-grow">
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 w-full">
         <!-- Users List -->
         <Uzytkownicy
             pracownicy={data.pracownicy}

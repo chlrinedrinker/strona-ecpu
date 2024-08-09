@@ -17,43 +17,24 @@
 
 <button
     type="button"
-    class="flex items-center w-full p-2 space-x-2 border-b cursor-pointer text-left object-fill width {selected
-        ? 'border-blue-500'
-        : ''}"
+    class="flex items-center w-full p-1 space-x-1 border-b cursor-pointer text-left {selected ? 'border-blue-500' : ''}"
     on:click={handleClick}
 >
-    <div class="relative">
+    <div class="relative flex-shrink-0">
         <img
             src="/user.png"
             alt="person"
-            class="w-10 h-10 rounded-full bg-gray-300"
+            class="w-8 h-8 rounded-full bg-gray-300"
         />
         {#if active}
             <span
-                class="absolute right-0 bottom-0 w-3 h-3 bg-green-500 rounded-full border border-white"
+                class="absolute right-0 bottom-0 w-2 h-2 bg-green-500 rounded-full border border-white"
             ></span>
         {/if}
     </div>
-    <div>
-        <div class="text-sm font-semibold">{imie} {nazwisko}</div>
-        <div class="text-xs text-gray-500">{stanowisko}</div>
+    <div class="flex-1 min-w-0">
+        <div class="text-xs font-semibold truncate">{imie} {nazwisko}</div>
+        <div class="text-[10px] text-gray-500 truncate">{stanowisko}</div>
     </div>
 </button>
 
-<style>
-    .absolute {
-        position: absolute;
-    }
-    .bg-green-500 {
-        background-color: #48bb78;
-    }
-    .rounded-full {
-        border-radius: 9999px;
-    }
-    .border {
-        border-width: 1px;
-    }
-    .border-white {
-        border-color: #ffffff;
-    }
-</style>
