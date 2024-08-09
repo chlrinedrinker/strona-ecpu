@@ -113,31 +113,33 @@
       0
     );
 
-        await tick();
-        setupTooltips();
-    };
-    function extractLastPart(text: string): string {
-  // Usuń białe znaki na początku i końcu ciągu
-  const trimmedText = text.trim();
+    await tick();
+    setupTooltips();
+  };
+  function extractLastPart(text: string): string {
+    // Usuń białe znaki na początku i końcu ciągu
+    const trimmedText = text.trim();
 
-  // Znajdź pozycję ostatniej spacji w ciągu
-  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
+    // Znajdź pozycję ostatniej spacji w ciągu
+    const lastSpaceIndex = trimmedText.lastIndexOf(" ");
 
-  // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
-  return lastSpaceIndex !== -1 ? trimmedText.substring(lastSpaceIndex + 1) : "";
-}
-    const setupDatePickers = () => {
-        flatpickr("#customStartDate", {
-            onChange: (selectedDates) => {
-                customStartDate = selectedDates[0].toISOString();
-            },
-        });
-        flatpickr("#customEndDate", {
-            onChange: (selectedDates) => {
-                customEndDate = selectedDates[0].toISOString();
-            },
-        });
-    };
+    // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
+    return lastSpaceIndex !== -1
+      ? trimmedText.substring(lastSpaceIndex + 1)
+      : "";
+  }
+  const setupDatePickers = () => {
+    flatpickr("#customStartDate", {
+      onChange: (selectedDates) => {
+        customStartDate = selectedDates[0].toISOString();
+      },
+    });
+    flatpickr("#customEndDate", {
+      onChange: (selectedDates) => {
+        customEndDate = selectedDates[0].toISOString();
+      },
+    });
+  };
 
   const showCustomDateRange = () => {
     document.getElementById("customDateRange").style.display = "block";
@@ -286,70 +288,71 @@
     >
   </div>
 
-    <h2 class="text-center text-xs md:text-sm">
-        Logowania użytkownika: <span
-            class="underline decoration-2 decoration-sky-600"
-            >{selectedUser.imie} {selectedUser.nazwisko}</span
-        >
-    </h2>
-    <div class="overflow-x-auto">
-
-    <table class="class=w-full border-collapse mt-2 text-xs md:text-sm pr-5">
-        <thead>
+  <h2 class="text-center text-xs md:text-sm">
+    Logowania użytkownika: <span
+      class="underline decoration-2 decoration-sky-600"
+      >{selectedUser.imie} {selectedUser.nazwisko}</span
+    >
+  </h2>
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse mt-2 text-xs md:text-sm">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Godzina wejścia</th>
+          <th>Godzina wyjścia</th>
+          <th>Godziny</th>
+          <th>Komentarz</th>
+          <th>Edycja</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#if showFiltered}
+          {#each filteredLogowania as log}
             <tr>
-                <th>Data</th>
-                <th>Godzina wejścia</th>
-                <th>Godzina wyjścia</th>
-                <th>Godziny</th>
-                <th>Komentarz</th>
-                <th>Edycja</th>
+              <td>{log.date}</td>
+              <td>{log.entrence_time}</td>
+              <td>{log.exit_time}</td>
+              <td>{log.hours}</td>
+              <td
+                >{extractLastPart(String(log.komentarz)) ||
+                  "Brak komentarza"}</td
+              >
+              <td>
+                <div class="flex justify-center items-center">
+                  <button
+                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
+                    data-comment={log.komentarz || "Brak komentarza"}
+                    on:click={() => openModal(log)}>Zobacz komentarz</button
+                  >
+                </div>
+              </td>
             </tr>
-        </thead>
-        <tbody>
-            {#if showFiltered}
-                {#each filteredLogowania as log}
-                    <tr>
-                        <td>{log.date}</td>
-                        <td>{log.entrence_time}</td>
-                        <td>{log.exit_time}</td>
-                        <td>{log.hours}</td>
-                        <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
-                        <td>
-                            <div class="flex justify-center items-center">
-                                <button
-                                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
-                                    data-comment={log.komentarz ||
-                                        "Brak komentarza"}
-                                    on:click={() => openModal(log)}
-                                    >Zobacz komentarz</button
-                                >
-                            </div>
-                        </td>
-                    </tr>
-                {/each}
-            {:else}
-                {#each logowania as log}
-                    <tr>
-                        <td>{log.date}</td>
-                        <td>{log.entrence_time}</td>
-                        <td>{log.exit_time}</td>
-                        <td>{log.hours}</td>
-                        <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
-                        <td>
-                            <div class="flex justify-center items-center">
-                                <button
-                                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
-                                    data-comment={log.komentarz ||
-                                        "Brak komentarza"}
-                                    on:click={() => openModal(log)}
-                                    >Zobacz komentarz</button
-                                >
-                            </div>
-                        </td>
-                    </tr>
-                {/each}
-            {/if}
-        </tbody>
+          {/each}
+        {:else}
+          {#each logowania as log}
+            <tr>
+              <td>{log.date}</td>
+              <td>{log.entrence_time}</td>
+              <td>{log.exit_time}</td>
+              <td>{log.hours}</td>
+              <td
+                >{extractLastPart(String(log.komentarz)) ||
+                  "Brak komentarza"}</td
+              >
+              <td>
+                <div class="flex justify-center items-center">
+                  <button
+                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
+                    data-comment={log.komentarz || "Brak komentarza"}
+                    on:click={() => openModal(log)}>Zobacz komentarz</button
+                  >
+                </div>
+              </td>
+            </tr>
+          {/each}
+        {/if}
+      </tbody>
     </table>
   </div>
 
@@ -479,8 +482,124 @@
       </div>
     </div>
   {/if}
-
 </div>
+
+{#if $showReportModal}
+  <div
+    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40"
+  >
+    <div
+      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg"
+    >
+      <button on:click={closeReportModal}>
+        <span
+          class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer"
+          >&times;</span
+        >
+      </button>
+      <h2 class="mt-0 text-xl md:text-2xl font-bold">
+        <strong>Pobierz Raport użytkownika&nbsp; </strong>
+        {selectedUser.imie}
+        {selectedUser.nazwisko}
+      </h2>
+      <div class="mt-4">
+        <label for="months" class="block mb-2">Wybierz Miesiąc</label>
+        <select
+          bind:value={selectedMonth}
+          class="w-full px-4 py-2 border rounded mb-4"
+        >
+          {#each months as { value, name }}
+            <option {value}>{name}</option>
+          {/each}
+        </select>
+        <button
+          class="w-full px-4 py-2 bg-blue-500 text-white rounded"
+          on:click={() =>
+            generatePDF(selectedUser, logowania, 2024, Number(selectedMonth))}
+          >Pobierz Raport</button
+        >
+      </div>
+    </div>
+  </div>
+{/if}
+
+{#if $showAddLogModal}
+  <div
+    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40"
+  >
+    <div
+      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-4xl rounded-lg"
+    >
+      <button on:click={closeAddLogModal}>
+        <span
+          class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer"
+          >&times;</span
+        >
+      </button>
+      <h2 class="mt-0 py-5 text-center text-xl md:text-2xl font-bold">
+        <strong>Dodaj Nowy Log</strong>
+      </h2>
+      <form
+        action="?/addLog"
+        method="post"
+        use:enhance={({ formData }) => {
+          formData.append("imie", selectedUser.imie);
+          formData.append("nazwisko", selectedUser.nazwisko);
+        }}
+      >
+        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+          <div>
+            <label for="date">Data</label>
+            <input
+              type="date"
+              class="w-full px-4 py-2 border rounded"
+              name="date"
+              required
+            />
+          </div>
+          <div>
+            <label for="entrance_time">Godzina wejścia</label>
+            <input
+              type="time"
+              class="w-full px-4 py-2 border rounded"
+              name="entrance_time"
+              required
+            />
+          </div>
+          <div>
+            <label for="exit_time">Godzina wyjścia</label>
+            <input
+              type="time"
+              class="w-full px-4 py-2 border rounded"
+              name="exit_time"
+              required
+            />
+          </div>
+          <div>
+            <label for="hours">Godziny</label>
+            <input
+              type="number"
+              step="0.1"
+              class="w-full px-4 py-2 border rounded"
+              name="hours"
+              required
+            />
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="komentarz">Komentarz</label>
+          <textarea class="w-full px-4 py-2 border rounded" name="komentarz"
+            >Log dodany ręcznie</textarea
+          >
+        </div>
+        <button
+          class="w-full px-4 py-2 bg-blue-500 text-white rounded"
+          type="submit">Dodaj Log</button
+        >
+      </form>
+    </div>
+  </div>
+{/if}
 
 <style>
   th,

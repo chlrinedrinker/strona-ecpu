@@ -118,7 +118,7 @@
     <button
       on:click={handleBack}
       class="lg:hidden absolute top-2 left-2 bg-blue-500 text-white p-0.5 rounded shadow-md text-xs m-1"
-    >wróć
+    >Wróć
     </button>
 
     <!-- Sekcja ShowLogs na dużych ekranach -->
