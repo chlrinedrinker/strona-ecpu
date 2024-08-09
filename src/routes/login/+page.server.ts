@@ -3,7 +3,7 @@ import { lucia } from "$lib/server/auth"; // Authentication library
 import { fail, redirect } from "@sveltejs/kit"; // SvelteKit utilities
 import { verify } from "@node-rs/argon2"; // Password hashing and verification
 import type { Actions } from "./$types"; // Type definitions for SvelteKit actions
-import { PrismaClient, Prisma } from "@prisma/client"; // Prisma client for database operations
+import { PrismaClient } from "@prisma/client"; // Prisma client for database operations
 
 let prisma = new PrismaClient(); // Initialize Prisma client
 let ranga = 3;

@@ -1,8 +1,7 @@
 import { lucia } from "$lib/server/auth";
 import { fail, redirect } from "@sveltejs/kit";
-import type { Actions, PageLoad, PageServerLoad } from "./$types";
-import { _pracownicy, _czas_pracy } from "$db/mongo";
-import { ObjectId } from "mongodb";
+import type { Actions, PageServerLoad } from "./$types";
+import { _czas_pracy } from "$db/mongo";
 
 interface Pracownik {
   _id: string;
@@ -154,8 +153,6 @@ export const actions: Actions = {
   },
   PokazLogiUżytkownika: async (event) => {
     const data = await event.request.formData();
-    const imie = data.get("imie");
-    const nazwisko = data.get("nazwisko");
 
     try {
       const response = await fetch(

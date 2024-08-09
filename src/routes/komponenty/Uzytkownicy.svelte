@@ -82,7 +82,7 @@
     // Fetch logs for all users on component load
 </script>
 
-<div class="w-64 overflow-scroll h-screen">
+<div class="w-64 overflow-y-visible  overflow-scroll h-screen">
     {#if $isLoading}
         <div>Loading...</div>
     {:else}
@@ -108,12 +108,8 @@
             {selectedUser}
         />
     </div>
-    <div class="outer-container flex flex-col min-h-screen">
-        <div
-            class="header-container flex items-center justify-between p-4 relative bg-white"
-        >
-            <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
-        </div>
+    <div class="flex flex-col items-center justify-between p-4 h-screen relative bg-white overflow-auto">
+        <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
     </div>
 {/if}
 

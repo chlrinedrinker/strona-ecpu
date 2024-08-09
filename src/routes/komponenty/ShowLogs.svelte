@@ -1,60 +1,79 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
-  import flatpickr from "flatpickr";
-  import "flatpickr/dist/flatpickr.css";
-  import tippy from 'tippy.js';
-  import 'tippy.js/dist/tippy.css'; // Import Tippy.js CSS
-  import { enhance } from '$app/forms';
-  import { writable } from 'svelte/store';
-  import { isLoggedIn, userType } from "../stores/stores";
-  import { generatePDF } from './pdfUtils.js';
+    import { onMount, tick } from "svelte";
+    import flatpickr from "flatpickr";
+    import "flatpickr/dist/flatpickr.css";
+    import tippy from "tippy.js";
+    import "tippy.js/dist/tippy.css"; // Import Tippy.js CSS
+    import { enhance } from "$app/forms";
+    import { writable } from "svelte/store";
+    import { isLoggedIn, userType } from "../stores/stores";
+    import { generatePDF } from "./pdfUtils";
 
-  
-  export let logowania: { _id: string; date: string; entrence_time: string; exit_time: string; hours: string; komentarz?: string, historia_komentarza?: string }[] = [];
-  export let selectedUser: { imie: string; nazwisko: string; stanowisko: string };
+    export let logowania: {
+        _id: string;
+        date: string;
+        entrence_time: string;
+        exit_time: string;
+        hours: string;
+        komentarz?: string;
+        historia_komentarza?: string;
+    }[] = [];
+    export let selectedUser: {
+        imie: string;
+        nazwisko: string;
+        stanowisko: string;
+    };
 
-  // Tablica miesięcy
-  const months = [
-        { value: '0', name: 'Styczeń' },
-        { value: '1', name: 'Luty' },
-        { value: '2', name: 'Marzec' },
-        { value: '3', name: 'Kwiecień' },
-        { value: '4', name: 'Maj' },
-        { value: '5', name: 'Czerwiec' },
-        { value: '6', name: 'Lipiec' },
-        { value: '7', name: 'Sierpień' },
-        { value: '8', name: 'Wrzesień' },
-        { value: '9', name: 'Październik' },
-        { value: '10', name: 'Listopad' },
-        { value: '11', name: 'Grudzień' }
+    // Tablica miesięcy
+    const months = [
+        { value: "0", name: "Styczeń" },
+        { value: "1", name: "Luty" },
+        { value: "2", name: "Marzec" },
+        { value: "3", name: "Kwiecień" },
+        { value: "4", name: "Maj" },
+        { value: "5", name: "Czerwiec" },
+        { value: "6", name: "Lipiec" },
+        { value: "7", name: "Sierpień" },
+        { value: "8", name: "Wrzesień" },
+        { value: "9", name: "Październik" },
+        { value: "10", name: "Listopad" },
+        { value: "11", name: "Grudzień" },
     ];
 
-  // Wybrany miesiąc
-  export let selectedMonth: string = '1'; // Domyślnie Styczeń
-  let filteredLogowania = [];
-  let customStartDate = "";
-  let customEndDate = "";
-  let showFiltered = false;
-  let totalHours = 0;
+    // Wybrany miesiąc
+    export let selectedMonth: string = "1"; // Domyślnie Styczeń
+    let filteredLogowania = [];
+    let customStartDate = "";
+    let customEndDate = "";
+    let showFiltered = false;
+    let totalHours = 0;
 
     const showModal = writable(false);
     const showReportModal = writable(false);
     const modalContent = writable("");
     const modalDate = writable("");
     const modalHistory = writable("");
-    const currentLog = writable({ _id: "", date: "", entrence_time: "", exit_time: "", hours: "", komentarz: "", historia_komentarza: "" });
+    const currentLog = writable({
+        _id: "",
+        date: "",
+        entrence_time: "",
+        exit_time: "",
+        hours: "",
+        komentarz: "",
+        historia_komentarza: "",
+    });
     const editField = writable("");
     const newValue = writable("");
 
     const parseHours = (time: string): number => {
-        const [hours, minutes] = time.split(':').map(Number);
+        const [hours, minutes] = time.split(":").map(Number);
         return hours + minutes / 60;
     };
 
     const convertDecimalHoursToTime = (decimalHours: number): string => {
         const hours = Math.floor(decimalHours);
         const minutes = Math.round((decimalHours - hours) * 60);
-        return `${hours}:${minutes.toString().padStart(2, '0')}`;
+        return `${hours}:${minutes.toString().padStart(2, "0")}`;
     };
 
     const filterLogs = async (range: string) => {
@@ -65,12 +84,20 @@
         let endDate: Date = new Date(now);
 
         if (range === "today") {
-            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate(),
+            );
         } else if (range === "week") {
             const startOfWeek = new Date(now);
             const dayOfWeek = startOfWeek.getDay() || 7;
             startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + 1);
-            startDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
+            startDate = new Date(
+                startOfWeek.getFullYear(),
+                startOfWeek.getMonth(),
+                startOfWeek.getDate(),
+            );
         } else if (range === "month") {
             startDate = new Date(now.getFullYear(), now.getMonth(), 1);
         } else if (range === "custom") {
@@ -80,12 +107,15 @@
             startDate = new Date(now.getFullYear(), now.getMonth(), 1);
         }
 
-        filteredLogowania = logowania.filter(log => {
+        filteredLogowania = logowania.filter((log) => {
             const logDate = new Date(log.date);
             return logDate >= startDate && logDate <= endDate;
         });
 
-        totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+        totalHours = filteredLogowania.reduce(
+            (sum, log) => sum + parseHours(log.hours),
+            0,
+        );
 
         await tick();
         setupTooltips();
@@ -104,38 +134,38 @@
         flatpickr("#customStartDate", {
             onChange: (selectedDates) => {
                 customStartDate = selectedDates[0].toISOString();
-            }
+            },
         });
         flatpickr("#customEndDate", {
             onChange: (selectedDates) => {
                 customEndDate = selectedDates[0].toISOString();
-            }
+            },
         });
     };
 
     const showCustomDateRange = () => {
-        document.getElementById('customDateRange').style.display = 'block';
+        document.getElementById("customDateRange").style.display = "block";
     };
 
     const hideCustomDateRange = () => {
-        document.getElementById('customDateRange').style.display = 'none';
+        document.getElementById("customDateRange").style.display = "none";
     };
 
-  const openModal = (log) => {
-      currentLog.set(log);
-      modalContent.set(log.komentarz || "Brak komentarza");
-      modalDate.set(log.date);
-      modalHistory.set(log.historia_komentarza || "Brak historii komentarzy");
-      showModal.set(true);
+    const openModal = (log) => {
+        currentLog.set(log);
+        modalContent.set(log.komentarz || "Brak komentarza");
+        modalDate.set(log.date);
+        modalHistory.set(log.historia_komentarza || "Brak historii komentarzy");
+        showModal.set(true);
     };
-    
+
     const closeModal = () => {
         showModal.set(false);
     };
-    
+
     const openReportModal = () => {
-      modalContent.set("Raport");
-      showReportModal.set(true);
+        modalContent.set("Raport");
+        showReportModal.set(true);
     };
 
     const closeReportModal = () => {
@@ -143,22 +173,26 @@
     };
 
     const parseHistory = (history) => {
-        return history.split('\n').filter(line => line).map(line => {
-            const [date, time, ...commentParts] = line.split(' ');
-            return { date, time, comment: commentParts.join(' ') };
-        });
+        return history
+            .split("\n")
+            .filter((line) => line)
+            .map((line) => {
+                const [date, time, ...commentParts] = line.split(" ");
+                return { date, time, comment: commentParts.join(" ") };
+            });
     };
 
     const setupTooltips = () => {
-      const commentButtons = document.querySelectorAll('.comment-button');
-      commentButtons.forEach(button => {
-        tippy(button, {
-          content: button.getAttribute('data-comment') || "Brak komentarza",
-          placement: 'top',
-          theme: 'light',
-          maxWidth: 200,
+        const commentButtons = document.querySelectorAll(".comment-button");
+        commentButtons.forEach((button) => {
+            tippy(button, {
+                content:
+                    button.getAttribute("data-comment") || "Brak komentarza",
+                placement: "top",
+                theme: "light",
+                maxWidth: 200,
+            });
         });
-      });
     };
 
      // Zmienna dla nowego modala
@@ -186,19 +220,45 @@
     $: {
         if (logowania.length > 0 && !showFiltered) {
             filteredLogowania = [...logowania];
-            totalHours = filteredLogowania.reduce((sum, log) => sum + parseHours(log.hours), 0);
+            totalHours = filteredLogowania.reduce(
+                (sum, log) => sum + parseHours(log.hours),
+                0,
+            );
         }
     }
 </script>
 
 <div class="p-4">
     <div class="mb-4">
-        <h2 class="mb-4 text-lg font-semibold">Wybierz zakres dat aby wyświetlić logowania</h2>
+        <h2 class="mb-4 text-lg font-semibold">
+            Wybierz zakres dat aby wyświetlić logowania
+        </h2>
         <ul class="flex space-x-2 justify-center">
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("today")}>Dzisiaj</button></li>
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("week")}>Tydzień</button></li>
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => filterLogs("month")}>Miesiąc</button></li>
-            <li><button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => showCustomDateRange()}>Niestandardowy</button></li>
+            <li>
+                <button
+                    class="px-4 py-2 bg-blue-500 text-white rounded"
+                    on:click={() => filterLogs("today")}>Dzisiaj</button
+                >
+            </li>
+            <li>
+                <button
+                    class="px-4 py-2 bg-blue-500 text-white rounded"
+                    on:click={() => filterLogs("week")}>Tydzień</button
+                >
+            </li>
+            <li>
+                <button
+                    class="px-4 py-2 bg-blue-500 text-white rounded"
+                    on:click={() => filterLogs("month")}>Miesiąc</button
+                >
+            </li>
+            <li>
+                <button
+                    class="px-4 py-2 bg-blue-500 text-white rounded"
+                    on:click={() => showCustomDateRange()}
+                    >Niestandardowy</button
+                >
+            </li>
         </ul>
       <div class="flex space-x-2 justify-center">
         <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openReportModal}>Wygeneruj raport</button>
@@ -210,14 +270,30 @@
     
 
     <div id="customDateRange" style="display: none;" class="mt-4">
-      <label for="customStartDate">Początek:</label>
-      <input id="customStartDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
-      <label for="customEndDate">Koniec:</label>
-      <input id="customEndDate" type="text" class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1" />
-      <button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => applyCustomDateFilter()}>Zastosuj</button>
+        <label for="customStartDate">Początek:</label>
+        <input
+            id="customStartDate"
+            type="text"
+            class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1"
+        />
+        <label for="customEndDate">Koniec:</label>
+        <input
+            id="customEndDate"
+            type="text"
+            class="w-full px-4 py-2 border rounded mb-2 mr-2 flex-1"
+        />
+        <button
+            class="px-4 py-2 bg-blue-500 text-white rounded"
+            on:click={() => applyCustomDateFilter()}>Zastosuj</button
+        >
     </div>
 
-    <h2>Logowania użytkownika: <span class="underline decoration-2 decoration-sky-600">{selectedUser.imie} {selectedUser.nazwisko}</span></h2>
+    <h2>
+        Logowania użytkownika: <span
+            class="underline decoration-2 decoration-sky-600"
+            >{selectedUser.imie} {selectedUser.nazwisko}</span
+        >
+    </h2>
     <table class="wd-100 border-collapse mt-4">
       <thead>
         <tr>
@@ -240,7 +316,7 @@
               <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
               <td>
                 <div class="flex justify-center items-center">
-                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
+                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
                 </div>
               </td>
             </tr>
@@ -255,7 +331,7 @@
             <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
             <td>
                 <div class="flex justify-center items-center">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
                 </div>
             </td>
           </tr>
@@ -412,12 +488,11 @@
 </div>
 
 <style>
-    th, td {
+    th,
+    td {
         @apply border border-gray-300 p-2 text-center;
     }
     th {
         @apply bg-gray-200;
     }
 </style>
-
-
