@@ -28,7 +28,7 @@ export const actions: Actions = {
         nazwisko: nazwisko,
         stanowisko: stanowisko,
       };
-
+      console.log(insertIntoPracownicy)
       // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
       // keep in mind some database (e.g. mysql) are case insensitive
       if (
@@ -62,12 +62,12 @@ export const actions: Actions = {
           message: "Niepoprawne nazwisko",
         });
       }
-      if (typeof karta !== "string" || !/^[a-zA-Z]+$/.test(karta)) {
+      if (typeof karta !== "string" || !/^[a-zA-Z0-9]+$/.test(karta)) {
         return fail(400, {
           message: "Niepoprawny kod karty",
         });
       }
-      if (typeof palec !== "string" || !/^[a-zA-Z]+$/.test(palec)) {
+      if (typeof palec !== "string" || !/^[a-zA-Z0-9]+$/.test(palec)) {
         return fail(400, {
           message: "Niepoprawny kod palca",
         });
@@ -80,21 +80,23 @@ export const actions: Actions = {
         outputLen: 32,
         parallelism: 1,
       });
-
+      const user = {
+        id: userId,
+        role: ranga,
+        name: name,
+        username: username,
+        hash_password: passwordHash
+      }
+      console.log(user)
       // TODO: check if username is already used
       const User = await prisma.user.create({ data: user });
       console.log("Zarejestrowano użytkownika");
-      const session = await lucia.createSession(userId, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-      event.cookies.set(sessionCookie.name, sessionCookie.value, {
-        path: ".",
-        ...sessionCookie.attributes,
-      });
-
       _pracownicy.collection("PracownicyID").insertOne(insertIntoPracownicy);
 
       // Użycie funkcji redirect, aby przekierować użytkownika na stronę z parametrem sukcesu
-      throw redirect(302, "/signup?success=true");
+      return{
+        success: true,
+      }
     } catch (error) {
       console.error("Błąd serwera:", error);
       return fail(500, { message: "Internal Server Error" });
