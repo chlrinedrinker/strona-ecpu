@@ -4,6 +4,7 @@
   import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
   import NavbarKalendarz from "./NavbarKalendarz.svelte";
+  import { userType } from "../stores/stores";
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
 
@@ -88,33 +89,79 @@
     showLogs.set(false);
     showUserList.set(true);
   }
+
+  // Reactive statement to auto-select user if userType is 2
+  $: if ($userType === 2 && pracownicy.length > 0) {
+    selectedUser = pracownicy[0];
+    showLogs.set(true);
+    showUserList.set(false);
+
+    // Fetch logs for the first user when selected
+    (async () => {
+      const userLogs = await fetchLogsForUser(selectedUser);
+      logowaniaStore.update((logs) => {
+        logs[selectedUser!._id] = userLogs;
+        return logs;
+      });
+    })();
+  }
 </script>
 
-<!-- Przepisałem style na klasy Tailwind CSS -->
-<div
-  class={`w-64 overflow-y-visible overflow-scroll h-screen lg:block ${$showUserList ? "block" : "hidden"} lg:visible`}
->
-  {#if $isLoading}
-    <div>Loading...</div>
-  {:else}
-    {#each pracownicy as user}
-      <Uzytkownik
-        imie={user.imie}
-        nazwisko={user.nazwisko}
-        stanowisko={user.stanowisko}
-        on:select={handleSelect}
-        selected={selectedUser &&
-          selectedUser.imie === user.imie &&
-          selectedUser.nazwisko === user.nazwisko}
-        active={isUserActive(user)}
-      />
-    {/each}
-  {/if}
-</div>
+<!-- Render based on userType -->
+{#if $userType == 1 || $userType == 0}
+  <div
+    class={`w-64 overflow-y-visible overflow-scroll h-screen lg:block ${$showUserList ? "block" : "hidden"} lg:visible`}
+  >
+    {#if $isLoading}
+      <div>Loading...</div>
+    {:else}
+      {#each pracownicy as user}
+        <Uzytkownik
+          imie={user.imie}
+          nazwisko={user.nazwisko}
+          stanowisko={user.stanowisko}
+          on:select={handleSelect}
+          selected={selectedUser &&
+            selectedUser.imie === user.imie &&
+            selectedUser.nazwisko === user.nazwisko}
+          active={isUserActive(user)}
+        />
+      {/each}
+    {/if}
+  </div>
 
-{#if selectedUser}
+  {#if selectedUser}
+    <div class="relative lg:flex lg:w-full lg:h-screen">
+      <!-- Back Button -->
+      <button
+        on:click={handleBack}
+        class="lg:hidden fixed top-48 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
+      >
+        <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
+          <span class="text-lg">&gt;</span>
+        </div>
+      </button>
+
+      <!-- ShowLogs Section -->
+      <div
+        class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
+      >
+        <ShowLogs logowania={$logowaniaStore[selectedUser._id]} {selectedUser} />
+      </div>
+
+      <!-- NavbarKalendarz Section -->
+      <div
+        class="lg:w-1/4 lg:flex lg:flex-col lg:justify-between lg:bg-white lg:overflow-auto lg:border-r lg:border-gray-200 max-w-full overflow-hidden z-90"
+      >
+        <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
+      </div>
+    </div>
+  {/if}
+{/if}
+
+{#if $userType == 2}
   <div class="relative lg:flex lg:w-full lg:h-screen">
-    <!-- Przycisk powrotu -->
+    <!-- Back Button -->
     <button
       on:click={handleBack}
       class="lg:hidden fixed top-48 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
@@ -124,14 +171,14 @@
       </div>
     </button>
 
-    <!-- Sekcja ShowLogs na dużych ekranach -->
+    <!-- ShowLogs Section -->
     <div
       class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
     >
       <ShowLogs logowania={$logowaniaStore[selectedUser._id]} {selectedUser} />
     </div>
 
-    <!-- NavbarKalendarz na dużych ekranach -->
+    <!-- NavbarKalendarz Section -->
     <div
       class="lg:w-1/4 lg:flex lg:flex-col lg:justify-between lg:bg-white lg:overflow-auto lg:border-r lg:border-gray-200 max-w-full overflow-hidden z-90"
     >

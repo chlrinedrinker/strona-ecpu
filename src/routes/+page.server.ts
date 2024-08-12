@@ -54,6 +54,7 @@ export const load: PageServerLoad = async (event) => {
     imie: imie,
     nazwisko: nazwisko,
     active: activeUsers,
+    
   };
 };
 
