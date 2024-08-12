@@ -36,7 +36,7 @@
     <div class="flex items-center space-x-2 md:space-x-4 relative">
       <!-- Hamburger Menu Button for Small Screens -->
       <button
-        class="md:hidden block px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
+        class="block px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
         on:click={toggleDropdown}
       >
         <svg
