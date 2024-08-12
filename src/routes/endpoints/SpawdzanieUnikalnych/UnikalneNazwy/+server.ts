@@ -3,13 +3,17 @@ import dotenv from "dotenv";
 import { _login } from "$db/mongo";
 
 dotenv.config();
+const projection = {
+    _id: 0,
+    name: 1,
+}
 
 
 export async function GET() {
     try {
         const collection = _login.collection("User")
 
-        const unikatoweNazwy = await collection.distinct("name")
+        const unikatoweNazwy = await collection.find({}, {projection: projection}).toArray()
         
         return json(unikatoweNazwy)
     } catch (error) {
