@@ -254,6 +254,7 @@
         >
       </li>
     </ul>
+    {#if $userType == 0}
     <div class="flex space-x-1 justify-center mt-2">
       <button
         class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
@@ -264,10 +265,12 @@
         on:click={openAddLogModal}>Dodaj Log</button
       >
     </div>
+    {/if}
     <p class="font-bold text-center mt-2 text-xs md:text-sm">
       Suma godzin: {convertDecimalHoursToTime(totalHours)}
     </p>
   </div>
+  
 
   <div id="customDateRange" style="display: none;" class="mt-2">
     <label for="customStartDate" class="block text-xs">Początek:</label>
