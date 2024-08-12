@@ -320,7 +320,7 @@
           <td class="p-2 md:p-3">{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
           <td class="p-2 md:p-3">
             <div class="flex justify-center items-center">
-              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
             </div>
           </td>
         </tr>
@@ -342,9 +342,9 @@
               <td class="p-2 md:p-3">
                 <div class="flex justify-center items-center">
                   <button
-                    class="px-1 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
+                    class="px-8 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
                     data-comment={log.komentarz || "Brak komentarza"}
-                    on:click={() => openModal(log)}>Zobacz komentarz</button
+                    on:click={() => openModal(log)}>Edytuj</button
                   >
                 </div>
               </td>

@@ -84,23 +84,20 @@
     }
 </script>
 
-<main
-    class="flex flex-col items-center justify-center h-screen bg-gray-100 p-6"
->
-    <h1 class="text-5xl font-bold mb-4">Rejestracja</h1>
-    <h1 class="text-5xl font-bold mb-4"></h1>
+<main class="flex flex-col items-center justify-center h-screen bg-gray-100 p-4 sm:p-6">
+    <h1 class="text-3xl  sm:text-5xl font-bold mb-1 mt-4 sm: mb-3 mt-0">Rejestracja</h1>
     {#if successMessage}
-        <p class="text-green-500 mb-4">{successMessage}</p>
+        <p class="text-green-500 mb-4 text-center">{successMessage}</p>
     {/if}
     <form
-        class="flex flex-col gap-4 p-8 bg-white rounded-lg shadow-md w-full max-w-3xl"
+        class="flex flex-col gap-4 p-6 sm:p-8 bg-white rounded-lg shadow-md w-full max-w-lg sm:max-w-3xl"
         method="post"
         use:enhance
         on:submit={validate}
         action="?/signup"
     >
         <!-- Imie i Nazwisko -->
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
                 <label for="imie" class="block mb-2">Imie:</label>
                 <input
@@ -130,11 +127,9 @@
         </div>
 
         <!-- Typ użytkownika i Stanowisko -->
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="ranga" class="block mb-2"
-                    >Wybierz typ użytkownika:</label
-                >
+                <label for="ranga" class="block mb-2">Wybierz typ użytkownika:</label>
                 <select
                     name="ranga"
                     id="ranga"
@@ -160,7 +155,7 @@
         </div>
 
         <!-- Kod Karty i Kod Odcisku Palca -->
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
                 <label for="cardID" class="block mb-2">Kod Karty:</label>
                 <input
@@ -174,9 +169,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="fingerID" class="block mb-2"
-                    >Kod Odcisku Palca:</label
-                >
+                <label for="fingerID" class="block mb-2">Kod Odcisku Palca:</label>
                 <input
                     type="text"
                     id="fingerID"
@@ -190,11 +183,9 @@
         </div>
 
         <!-- Nazwa użytkownika i Hasło -->
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="username" class="block mb-2"
-                    >Nazwa użytkownika:</label
-                >
+                <label for="username" class="block mb-2">Nazwa użytkownika:</label>
                 <input
                     type="text"
                     id="username"
@@ -223,8 +214,9 @@
 
         <button
             type="submit"
-            class="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >Zarejestruj się</button
+            class="w-full py-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
+            Zarejestruj się
+        </button>
     </form>
 </main>
