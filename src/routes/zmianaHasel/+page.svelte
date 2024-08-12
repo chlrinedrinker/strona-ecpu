@@ -3,10 +3,11 @@
   import KontoZmiany from "../komponenty/KontoZmiany.svelte";
   import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
-  import type { PageData } from "../$types";
+  import type { PageData, ActionData} from "../$types";
   import { enhance } from "$app/forms";
   import Modal from "../komponenty/Modal.svelte";
   export let data: PageData;
+  export let form: ActionData ;
 
   interface Pracownik {
     _id: string;
@@ -98,6 +99,9 @@
         
         class="flex flex-col items-center justify-center"
       >
+      {#if form?.error}
+      <p class="error">{form.error}</p>
+      {/if}
         <KontoZmiany {selectedUser} />
       </div>
     {/if}
