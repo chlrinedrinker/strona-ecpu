@@ -117,8 +117,7 @@
     <!-- Przycisk powrotu -->
     <button
       on:click={handleBack}
-      class="lg:hidden bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
-      style="position: sticky; top: 0px; -left: 1px;"
+      class="lg:hidden fixed top-48 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
     >
       <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
         <span class="text-lg">&gt;</span>
