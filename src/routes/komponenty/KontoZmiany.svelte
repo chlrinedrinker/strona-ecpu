@@ -1,7 +1,9 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import type { ActionData } from "../$types";
     import Modal from "../komponenty/Modal.svelte";
     export let selectedUser;
+
     let showModal = false;
     interface Pracownik {
         _id: string;
@@ -14,9 +16,17 @@
 <div class="p-4 bg-white rounded-lg w-full max-w-md">
     <h2 class="mb-4">
         Wybrano: <span class="underline decoration-2 decoration-sky-600"
-            >{selectedUser.imie} {selectedUser.nazwisko}</span
+        >{selectedUser.imie} {selectedUser.nazwisko}</span
         >
     </h2>
+    <form
+        action="?/zmianaDanychUżytkownika"
+        method="post"
+        use:enhance={({ formData }) => {
+            formData.append("imie", selectedUser.imie);
+            formData.append("nazwisko", selectedUser.nazwisko);
+        }}
+    >
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label for="zmianaLogin" class="block mb-2">Zmiana Login</label>
@@ -63,15 +73,46 @@
                 <option value="2">Użytkownik</option>
             </select>
         </div>
+        <div>
+            <label for="zmianaKarty" class="block mb-2">Zmiana Numeru Karty</label>
+            <input
+                type="text"
+                name="zmianaKarty"
+                id="zmianaKarty"
+                class="w-full mb-4 p-2 border border-gray-300 rounded"
+            />
+        </div>
+        <div>
+            <label for="zmianaKoduKarty" class="block mb-2">Zmiana Numeru Palca</label>
+            <input
+                type="text"
+                name="zmianaKoduKarty"
+                id="zmianaKoduKarty"
+                class="w-full mb-4 p-2 border border-gray-300 rounded"
+            />
+        </div>
+        <div>
+            <label for="zmianaImienia" class="block mb-2">Zmiana Imienia</label>
+            <input
+                type="text"
+                name="zmianaImienia"
+                id="zmianaImienia"
+                class="w-full mb-4 p-2 border border-gray-300 rounded"
+                placeholder={selectedUser.imie}
+            />
+        </div>
+        <div>
+            <label for="zmianaNazwiska" class="block mb-2">Zmiana Nazwiska</label>
+            <input
+                type="text"
+                name="zmianaNazwiska"
+                id="zmianaNazwiska"
+                class="w-full mb-4 p-2 border border-gray-300 rounded"
+                placeholder={selectedUser.nazwisko}
+            />
+        </div>
+
     </div>
-    <form
-        action="?/zmianaDanychUżytkownika"
-        method="post"
-        use:enhance={({ formData }) => {
-            formData.append("imie", selectedUser.imie);
-            formData.append("nazwisko", selectedUser.nazwisko);
-        }}
-    >
         <div class="flex justify-between mt-4">
             <button
                 type="submit"

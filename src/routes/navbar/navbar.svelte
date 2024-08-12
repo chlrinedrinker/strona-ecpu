@@ -1,73 +1,104 @@
 <script>
-    import { enhance } from "$app/forms"; // SvelteKit form enhancement
-    import { isLoggedIn, userType } from "../stores/stores"; // Store for login state
-    const logged = isLoggedIn; // Get the login state
-    let isDropdownOpen = false;
-    const handleDropdownClick = () => {
-        isDropdownOpen = !isDropdownOpen; // togle state on click
-    };
+  import { enhance } from "$app/forms"; // SvelteKit form enhancement
+  import { isLoggedIn, userType } from "../stores/stores"; // Store for login state
+  const logged = isLoggedIn; // Get the login state
 
-    const handleDropdownFocusLoss = ({ relatedTarget, currentTarget }) => {
-        // use "focusout" event to ensure that we can close the dropdown when clicking outside or when we leave the dropdown with the "Tab" button
-        if (
-            relatedTarget instanceof HTMLElement &&
-            currentTarget.contains(relatedTarget)
-        )
-            return; // check if the new focus target doesn't present in the dropdown tree (exclude ul\li padding area because relatedTarget, in this case, will be null)
-        isDropdownOpen = false;
-    };
+  // Zmienna stanu do przechowywania stanu rozwinięcia menu
+  let isDropdownOpen = false;
+
+  // Funkcja zmieniająca stan isDropdownOpen
+  function toggleDropdown() {
+    isDropdownOpen = !isDropdownOpen;
+  }
+
+  // Funkcja zamykająca modal
+  function closeDropdown() {
+    isDropdownOpen = false;
+  }
 </script>
 
-<div class="flex items-center justify-between p-4 bg-gray-100 border-b z-100">
-    <div class="flex items-center space-x-4">
-        <a href="/">
-            <img src="/herb.png" alt="Logo" class="h-8" />
-        </a>
-        <a href="/">
-            <div>Gmina Łubnice</div>
-        </a>
-    </div>
-    {#if $logged}
-        <div class="flex items-center space-x-4">
-            <a href="/zmianaHaslaIndiwidualna">
-                <button class="px-4 py-2 bg-blue-500 text-white rounded"
-                    >Zmień Hasło</button
-                ></a
-            >
-            <!-- <button class="px-4 py-2 bg-blue-500 text-white rounded"
-                >Raporty</button -->
-            <!-- > -->
-            <div class="flex items-center space-x-2">
-                <form method="post" use:enhance action="?/wyloguj">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded"
-                        >Wyloguj się</button
-                    >
-                </form>
-                {#if $userType == 0}
-                    <div
-                        class="dropdown relative"
-                        on:focus={handleDropdownFocusLoss}
-                    >
-                        <button
-                            class="px-4 py-2 bg-blue-500 text-white rounded m-1"
-                            on:click={handleDropdownClick}
-                        >
-                            <h1>
-                                <a href="zmianaHasel">Panel Administracyjny</a>
-                            </h1>
-                        </button>
-                    </div>
-                    <a href="/signup"
-                        ><button
-                            class="px-4 py-2 bg-blue-500 text-white rounded"
-                            >Zarejestruj użytkownika</button
-                        ></a
-                    >
-                {/if}
-            </div>
-            <div class="w-10 h-10 rounded-full bg-gray-300">
-                <img src="user.png" alt="User" />
-            </div>
+<div
+  class="flex items-center justify-between p-2 md:p-4 bg-gray-100 border-b z-100 w-full"
+>
+  <div class="flex items-center space-x-2 md:space-x-4">
+    <a href="/">
+      <img
+        src="/herb.png"
+        alt="Logo"
+        class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12"
+      />
+    </a>
+    <a href="/">
+      <div class="text-sm sm:text-base md:text-lg">Gmina Łubnice</div>
+    </a>
+  </div>
+  {#if $logged}
+    <div class="flex items-center space-x-2 md:space-x-4 relative">
+      <!-- Hamburger Menu Button for Small Screens -->
+      <button
+        class="block px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
+        on:click={toggleDropdown}
+      >
+        <svg
+          class="w-4 h-4 sm:w-6 sm:h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
+        </svg>
+      </button>
+
+      <!-- Dropdown menu for small screens -->
+      {#if isDropdownOpen}
+        <div class="fixed inset-0 z-10 overflow-auto bg-black/40">
+          <div
+            class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg"
+          >
+            <button on:click={closeDropdown}>
+              <span
+                class="text-gray-400 float-right text-2xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer"
+                >&times;</span
+              >
+            </button>
+            <button
+              class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
+              ><a href="/zmianaHaslaIndiwidualna">Zmień Hasło</a>
+            </button>
+
+            {#if $userType == 0}
+              <button
+                class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
+                ><a href="/zmianaHasel">Panel Administracyjny</a>
+              </button>
+              <button
+                class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
+                ><a href="/signup">Zarejestruj użytkownika</a>
+              </button>
+            {/if}
+            <form method="post" use:enhance action="?/wyloguj">
+              <button
+                type="submit"
+                class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
+                >Wyloguj się</button
+              >
+            </form>
+          </div>
         </div>
-    {/if}
+      {/if}
+
+      <!-- Optional Profile Image -->
+      <div
+        class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 hidden lg:block"
+      >
+        <img src="user.png" alt="User" class="w-full h-full rounded-full" />
+      </div>
+    </div>
+  {/if}
 </div>

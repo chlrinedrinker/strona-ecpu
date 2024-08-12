@@ -22,6 +22,7 @@
     slotMinTime: '06:00:00',
     slotMaxTime: '21:00:00',
     themeSystem: 'bootstrap',
+    allDaySlot: false,
     editable: true,
     selectable: true,
     hiddenDays: [0, 6], // Ukryj sobotę (6) i niedzielę (0)
@@ -117,6 +118,6 @@
   }
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col m-5 z-90">
   <Calendar {plugins} {options} />
 </div>
