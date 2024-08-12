@@ -59,12 +59,16 @@ export const actions: Actions = {
     const name = wybranyImie!.toString() + "_" + wybranyNazwisko!.toString();
     const response_loginy = event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneLoginy")
     const response_name = event.fetch("src/routes/endpoints/SpawdzanieUnikalnych/UnikalneNazwy")
+    let unikalneLoginy= [];
+    let unikalneName = [];
     if((await response_loginy).ok){
-      const unikalneLoginy = (await response_loginy).json()
+      unikalneLoginy = (await response_loginy).json()
     }
     if((await response_name).ok){
-      const unikalneName = (await response_name).json()
+      unikalneName = (await response_name).json()
     }
+    console.log(unikalneLoginy)
+    console.log(unikalneName)
 
     console.log(name)
     let zmianaUSERS: { [key: string]: string } = {};
