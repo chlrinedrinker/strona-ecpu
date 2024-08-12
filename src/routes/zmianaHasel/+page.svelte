@@ -87,14 +87,15 @@
 
   <div
     class="w-full md:flex-grow md:items-center md:justify-center bg-gray-100 p-4 md:p-6"
-  >
+  >{#if selectedUser}
     <!-- Nagłówek widoczny na dużych ekranach i po wybraniu użytkownika na małych ekranach -->
     <h1 class={`text-center mb-4 text-2xl md:text-5xl font-bold ${!selectedUser && 'hidden md:block'}`}>
       Panel administratora
     </h1>
-    {#if selectedUser}
+    
       <div
         transition:slide={{ duration: 300 }}
+        
         class="flex flex-col items-center justify-center"
       >
         <KontoZmiany {selectedUser} />

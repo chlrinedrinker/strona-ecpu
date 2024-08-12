@@ -31,6 +31,14 @@
   function closeDropdown() {
     isDropdownOpen = false;
   }
+
+  // Close the dropdown when clicking outside the dropdown area
+  function handleOutsideClick(event) {
+    // Check if the clicked element is outside the dropdown content
+    if (event.target.closest('.dropdown-content') === null) {
+      closeDropdown();
+    }
+  }
 </script>
 
 <div
@@ -74,9 +82,9 @@
 
         <!-- Dropdown menu for small screens -->
         {#if isDropdownOpen}
-          <div class="fixed inset-0 z-10 overflow-auto bg-black/40">
+          <div class="fixed inset-0 z-10 overflow-auto" on:click={handleOutsideClick}>
             <div
-              class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg"
+              class="bg-white my-5 p-5 border border-gray-400 w-auto right-0 absolute mr-4 rounded-lg dropdown-content"
             >
               <button on:click={closeDropdown}>
                 <span

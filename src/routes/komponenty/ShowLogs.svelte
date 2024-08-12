@@ -221,6 +221,18 @@
       );
     }
   }
+  function handleOutsideClick(event) {
+    // Check if the clicked element is outside the dropdown content
+    if (event.target.closest('.dropdown-content') === null) {
+        closeModal();
+    }
+    if (event.target.closest('.dropdown-raport-content') === null) {
+        closeReportModal();
+    }
+    if (event.target.closest('.dropdown-add-content') === null) {
+        closeAddLogModal();
+    }
+  }
 </script>
 
 <div class="p-1 md:p-2 z-90">
@@ -358,10 +370,10 @@
   <!-- Modal z komentarzem -->
   {#if $showModal}
   <div
-    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40"
+    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >
     <div
-      class="bg-white my-2 mx-4 p-4 border border-gray-400 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-lg"
+      class="bg-white my-2 mx-4 p-4 border border-gray-400 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-lg dropdown-content"
     >
       <button on:click={closeModal}>
         <span
@@ -428,7 +440,6 @@
               <strong>Edycja godzin:</strong>
             </h4>
             <div class="mb-2">
-              <p class="mx-1 my-0 text-xs md:text-sm">Godzina wejścia</p>
               <form
                 action="?/editEntrenceHours"
                 method="post"
@@ -443,7 +454,7 @@
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="text"
                   placeholder="Godzina wejścia"
-                  bind:value={$currentLog.entrence_time}
+                  
                   name="entrance_time"
                 />
                 <button
@@ -451,7 +462,7 @@
                   type="submit">Zapisz</button
                 >
               </form>
-              <p class="mx-1 my-0 text-xs md:text-sm">Godzina wyjścia</p>
+              <hr>
               <form
                 action="?/editExitHours"
                 method="post"
@@ -466,7 +477,7 @@
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="text"
                   placeholder="Godzina wyjścia"
-                  bind:value={$currentLog.exit_time}
+                  
                   name="exit_time"
                 />
                 <button
@@ -486,10 +497,10 @@
 
 {#if $showReportModal}
   <div
-    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40"
+    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >
     <div
-      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg"
+      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg dropdown-raport-content"
     >
       <button on:click={closeReportModal}>
         <span
@@ -525,10 +536,10 @@
 
 {#if $showAddLogModal}
   <div
-    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40"
+    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >
     <div
-      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-xs md:max-w-sm lg:max-w-4xl rounded-lg"
+      class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-xs md:max-w-sm lg:max-w-4xl rounded-lg dropdown-add-content"
     >
       <button on:click={closeAddLogModal}>
         <span
