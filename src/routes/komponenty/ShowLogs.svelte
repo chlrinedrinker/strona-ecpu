@@ -260,10 +260,12 @@
                 >
             </li>
         </ul>
+        {#if $userType == 0}
       <div class="flex space-x-2 justify-center">
         <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openReportModal}>Wygeneruj raport</button>
         <button class="px-4 py-2 mt-2 bg-blue-500 text-white rounded" on:click={openAddLogModal}>Dodaj Log</button>
       </div>
+      {/if}
         <p class="font-bold text-center mt-4">Suma godzin: {convertDecimalHoursToTime(totalHours)}</p>
     </div>
     
@@ -316,7 +318,7 @@
               <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
               <td>
                 <div class="flex justify-center items-center">
-                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                  <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj </button>
                 </div>
               </td>
             </tr>
@@ -331,7 +333,7 @@
             <td>{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
             <td>
                 <div class="flex justify-center items-center">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Zobacz komentarz</button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded comment-button ml-2" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj </button>
                 </div>
             </td>
           </tr>
