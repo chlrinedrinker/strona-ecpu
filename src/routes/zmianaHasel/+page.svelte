@@ -8,6 +8,8 @@
   import Modal from "../komponenty/Modal.svelte";
   export let data: PageData;
   export let form: ActionData ;
+  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+
 
   interface Pracownik {
     _id: string;
@@ -91,7 +93,7 @@
   >{#if selectedUser}
     <!-- Nagłówek widoczny na dużych ekranach i po wybraniu użytkownika na małych ekranach -->
     <h1 class={`text-center mb-4 text-2xl md:text-5xl font-bold ${!selectedUser && 'hidden md:block'}`}>
-      Panel administratora
+      {t('admin_panel')}
     </h1>
     
       <div

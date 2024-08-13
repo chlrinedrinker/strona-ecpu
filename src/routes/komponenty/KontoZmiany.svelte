@@ -3,6 +3,7 @@
     import type { ActionData } from "../$types";
     import Modal from "../komponenty/Modal.svelte";
     export let selectedUser;
+    import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
 
     let showModal = false;
     interface Pracownik {
@@ -15,7 +16,7 @@
 
 <div class="p-4 bg-white rounded-lg w-full max-w-md">
     <h2 class="mb-4">
-        Wybrano: <span class="underline decoration-2 decoration-sky-600"
+        {t('selected')}: <span class="underline decoration-2 decoration-sky-600"
         >{selectedUser.imie} {selectedUser.nazwisko}</span
         >
     </h2>
@@ -29,7 +30,7 @@
     >
     <div class="grid grid-cols-2 gap-4">
         <div>
-            <label for="zmianaLogin" class="block mb-2">Zmiana Login</label>
+            <label for="zmianaLogin" class="block mb-2">{t('change_login')}</label>
             <input
                 type="text"
                 name="zmianaLogin"
@@ -39,7 +40,7 @@
             />
         </div>
         <div>
-            <label for="zmianaHasła" class="block mb-2">Zmiana Hasła</label>
+            <label for="zmianaHasła" class="block mb-2">{t('change_password')}</label>
             <input
                 type="password"
                 name="zmianaHasła"
@@ -50,7 +51,7 @@
         </div>
         <div>
             <label for="zmianaStanowiska" class="block mb-2"
-                >Zmiana Stanowiska</label
+                >{t('change_position')}</label
             >
             <input
                 type="text"
@@ -61,20 +62,20 @@
             />
         </div>
         <div>
-            <label for="zmianaRanga" class="block mb-2">Zmiana Ranga</label>
+            <label for="zmianaRanga" class="block mb-2">{t('change_rank')}</label>
             <select
                 name="zmianaRanga"
                 id="zmianaRanga"
                 class="w-full p-2 border border-gray-300 rounded"
             >
-                <option value="">Brak Zmian</option>
-                <option value="0">Administrator</option>
+                <option value="">{t('no_changes')}</option>
+                <option value="0">Admin</option>
                 <option value="1">Boss</option>
-                <option value="2">Użytkownik</option>
+                <option value="2">User</option>
             </select>
         </div>
         <div>
-            <label for="zmianaKarty" class="block mb-2">Zmiana Numeru Karty</label>
+            <label for="zmianaKarty" class="block mb-2">{t('change_card_number')}</label>
             <input
                 type="text"
                 name="zmianaKarty"
@@ -83,7 +84,7 @@
             />
         </div>
         <div>
-            <label for="zmianaKoduKarty" class="block mb-2">Zmiana Numeru Palca</label>
+            <label for="zmianaKoduKarty" class="block mb-2">{t('change_fingerprint_number')}</label>
             <input
                 type="text"
                 name="zmianaKoduKarty"
@@ -92,7 +93,7 @@
             />
         </div>
         <div>
-            <label for="zmianaImienia" class="block mb-2">Zmiana Imienia</label>
+            <label for="zmianaImienia" class="block mb-2">{t('change_first_name')}</label>
             <input
                 type="text"
                 name="zmianaImienia"
@@ -102,7 +103,7 @@
             />
         </div>
         <div>
-            <label for="zmianaNazwiska" class="block mb-2">Zmiana Nazwiska</label>
+            <label for="zmianaNazwiska" class="block mb-2">{t('change_last_name')}</label>
             <input
                 type="text"
                 name="zmianaNazwiska"
@@ -117,17 +118,17 @@
             <button
                 type="submit"
                 class="px-4 py-2 bg-blue-500 text-white rounded"
-                >Zmień Dane</button
+                >{t('update_data')}</button
             >
             <button
                 type="button"
                 class="px-4 py-2 bg-red-500 text-white rounded"
-                on:click={() => (showModal = true)}>Usuń Użytkownika</button
+                on:click={() => (showModal = true)}>{t('delete_user')}</button
             >
         </div>
     </form>
     <Modal bind:showModal>
-        <h1>Czy na pewno chcesz usunąć użytkownika?</h1>
+        <h1>{t('confirm_delete_user')}</h1>
         <form
             action="?/Delete"
             method="post"
@@ -139,7 +140,7 @@
         >
             <button
                 type="submit"
-                class="px-4 py-2 bg-red-500 text-white rounded my-2">Tak</button
+                class="px-4 py-2 bg-red-500 text-white rounded my-2">{t('yes')}</button
             >
         </form>
     </Modal>

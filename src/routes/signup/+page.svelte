@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { enhance } from "$app/forms";
+    import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
 
     let successMessage = "";
     let errors = {
@@ -85,7 +86,7 @@
 </script>
 
 <main class="flex flex-col items-center justify-center h-screen bg-gray-100 p-4 sm:p-6">
-    <h1 class="text-3xl  sm:text-5xl font-bold mb-1 mt-4 sm: mb-3 mt-0">Rejestracja</h1>
+    <h1 class="text-3xl  sm:text-5xl font-bold mb-1 mt-4 sm: mb-3 mt-0">{t('registration')}</h1>
     {#if successMessage}
         <p class="text-green-500 mb-4 text-center">{successMessage}</p>
     {/if}
@@ -99,7 +100,7 @@
         <!-- Imie i Nazwisko -->
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="imie" class="block mb-2">Imie:</label>
+                <label for="imie" class="block mb-2">{t('first_name')}:</label>
                 <input
                     type="text"
                     id="imie"
@@ -112,7 +113,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="nazwisko" class="block mb-2">Nazwisko:</label>
+                <label for="nazwisko" class="block mb-2">{t('last_name')}:</label>
                 <input
                     type="text"
                     id="nazwisko"
@@ -129,19 +130,19 @@
         <!-- Typ użytkownika i Stanowisko -->
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="ranga" class="block mb-2">Wybierz typ użytkownika:</label>
+                <label for="ranga" class="block mb-2">{t('select_user_type')}:</label>
                 <select
                     name="ranga"
                     id="ranga"
                     class="w-full p-2 border border-gray-300 rounded"
                 >
-                    <option value="0">Administrator</option>
+                    <option value="0">Admin</option>
                     <option value="1">Boss</option>
-                    <option value="2">Użytkownik</option>
+                    <option value="2">User</option>
                 </select>
             </div>
             <div class="flex-1">
-                <label for="stanowisko" class="block mb-2">Stanowisko:</label>
+                <label for="stanowisko" class="block mb-2">{t('position')}:</label>
                 <input
                     type="text"
                     id="stanowisko"
@@ -157,7 +158,7 @@
         <!-- Kod Karty i Kod Odcisku Palca -->
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="cardID" class="block mb-2">Kod Karty:</label>
+                <label for="cardID" class="block mb-2">{t('card_code')}:</label>
                 <input
                     type="text"
                     id="cardID"
@@ -169,7 +170,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="fingerID" class="block mb-2">Kod Odcisku Palca:</label>
+                <label for="fingerID" class="block mb-2">{t('fingerprint_code')}:</label>
                 <input
                     type="text"
                     id="fingerID"
@@ -185,7 +186,7 @@
         <!-- Nazwa użytkownika i Hasło -->
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="username" class="block mb-2">Nazwa użytkownika:</label>
+                <label for="username" class="block mb-2">{t('username')}:</label>
                 <input
                     type="text"
                     id="username"
@@ -198,7 +199,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="password" class="block mb-2">Hasło:</label>
+                <label for="password" class="block mb-2">{t('password')}:</label>
                 <input
                     type="password"
                     id="password"
@@ -216,7 +217,7 @@
             type="submit"
             class="w-full py-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-            Zarejestruj się
+        {t('registration')}
         </button>
     </form>
 </main>

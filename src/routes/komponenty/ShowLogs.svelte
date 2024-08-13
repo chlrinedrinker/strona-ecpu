@@ -8,6 +8,8 @@
   import { writable } from "svelte/store";
   import { isLoggedIn, userType } from "../stores/stores";
   import { generatePDF } from "./pdfUtils";
+  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+
 
   export let logowania: {
     _id: string;
@@ -26,18 +28,18 @@
 
   // Tablica miesięcy
   const months = [
-    { value: "0", name: "Styczeń" },
-    { value: "1", name: "Luty" },
-    { value: "2", name: "Marzec" },
-    { value: "3", name: "Kwiecień" },
-    { value: "4", name: "Maj" },
-    { value: "5", name: "Czerwiec" },
-    { value: "6", name: "Lipiec" },
-    { value: "7", name: "Sierpień" },
-    { value: "8", name: "Wrzesień" },
-    { value: "9", name: "Październik" },
-    { value: "10", name: "Listopad" },
-    { value: "11", name: "Grudzień" },
+    { "value": "0", "name": t('january') },
+    { "value": "1", "name": t('february') },
+    { "value": "2", "name": t('march') },
+    { "value": "3", "name": t('april') },
+    { "value": "4", "name": t('may') },
+    { "value": "5", "name": t('june') },
+    { "value": "6", "name": t('july') },
+    { "value": "7", "name": t('august') },
+    { "value": "8", "name": t('september') },
+    { "value": "9", "name": t('october') },
+    { "value": "10", "name": t('november') },
+    { "value": "11", "name": t('december') },
   ];
 
   // Wybrany miesiąc
@@ -151,9 +153,9 @@
 
   const openModal = (log) => {
     currentLog.set(log);
-    modalContent.set(log.komentarz || "Brak komentarza");
+    modalContent.set(log.komentarz || t('no_comment'));
     modalDate.set(log.date);
-    modalHistory.set(log.historia_komentarza || "Brak historii komentarzy");
+    modalHistory.set(log.historia_komentarza ||  t('no_comment_history'));
     showModal.set(true);
   };
 
@@ -184,7 +186,7 @@
     const commentButtons = document.querySelectorAll(".comment-button");
     commentButtons.forEach((button) => {
       tippy(button, {
-        content: button.getAttribute("data-comment") || "Brak komentarza",
+        content: button.getAttribute("data-comment") || t('no_comment'),
         placement: "top",
         theme: "light",
         maxWidth: 200,
@@ -238,31 +240,31 @@
 <div class="p-1 md:p-2 z-90">
   <div class="mb-2">
     <h2 class="mb-2 text-xs md:text-base font-semibold text-center">
-      Wybierz zakres dat aby wyświetlić logowania
+      {t('select_date_range')}
     </h2>
     <ul class="flex flex-wrap space-x-1 justify-center">
       <li>
         <button
           class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-          on:click={() => filterLogs("today")}>Dzisiaj</button
+          on:click={() => filterLogs("today")}>{t('today')}</button
         >
       </li>
       <li>
         <button
           class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-          on:click={() => filterLogs("week")}>Tydzień</button
+          on:click={() => filterLogs("week")}>{t('week')}</button
         >
       </li>
       <li>
         <button
           class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-          on:click={() => filterLogs("month")}>Miesiąc</button
+          on:click={() => filterLogs("month")}>{t('month')}</button
         >
       </li>
       <li>
         <button
           class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-          on:click={() => showCustomDateRange()}>Niestandardowy</button
+          on:click={() => showCustomDateRange()}>{t('custom')}</button
         >
       </li>
     </ul>
@@ -270,28 +272,28 @@
     <div class="flex space-x-1 justify-center mt-2">
       <button
         class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-        on:click={openReportModal}>Wygeneruj raport</button
+        on:click={openReportModal}>{t('generate_report')}</button
       >
       <button
         class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-        on:click={openAddLogModal}>Dodaj Log</button
+        on:click={openAddLogModal}>{t('add_log')}</button
       >
     </div>
     {/if}
     <p class="font-bold text-center mt-2 text-xs md:text-sm">
-      Suma godzin: {convertDecimalHoursToTime(totalHours)}
+      {t('total_hours')}: {convertDecimalHoursToTime(totalHours)}
     </p>
   </div>
   
 
   <div id="customDateRange" style="display: none;" class="mt-2">
-    <label for="customStartDate" class="block text-xs">Początek:</label>
+    <label for="customStartDate" class="block text-xs">{t('start')}:</label>
     <input
       id="customStartDate"
       type="text"
       class="w-full px-1 py-1 border rounded mb-1 text-xs"
     />
-    <label for="customEndDate" class="block text-xs">Koniec:</label>
+    <label for="customEndDate" class="block text-xs">{t('end')}:</label>
     <input
       id="customEndDate"
       type="text"
@@ -299,12 +301,12 @@
     />
     <button
       class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-      on:click={() => applyCustomDateFilter()}>Zastosuj</button
+      on:click={() => applyCustomDateFilter()}>{t('apply')}</button
     >
   </div>
 
   <h2 class="text-center text-xs md:text-sm">
-    Logowania użytkownika: <span
+    {t('user_logins')}: <span
       class="underline decoration-2 decoration-sky-600"
       >{selectedUser.imie} {selectedUser.nazwisko}</span
     >
@@ -313,12 +315,12 @@
     <table class="w-full border-collapse mt-2 text-xs md:text-sm">
       <thead>
         <tr>
-          <th class="p-2 md:p-3">Data</th>
-          <th class="p-2 md:p-3">Godzina wejścia</th>
-          <th class="p-2 md:p-3">Godzina wyjścia</th>
-          <th class="p-2 md:p-3 hidden md:table-cell">Godziny</th>
-          <th class="p-2 md:p-3 hidden md:table-cell">Komentarz</th>
-          <th class="p-2 md:p-3">Edycja</th>
+          <th class="p-2 md:p-3">{t('date')}</th>
+          <th class="p-2 md:p-3">{t('entrance_time')}</th>
+          <th class="p-2 md:p-3">{t('exit_time')}</th>
+          <th class="p-2 md:p-3 hidden md:table-cell">{t('hours')}</th>
+          <th class="p-2 md:p-3 hidden md:table-cell">{t('comment')}</th>
+          <th class="p-2 md:p-3">{t('edit')}</th>
         </tr>
       </thead>
       <tbody>
@@ -329,10 +331,10 @@
           <td class="p-2 md:p-3">{log.entrence_time}</td>
           <td class="p-2 md:p-3">{log.exit_time}</td>
           <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
-          <td class="p-2 md:p-3">{extractLastPart(String(log.komentarz)) || "Brak komentarza"}</td>
+          <td class="p-2 md:p-3">{extractLastPart(String(log.komentarz)) || t('no_comment')}</td>
           <td class="p-2 md:p-3">
             <div class="flex justify-center items-center">
-              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || "Brak komentarza"} on:click={() => openModal(log)}>Edytuj</button>
+              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>{t('edit')}</button>
             </div>
           </td>
         </tr>
@@ -349,14 +351,14 @@
               <td
                 class="p-2 md:p-3 hidden md:table-cell"
                 >{extractLastPart(String(log.komentarz)) ||
-                  "Brak komentarza"}</td
+                  t('no_comment')}</td
               >
               <td class="p-2 md:p-3">
                 <div class="flex justify-center items-center">
                   <button
                     class="px-8 py-1 bg-blue-500 text-white rounded comment-button ml-1 text-xs"
-                    data-comment={log.komentarz || "Brak komentarza"}
-                    on:click={() => openModal(log)}>Edytuj</button
+                    data-comment={log.komentarz ||  t('no_comment')}
+                    on:click={() => openModal(log)}>{t('edit')}</button
                   >
                 </div>
               </td>
@@ -385,7 +387,7 @@
         class="flex flex-col md:flex-row mt-2 space-y-2 md:space-y-0 md:space-x-2"
       >
         <div class="w-full md:w-1/2">
-          <h2 class="text-xs md:text-base"><strong>Komentarz</strong></h2>
+          <h2 class="text-xs md:text-base"><strong>{t('comment')}</strong></h2>
           <form
             action="?/saveComment"
             method="post"
@@ -399,25 +401,25 @@
             <input
               type="text"
               class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
-              placeholder="Dodaj komentarz"
+              placeholder={t('add_comment')} 
               name="komentarz"
               bind:value={$currentLog.komentarz}
             />
             <button
               class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-              type="submit">Zapisz</button
+              type="submit">{t('save')}</button
             >
           </form>
           <h3 class="text-xs md:text-base">
-            <strong>Historia komentarzy:</strong>
+            <strong>{t('comment_history')} </strong>
           </h3>
           {#if $modalHistory}
             <table class="w-full border-collapse mt-2 text-center text-xs md:text-sm">
               <thead>
                 <tr>
-                  <th>Data</th>
-                  <th>Czas</th>
-                  <th>Komentarz</th>
+                  <th>{t('date')}</th>
+                  <th>{t('entrance_time')}</th>
+                  <th>{t('comment')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -431,13 +433,13 @@
               </tbody>
             </table>
           {:else}
-            <p class="mx-1 my-0 text-xs">Brak historii komentarzy</p>
+            <p class="mx-1 my-0 text-xs">{t('no_comment_history')}</p>
           {/if}
         </div>
         {#if $userType == 0}
           <div class="w-full md:w-1/2">
             <h4 class="text-xs md:text-base">
-              <strong>Edycja godzin:</strong>
+              <strong>{t('edit')}:</strong>
             </h4>
             <div class="mb-2">
               <form
@@ -453,13 +455,13 @@
                 <input
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="text"
-                  placeholder="Godzina wejścia"
+                  placeholder={t('entrance_time')} 
                   
                   name="entrance_time"
                 />
                 <button
                   class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">Zapisz</button
+                  type="submit">{t('save')}</button
                 >
               </form>
               <hr>
@@ -476,13 +478,13 @@
                 <input
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="text"
-                  placeholder="Godzina wyjścia"
+                  placeholder={t('exit_time')} 
                   
                   name="exit_time"
                 />
                 <button
                   class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">Zapisz</button
+                  type="submit">{t('save')}</button
                 >
               </form>
             </div>
@@ -509,12 +511,12 @@
         >
       </button>
       <h2 class="mt-0 text-xl md:text-2xl font-bold">
-        <strong>Pobierz Raport użytkownika&nbsp; </strong>
+        <strong>{t('get_user_report')}&nbsp; </strong>
         {selectedUser.imie}
         {selectedUser.nazwisko}
       </h2>
       <div class="mt-4">
-        <label for="months" class="block mb-2">Wybierz Miesiąc</label>
+        <label for="months" class="block mb-2">{t('select_month')}</label>
         <select
           bind:value={selectedMonth}
           class="w-full px-4 py-2 border rounded mb-4"
@@ -527,7 +529,7 @@
           class="w-full px-4 py-2 bg-blue-500 text-white rounded"
           on:click={() =>
             generatePDF(selectedUser, logowania, 2024, Number(selectedMonth))}
-          >Pobierz Raport</button
+          >{t('get_user_report')}</button
         >
       </div>
     </div>
@@ -548,7 +550,7 @@
         >
       </button>
       <h2 class="mt-0 py-5 text-center text-xl md:text-2xl font-bold">
-        <strong>Dodaj Nowy Log</strong>
+        <strong>{t('add_new_log')}</strong>
       </h2>
       <form
         action="?/addLog"
@@ -560,7 +562,7 @@
       >
         <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
           <div>
-            <label for="date">Data</label>
+            <label for="date">{t('date')}</label>
             <input
               type="date"
               class="w-full px-4 py-2 border rounded"
@@ -569,7 +571,7 @@
             />
           </div>
           <div>
-            <label for="entrance_time">Godzina wejścia</label>
+            <label for="entrance_time">{t('entrance_time')}</label>
             <input
               type="time"
               class="w-full px-4 py-2 border rounded"
@@ -578,7 +580,7 @@
             />
           </div>
           <div>
-            <label for="exit_time">Godzina wyjścia</label>
+            <label for="exit_time">{t('exit_time')}</label>
             <input
               type="time"
               class="w-full px-4 py-2 border rounded"
@@ -587,7 +589,7 @@
             />
           </div>
           <div>
-            <label for="hours">Godziny</label>
+            <label for="hours">{t('hours')}</label>
             <input
               type="number"
               step="0.1"
@@ -598,14 +600,14 @@
           </div>
         </div>
         <div class="mb-4">
-          <label for="komentarz">Komentarz</label>
+          <label for="komentarz">{t('comment')}</label>
           <textarea class="w-full px-4 py-2 border rounded" name="komentarz"
-            >Log dodany ręcznie</textarea
+            >{t('manual_log_added')}</textarea
           >
         </div>
         <button
           class="w-full px-4 py-2 bg-blue-500 text-white rounded"
-          type="submit">Dodaj Log</button
+          type="submit">{t('add_new_log')}</button
         >
       </form>
     </div>

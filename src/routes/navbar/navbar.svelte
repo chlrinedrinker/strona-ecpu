@@ -1,22 +1,28 @@
 <script>
   import { enhance } from "$app/forms"; // SvelteKit form enhancement
   import { isLoggedIn, userType } from "../stores/stores"; // Store for login state
+  import { t, loadLanguage } from '../../i18n.js'; // Importing the i18n functions
   import { onMount } from "svelte";
-  const logged = isLoggedIn; // Get the login state
 
+  let currentLanguage = 'pl'; // Default language
   let isDropdownOpen = false; // State for dropdown
   let isMobileView = false; // State for checking if mobile view
+
+  const logged = isLoggedIn; // Get the login state
 
   // Function to check screen size
   function checkScreenSize() {
     isMobileView = window.innerWidth < 768; // 'md' is 768px in Tailwind
   }
 
-  // Check screen size on component mount
+  // Check screen size and language on component mount
   onMount(() => {
     checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
+    const savedLanguage = localStorage.getItem('language') || 'pl';
+    loadLanguage(savedLanguage);
+    currentLanguage = savedLanguage;
 
+    window.addEventListener("resize", checkScreenSize);
     return () => {
       window.removeEventListener("resize", checkScreenSize);
     };
@@ -39,23 +45,32 @@
       closeDropdown();
     }
   }
+
+  // Switch language and refresh the page
+  function switchLanguage(language) {
+    loadLanguage(language);
+    localStorage.setItem('language', language);
+    currentLanguage = language;
+    location.reload(); // Refresh the page
+  }
 </script>
 
-<div
-  class="flex items-center justify-between p-2 md:p-4 bg-gray-100 border-b z-100 w-full"
->
+<div class="flex items-center justify-between p-2 md:p-4 bg-gray-100 border-b z-100 w-full">
   <div class="flex items-center space-x-2 md:space-x-4">
     <a href="/">
-      <img
-        src="/herb.png"
-        alt="Logo"
-        class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12"
-      />
+      <img src="/herb.png" alt="Logo" class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12" />
     </a>
     <a href="/">
-      <div class="text-sm sm:text-base md:text-lg">Gmina Łubnice</div>
+      <div class="text-sm sm:text-base md:text-lg">{t('municipality')}</div>
     </a>
   </div>
+
+  <!-- Language Switcher -->
+  <div class="flex space-x-2">
+    <button on:click={() => switchLanguage('pl')} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">PL</button>
+    <button on:click={() => switchLanguage('en')} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">EN</button>
+  </div>
+
   {#if $logged}
     <div class="flex items-center space-x-2 md:space-x-4 relative">
       <!-- Hamburger Menu Button for Small Screens -->
@@ -96,7 +111,7 @@
               <a href="/zmianaHaslaIndiwidualna"
                 ><button on:click={closeDropdown}
                   class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
-                  >Zmień Hasło
+                  >{t('change_password')}
                 </button></a
               >
 
@@ -105,7 +120,7 @@
                   <button on:click={closeDropdown}
                     class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                   >
-                    Panel Administracyjny
+                    {t('admin_panel')}
                   </button>
                 </a>
 
@@ -113,7 +128,7 @@
                   <button on:click={closeDropdown}
                     class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                   >
-                    Zarejestruj użytkownika
+                    {t('register_user')}
                   </button>
                 </a>
               {/if}
@@ -122,7 +137,7 @@
                   type="submit"
                   class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                 >
-                  Wyloguj się
+                  {t('logout')}
                 </button>
               </form>
             </div>
@@ -133,26 +148,26 @@
         <button
           class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
         >
-          <a href="/zmianaHaslaIndiwidualna">Zmień Hasło</a>
+          <a href="/zmianaHaslaIndiwidualna">{t('change_password')}</a>
         </button>
 
         {#if $userType == 0}
           <button
             class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
           >
-            <a href="/zmianaHasel">Panel Administracyjny</a>
+            <a href="/zmianaHasel">{t('admin_panel')}</a>
           </button>
           <button
             class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
           >
-            <a href="/signup">Zarejestruj użytkownika</a>
+            <a href="/signup">{t('register_user')}</a>
           </button>
         {/if}
         <form method="post" use:enhance action="?/wyloguj">
           <button
             type="submit"
             class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
-            >Wyloguj się</button
+            >{t('logout')}</button
           >
         </form>
       {/if}
