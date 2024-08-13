@@ -68,7 +68,6 @@ export const actions: Actions = {
       unikalneName = await response_name.json()
     }
     console.log(unikalneLoginy)
-    console.log(unikalneName)
 
     console.log(name)
     let zmianaUSERS: { [key: string]: string } = {};

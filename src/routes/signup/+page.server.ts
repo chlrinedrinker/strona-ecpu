@@ -4,7 +4,7 @@ import { generateIdFromEntropySize } from "lucia";
 import { hash } from "@node-rs/argon2";
 import type { Actions } from "./$types";
 import { PrismaClient, Prisma } from "@prisma/client";
-import { _pracownicy } from "$db/mongo";
+import { _pracownicy, _czas_pracy } from "$db/mongo";
 
 export const actions: Actions = {
   signup: async (event) => {
@@ -83,6 +83,11 @@ export const actions: Actions = {
           message: "Niepoprawny kod palca",
         });
       }
+      if (unikalneName.some(item => item.name == name)){
+        return fail(400, {
+          message: "Użytkownik już jest w bazie danych"
+        })
+      }
 
       const userId = generateIdFromEntropySize(10); // 16 characters long
       const passwordHash = await hash(password, {
@@ -102,6 +107,7 @@ export const actions: Actions = {
       // TODO: check if username is already used
       const User = await prisma.user.create({ data: user });
       _pracownicy.collection("PracownicyID").insertOne(insertIntoPracownicy);
+      _czas_pracy.createCollection(name)
       console.log("Zarejestrowano użytkownika");
 
       // Użycie funkcji redirect, aby przekierować użytkownika na stronę z parametrem sukcesu
