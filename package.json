@@ -41,6 +41,7 @@
   "type": "module",
   "dependencies": {
     "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@netlify/functions": "^2.8.1",
     "@prisma/client": "^5.17.0",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
@@ -51,7 +52,6 @@
     "node-cron": "^3.0.0",
     "nodemailer": "^6.9.13",
     "pdfmake": "^0.2.10",
-    "quirrel": "^1.8.1",
     "tippy.js": "^6.3.7",
     "wrangler": "^3.68.0"
   },
