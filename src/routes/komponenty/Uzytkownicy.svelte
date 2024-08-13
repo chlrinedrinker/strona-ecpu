@@ -135,7 +135,7 @@
       <!-- Back Button -->
       <button
         on:click={handleBack}
-        class="lg:hidden fixed top-48 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
+        class="lg:hidden fixed top-22 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
       >
         <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
           <span class="text-lg">&gt;</span>
@@ -161,16 +161,6 @@
 
 {#if $userType == 2}
   <div class="relative lg:flex lg:w-full lg:h-screen">
-    <!-- Back Button -->
-    <button
-      on:click={handleBack}
-      class="lg:hidden fixed top-48 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
-    >
-      <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
-        <span class="text-lg">&gt;</span>
-      </div>
-    </button>
-
     <!-- ShowLogs Section -->
     <div
       class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
