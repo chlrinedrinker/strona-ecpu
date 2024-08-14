@@ -74,9 +74,11 @@
 
         <!-- Dropdown menu for small screens -->
         {#if isDropdownOpen}
-          <div class="fixed inset-0 z-10 overflow-auto bg-black/40">
+          <div
+            class="fixed inset-0 -left-10 z-10 overflow-auto bg-black/40 w-[calc(100%+2.5rem)]"
+          >
             <div
-              class="bg-white my-5 mx-2 p-5 border border-gray-400 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl rounded-lg"
+              class="relative left-10 bg-white my-5 mx-2 p-5 border border-gray-400 max-w-xs md:max-w-sm lg:max-w-4xl rounded-lg"
             >
               <button on:click={closeDropdown}>
                 <span
@@ -86,7 +88,8 @@
               </button>
 
               <a href="/zmianaHaslaIndiwidualna"
-                ><button on:click={closeDropdown}
+                ><button
+                  on:click={closeDropdown}
                   class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                   >Zmień Hasło
                 </button></a
@@ -94,7 +97,8 @@
 
               {#if $userType == 0}
                 <a href="/zmianaHasel">
-                  <button on:click={closeDropdown}
+                  <button
+                    on:click={closeDropdown}
                     class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                   >
                     Panel Administracyjny
@@ -102,14 +106,20 @@
                 </a>
 
                 <a href="/signup">
-                  <button on:click={closeDropdown}
+                  <button
+                    on:click={closeDropdown}
                     class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
                   >
                     Zarejestruj użytkownika
                   </button>
                 </a>
               {/if}
-              <form method="post" use:enhance action="?/wyloguj" on:submit={closeDropdown}>
+              <form
+                method="post"
+                use:enhance
+                action="?/wyloguj"
+                on:submit={closeDropdown}
+              >
                 <button
                   type="submit"
                   class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left mb-2"
