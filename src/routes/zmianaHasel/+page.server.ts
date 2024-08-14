@@ -57,14 +57,17 @@ export const actions: Actions = {
     const wybranyImie = data.get("imie");
     const wybranyNazwisko = data.get("nazwisko");
     const name = wybranyImie!.toString() + "_" + wybranyNazwisko!.toString();
-    const response_loginy = event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneLoginy")
-    const response_name = event.fetch("src/routes/endpoints/SpawdzanieUnikalnych/UnikalneNazwy")
+    const response_loginy = await event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneLoginy")
+    const response_name = await event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneNazwy")
+    let unikalneLoginy= [];
+    let unikalneName = [];
     if((await response_loginy).ok){
-      const unikalneLoginy = (await response_loginy).json()
+      unikalneLoginy = await response_loginy.json()
     }
     if((await response_name).ok){
-      const unikalneName = (await response_name).json()
+      unikalneName = await response_name.json()
     }
+    console.log(unikalneLoginy)
 
     console.log(name)
     let zmianaUSERS: { [key: string]: string } = {};
@@ -76,6 +79,7 @@ export const actions: Actions = {
     if (zmianaLogin != "" && zmianaLogin != null) {
       if (
         typeof zmianaLogin !== "string" ||
+        unikalneLoginy.some(item => item.username == zmianaLogin) ||
         zmianaLogin.length < 3 ||
         zmianaLogin.length > 31 ||
         !/^[a-zA-Z0-9_-]+$/.test(zmianaLogin)

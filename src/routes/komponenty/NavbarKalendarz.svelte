@@ -1,6 +1,8 @@
 <script lang="ts">
   import Calendar from '@event-calendar/core';
   import TimeGrid from '@event-calendar/time-grid';
+  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+
   import { onMount, afterUpdate } from 'svelte';
   import tippy from 'tippy.js';
   import 'tippy.js/dist/tippy.css'; // Import Tippy.js CSS
@@ -14,11 +16,11 @@
   }
 
   export let logowania: Logowanie[] = [];
-
+  console.log(currentLanguage)
   let plugins = [TimeGrid];
   let options = {
     initialView: 'timeGridWeek',
-    locale: 'pl',
+    locale: currentLanguage,
     slotMinTime: '06:00:00',
     slotMaxTime: '21:00:00',
     themeSystem: 'bootstrap',
@@ -31,13 +33,12 @@
       const isPresent = info.event.title === "Obecny"; // Sprawdzenie, czy tytuł to "Obecny"
       const tooltipContent = isPresent
         ? `<div class="p-2.5">
-             <h3 class="text-base font-bold mb-1.5">Status</h3>
-             <p>Pracownik obecnie w pracy</p>
+             <h3 class="text-base font-bold mb-1.5">${t('active')}</h3>
            </div>`
         : `<div class="p-2.5">
-             <h3 class="text-base font-bold mb-1.5">Czas pracy</h3>
-             <p>Wejście: ${info.event.extendedProps.entrence_time}</p>
-             <p>Wyjście: ${info.event.extendedProps.exit_time}</p>
+             <h3 class="text-base font-bold mb-1.5">${t('work_time')}</h3>
+             <p> ${t('entrance')}: ${info.event.extendedProps.entrence_time}</p>
+             <p>${t('exit')}: ${info.event.extendedProps.exit_time}</p>
            </div>`;
 
       // Używamy Tippy.js do wyświetlania tooltipów z niestandardowym stylem
@@ -72,7 +73,7 @@
       // Sprawdzenie, czy `exit_time` wynosi "Obecny" i zastąpienie go aktualnym czasem
       let endDateTime;
       let exitTime = log.exit_time;
-      let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
+      let eventTitle =  `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
       let backgroundColor = '#3b82f6';
 
       if (log.exit_time === "Obecny") {

@@ -4,7 +4,7 @@ import { generateIdFromEntropySize } from "lucia";
 import { hash } from "@node-rs/argon2";
 import type { Actions } from "./$types";
 import { PrismaClient, Prisma } from "@prisma/client";
-import { _pracownicy } from "$db/mongo";
+import { _pracownicy, _czas_pracy } from "$db/mongo";
 
 export const actions: Actions = {
   signup: async (event) => {
@@ -20,6 +20,16 @@ export const actions: Actions = {
       const palec = formData.get("fingerID");
       const karta = formData.get("cardID");
       const name = `${imie}_${nazwisko}`;
+      const response_loginy = await event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneLoginy")
+      const response_name = await event.fetch("/endpoints/SpawdzanieUnikalnych/UnikalneNazwy")
+      let unikalneLoginy= [];
+      let unikalneName = [];
+      if((await response_loginy).ok){
+        unikalneLoginy = await response_loginy.json()
+      }
+      if((await response_name).ok){
+        unikalneName = await response_name.json()
+      }  
 
       const insertIntoPracownicy = {
         cardID: karta,
@@ -35,7 +45,8 @@ export const actions: Actions = {
         typeof username !== "string" ||
         username.length < 3 ||
         username.length > 31 ||
-        !/^[a-zA-Z0-9_-]+$/.test(username)
+        !/^[a-zA-Z0-9_-]+$/.test(username) ||
+        unikalneLoginy.some(item => item.username == username)
       ) {
         return fail(400, {
           message: "Niepoprawny login",
@@ -72,6 +83,11 @@ export const actions: Actions = {
           message: "Niepoprawny kod palca",
         });
       }
+      if (unikalneName.some(item => item.name == name)){
+        return fail(400, {
+          message: "Użytkownik już jest w bazie danych"
+        })
+      }
 
       const userId = generateIdFromEntropySize(10); // 16 characters long
       const passwordHash = await hash(password, {
@@ -90,8 +106,9 @@ export const actions: Actions = {
       console.log(user)
       // TODO: check if username is already used
       const User = await prisma.user.create({ data: user });
-      console.log("Zarejestrowano użytkownika");
       _pracownicy.collection("PracownicyID").insertOne(insertIntoPracownicy);
+      _czas_pracy.createCollection(name)
+      console.log("Zarejestrowano użytkownika");
 
       // Użycie funkcji redirect, aby przekierować użytkownika na stronę z parametrem sukcesu
       return{

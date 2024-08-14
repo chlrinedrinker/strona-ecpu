@@ -3,10 +3,13 @@
   import KontoZmiany from "../komponenty/KontoZmiany.svelte";
   import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
-  import type { PageData } from "../$types";
+  import type { PageData, ActionData} from "../$types";
   import { enhance } from "$app/forms";
   import Modal from "../komponenty/Modal.svelte";
   export let data: PageData;
+  export let form: ActionData ;
+  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+
 
   interface Pracownik {
     _id: string;
@@ -87,16 +90,20 @@
 
   <div
     class="w-full md:flex-grow md:items-center md:justify-center bg-gray-100 p-4 md:p-6"
-  >
+  >{#if selectedUser}
     <!-- Nagłówek widoczny na dużych ekranach i po wybraniu użytkownika na małych ekranach -->
     <h1 class={`text-center mb-4 text-2xl md:text-5xl font-bold ${!selectedUser && 'hidden md:block'}`}>
-      Panel administratora
+      {t('admin_panel')}
     </h1>
-    {#if selectedUser}
+    
       <div
         transition:slide={{ duration: 300 }}
+        
         class="flex flex-col items-center justify-center"
       >
+      {#if form?.error}
+      <p class="error">{form.error}</p>
+      {/if}
         <KontoZmiany {selectedUser} />
       </div>
     {/if}

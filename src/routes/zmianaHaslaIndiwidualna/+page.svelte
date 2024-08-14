@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { enhance } from "$app/forms";
+    import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+
 
     let successMessage = "";
     let errors = {
@@ -54,7 +56,7 @@
 <main
     class="flex flex-col items-center justify-center h-screen bg-gray-100 p-6"
 >
-    <h1 class="text-5xl font-bold mb-4">Zmień hasło</h1>
+    <h1 class="text-5xl font-bold mb-4">{t('change_password')}</h1>
     {#if successMessage}
         <p class="text-green-500 mb-4">{successMessage}</p>
     {/if}
@@ -68,7 +70,7 @@
         <!-- Nazwa użytkownika i Hasło -->
         <div class="flex gap-4">
             <div class="flex-1">
-                <label for="username" class="block mb-2">Hasło:</label>
+                <label for="username" class="block mb-2">{t('password')}:</label>
                 <input
                     type="password"
                     id="password"
@@ -81,7 +83,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="password" class="block mb-2">Hasło:</label>
+                <label for="password" class="block mb-2">{t('password')}:</label>
                 <input
                     type="password"
                     id="password_repeat"
@@ -98,7 +100,7 @@
         <button
             type="submit"
             class="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >Zmień hasło</button
+            >{t('change_password')}</button
         >
     </form>
 </main>
