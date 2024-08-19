@@ -111,6 +111,7 @@
 {#if $userType == 1 || $userType == 0}
   <div
     class={`w-64 overflow-y-visible overflow-scroll h-screen lg:block ${$showUserList ? "block" : "hidden"} lg:visible`}
+    transition:slide
   >
     {#if $isLoading}
       <div>Loading...</div>
@@ -130,21 +131,22 @@
     {/if}
   </div>
 
-{#if selectedUser}
-  <div class="relative lg:flex lg:w-full lg:h-screen">
-    <!-- Przycisk powrotu -->
-    <button
-      on:click={handleBack}
-      class="lg:hidden fixed top-32 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
-    >
-      <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
-        <span class="text-lg">&gt;</span>
-      </div>
-    </button>
+  {#if selectedUser}
+    <div class="relative lg:flex lg:w-full lg:h-screen">
+      <!-- Przycisk powrotu -->
+      <button
+        on:click={handleBack}
+        class="lg:hidden fixed top-32 -left-5 bg-gray-300 text-gray-800 p-2 rounded shadow-md text-xs m-1"
+      >
+        <div class="flex items-center justify-center w-5 h-7 bg-gray-300 rounded">
+          <span class="text-lg">&gt;</span>
+        </div>
+      </button>
 
       <!-- ShowLogs Section -->
       <div
         class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
+        transition:slide
       >
         <ShowLogs logowania={$logowaniaStore[selectedUser._id]} {selectedUser} />
       </div>
@@ -152,18 +154,20 @@
       <!-- NavbarKalendarz Section -->
       <div
         class="lg:w-1/4 lg:flex lg:flex-col lg:justify-between lg:bg-white lg:overflow-auto lg:border-r lg:border-gray-200 max-w-full overflow-hidden z-90"
+        transition:slide
       >
         <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
       </div>
     </div>
   {/if}
 {/if}
-
+    
 {#if $userType == 2}
-  <div class="relative lg:flex lg:w-full lg:h-screen">
+  <div class="relative lg:flex lg:w-full lg:h-screen" transition:slide>
     <!-- ShowLogs Section -->
     <div
       class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
+      transition:slide
     >
       <ShowLogs logowania={$logowaniaStore[selectedUser._id]} {selectedUser} />
     </div>
@@ -171,6 +175,7 @@
     <!-- NavbarKalendarz Section -->
     <div
       class="lg:w-1/4 lg:flex lg:flex-col lg:justify-between lg:bg-white lg:overflow-auto lg:border-r lg:border-gray-200 max-w-full overflow-hidden z-90"
+      transition:slide
     >
       <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
     </div>
@@ -179,4 +184,4 @@
 
 {#if error}
   <div class="text-red-500">{error}</div>
-{/if}
+{/if} 

@@ -1,21 +1,19 @@
 <script>
-  import { enhance } from "$app/forms"; // SvelteKit form enhancement
-  import { isLoggedIn, userType } from "../stores/stores"; // Store for login state
-  import { t, loadLanguage } from '../../i18n.js'; // Importing the i18n functions
+  import { enhance } from "$app/forms"; 
+  import { isLoggedIn, userType } from "../stores/stores"; 
+  import { t, loadLanguage } from '../../i18n.js'; 
   import { onMount } from "svelte";
 
-  let currentLanguage = 'pl'; // Default language
-  let isDropdownOpen = false; // State for dropdown
-  let isMobileView = false; // State for checking if mobile view
+  let currentLanguage = 'pl'; 
+  let isDropdownOpen = false; 
+  let isMobileView = false; 
 
-  const logged = isLoggedIn; // Get the login state
+  const logged = isLoggedIn; 
 
-  // Function to check screen size
   function checkScreenSize() {
-    isMobileView = window.innerWidth < 768; // 'md' is 768px in Tailwind
+    isMobileView = window.innerWidth < 768; 
   }
 
-  // Check screen size and language on component mount
   onMount(() => {
     checkScreenSize();
     const savedLanguage = localStorage.getItem('language') || 'pl';
@@ -28,30 +26,26 @@
     };
   });
 
-  // Toggle dropdown state
   function toggleDropdown() {
     isDropdownOpen = !isDropdownOpen;
   }
 
-  // Close the dropdown
   function closeDropdown() {
     isDropdownOpen = false;
   }
 
-  // Close the dropdown when clicking outside the dropdown area
   function handleOutsideClick(event) {
-    // Check if the clicked element is outside the dropdown content
     if (event.target.closest('.dropdown-content') === null) {
       closeDropdown();
     }
   }
 
-  // Switch language and refresh the page
-  function switchLanguage(language) {
-    loadLanguage(language);
-    localStorage.setItem('language', language);
-    currentLanguage = language;
-    location.reload(); // Refresh the page
+  function switchLanguage() {
+    const newLanguage = currentLanguage === 'pl' ? 'en' : 'pl';
+    loadLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+    currentLanguage = newLanguage;
+    location.reload(); 
   }
 </script>
 
@@ -61,19 +55,20 @@
       <img src="/herb.png" alt="Logo" class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12" />
     </a>
     <a href="/">
-      <div class="text-sm sm:text-base md:text-lg">{t('municipality')}</div>
+      <div class="text-sm sm:text-base md:text-lg">Gmina Łubnice</div>
     </a>
   </div>
 
-  <!-- Language Switcher -->
-  <div class="flex space-x-2">
-    <button on:click={() => switchLanguage('pl')} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">PL</button>
-    <button on:click={() => switchLanguage('en')} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">EN</button>
-  </div>
+  
 
   {#if $logged}
     <div class="flex items-center space-x-2 md:space-x-4 relative">
-      <!-- Hamburger Menu Button for Small Screens -->
+      <!-- Language Switcher -->
+    <div class="flex space-x-2 right">
+      <button on:click={switchLanguage} class="px-1 py-0 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
+        {currentLanguage.toUpperCase()}
+      </button>
+    </div>
       {#if isMobileView}
         <button
           class="md:hidden block px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
@@ -95,7 +90,6 @@
           </svg>
         </button>
 
-        <!-- Dropdown menu for small screens -->
         {#if isDropdownOpen}
           <div class="fixed inset-0 z-10 overflow-auto" on:click={handleOutsideClick}>
             <div
@@ -152,22 +146,15 @@
           </div>
         {/if}
       {:else}
-        <!-- Buttons for larger screens -->
-        <button
-          class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
-        >
+        <button class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
           <a href="/zmianaHaslaIndiwidualna">{t('change_password')}</a>
         </button>
 
         {#if $userType == 0}
-          <button
-            class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
-          >
+          <button class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
             <a href="/zmianaHasel">{t('admin_panel')}</a>
           </button>
-          <button
-            class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
-          >
+          <button class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
             <a href="/signup">{t('register_user')}</a>
           </button>
         {/if}
@@ -175,15 +162,11 @@
           <button
             type="submit"
             class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
-            >{t('logout')}</button
-          >
+            >{t('logout')}</button>
         </form>
       {/if}
 
-      <!-- Optional Profile Image -->
-      <div
-        class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 hidden lg:block"
-      >
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 hidden lg:block">
         <img src="user.png" alt="User" class="w-full h-full rounded-full" />
       </div>
     </div>

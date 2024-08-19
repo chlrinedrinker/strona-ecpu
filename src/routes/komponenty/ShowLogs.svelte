@@ -325,26 +325,44 @@
       </thead>
       <tbody>
         {#if showFiltered}
-        {#each filteredLogowania as log}
-        <tr>
-          <td class="p-2 md:p-3">{log.date}</td>
-          <td class="p-2 md:p-3">{log.entrence_time}</td>
-          <td class="p-2 md:p-3">{log.exit_time}</td>
-          <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
-          <td class="p-2 md:p-3">{extractLastPart(String(log.komentarz)) || t('no_comment')}</td>
-          <td class="p-2 md:p-3">
-            <div class="flex justify-center items-center">
-              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>{t('edit')}</button>
-            </div>
-          </td>
-        </tr>
-      {/each}
+          {#each filteredLogowania as log}
+            <tr>
+              <td class="p-2 md:p-3">{log.date}</td>
+              <td class="p-2 md:p-3">{log.entrence_time}</td>
+              <td class="p-2 md:p-3">
+                {#if log.exit_time === 'Obecny'}
+                  {t('active')}
+                {:else if log.exit_time === 'Brak drugiego odbicia'}
+                  {t('no_second')}
+                {:else}
+                  {log.exit_time}
+                {/if}
+              </td>
+              <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
+              <td class="p-2 md:p-3 hidden md:table-cell">{extractLastPart(String(log.komentarz)) || t('no_comment')}</td>
+              <td class="p-2 md:p-3">
+                <div class="flex justify-center items-center">
+                  <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>
+                    {t('edit')}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {/each}
         {:else}
           {#each logowania as log}
             <tr>
               <td>{log.date}</td>
               <td>{log.entrence_time}</td>
-              <td>{log.exit_time}</td>
+              <td class="p-2 md:p-3">
+                {#if log.exit_time === 'Obecny'}
+                  {t('active')}
+                {:else if log.exit_time === 'Brak drugiego odbicia'}
+                  {t('no_second')}
+                {:else}
+                  {log.exit_time}
+                {/if}
+              </td>
               <td
                 class="p-2 md:p-3 hidden md:table-cell"
               >{log.hours}</td>
