@@ -118,18 +118,19 @@
     await tick();
     setupTooltips();
   };
-  function extractLastPart(text: string): string {
-    // Usuń białe znaki na początku i końcu ciągu
-    const trimmedText = text.trim();
+  // function extractLastPart(text: string): string {
+  //   // Usuń białe znaki na początku i końcu ciągu
+  //   const trimmedText = text.trim();
 
-    // Znajdź pozycję ostatniej spacji w ciągu
-    const lastSpaceIndex = trimmedText.lastIndexOf(" ");
-
-    // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
-    return lastSpaceIndex !== -1
-      ? trimmedText.substring(lastSpaceIndex + 1)
-      : "";
-  }
+  //   // Sprawdź, czy tekst ma co najmniej 18 znaków
+  //   if (trimmedText.length > 18) {
+  //       // Zwróć wszystko po 18. znaku
+  //       return trimmedText.substring(18);
+  //   } else {
+  //       // Jeśli tekst ma mniej niż 18 znaków, zwróć pusty ciąg
+  //       return "";
+  //   }
+  // }
   const setupDatePickers = () => {
     flatpickr("#customStartDate", {
       onChange: (selectedDates) => {
@@ -339,7 +340,7 @@
                 {/if}
               </td>
               <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
-              <td class="p-2 md:p-3 hidden md:table-cell">{extractLastPart(String(log.komentarz)) || t('no_comment')}</td>
+              <td class="p-2 md:p-3 hidden md:table-cell">{log.komentarz || t('no_comment')}</td>
               <td class="p-2 md:p-3">
                 <div class="flex justify-center items-center">
                   <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>
@@ -368,7 +369,7 @@
               >{log.hours}</td>
               <td
                 class="p-2 md:p-3 hidden md:table-cell"
-                >{extractLastPart(String(log.komentarz)) ||
+                >{log.komentarz ||
                   t('no_comment')}</td
               >
               <td class="p-2 md:p-3">
@@ -467,6 +468,7 @@
                   formData.append("imie", selectedUser.imie);
                   formData.append("nazwisko", selectedUser.nazwisko);
                   formData.append("data", $currentLog.date);
+                  formData.append("wejscie1", $currentLog.entrence_time);
                   formData.append("wyjscie", $currentLog.exit_time);
                 }}
               >

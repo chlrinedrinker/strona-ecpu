@@ -71,7 +71,10 @@
     "september": "Wrzesień",
     "october": "Październik",
     "november": "Listopad",
-    "december": "Grudzień"
+    "december": "Grudzień",
+    "current_password": "Obecne hasło",
+    "new_password": "Nowe hasło",
+    "login": "Logowanie"
 
   }
   

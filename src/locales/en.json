@@ -71,6 +71,9 @@
     "october": "October",
     "november": "November",
     "december": "December",
-    "no_second": "No second check"
+    "no_second": "No second check",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "login": "Login"
   }
   

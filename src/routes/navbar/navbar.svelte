@@ -60,15 +60,15 @@
   </div>
 
   
-
+  <div class="flex items-center space-x-2 md:space-x-4 relative">
+    <!-- Language Switcher -->
+  <div class="flex space-x-2 right">
+    <button on:click={switchLanguage} class="w-full px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded text-left ">
+      {currentLanguage.toUpperCase()}
+    </button>
+  </div>
   {#if $logged}
-    <div class="flex items-center space-x-2 md:space-x-4 relative">
-      <!-- Language Switcher -->
-    <div class="flex space-x-2 right">
-      <button on:click={switchLanguage} class="px-1 py-0 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
-        {currentLanguage.toUpperCase()}
-      </button>
-    </div>
+    
       {#if isMobileView}
         <button
           class="md:hidden block px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded"
@@ -169,6 +169,7 @@
       <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 hidden lg:block">
         <img src="user.png" alt="User" class="w-full h-full rounded-full" />
       </div>
-    </div>
+    
   {/if}
+</div>
 </div>

@@ -70,7 +70,7 @@
         <!-- Nazwa użytkownika i Hasło -->
         <div class="flex gap-4">
             <div class="flex-1">
-                <label for="username" class="block mb-2">{t('password')}:</label>
+                <label for="username" class="block mb-2">{t('current_password')}:</label>
                 <input
                     type="password"
                     id="password"
@@ -83,7 +83,7 @@
                 {/if}
             </div>
             <div class="flex-1">
-                <label for="password" class="block mb-2">{t('password')}:</label>
+                <label for="password" class="block mb-2">{t('new_password')}:</label>
                 <input
                     type="password"
                     id="password_repeat"

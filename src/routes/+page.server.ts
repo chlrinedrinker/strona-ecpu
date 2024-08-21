@@ -95,7 +95,7 @@ export const actions: Actions = {
       { date: data.get("data"), entrence_time: wejscie },
       {
         $set: {
-          komentarz: data_czas + " " + komentarz,
+          komentarz: komentarz,
           historia_komentarza: newCommentHistory,
         },
       },
@@ -107,13 +107,32 @@ export const actions: Actions = {
     const imie = data.get("imie");
     const nazwisko = data.get("nazwisko");
     const wejscie = data.get("entrance_time");
+    const wejscie1 = data.get("wejscie1");
     const wyjscie = data.get("wyjscie");
     const db = _czas_pracy.collection(imie + "_" + nazwisko);
+    function parseTime(timeStr) {
+      const [hours, minutes, seconds = "00"] = timeStr.split(":").map(Number);
+      return new Date(1970, 0, 1, hours, minutes, seconds);
+  }
+
+  // Helper function to calculate the difference in hours between two times
+  function calculateHourDifference(startTime, endTime) {
+      const start = parseTime(startTime);
+      const end = parseTime(endTime);
+      const diffMs = end - start; // Difference in milliseconds
+      return (diffMs / (1000 * 60 * 60)).toFixed(2); // Convert to hours and round to 2 decimal places
+  }
+
+  // Calculate the difference in hours between wejscie and wejscie1
+  const hours = calculateHourDifference(wejscie, wejscie1);
+  
     await db.updateOne(
       { date: date, exit_time: wyjscie },
       {
         $set: {
           entrence_time: wejscie,
+          exit_time: wejscie1,
+          hours: hours
         },
       },
     );
@@ -124,13 +143,30 @@ export const actions: Actions = {
     const imie = data.get("imie");
     const nazwisko = data.get("nazwisko");
     const wyjscie = data.get("exit_time");
+    
     const wejscie = data.get("wejscie");
     const db = _czas_pracy.collection(imie + "_" + nazwisko);
+    function parseTime(timeStr) {
+      const [hours, minutes, seconds = "00"] = timeStr.split(":").map(Number);
+      return new Date(1970, 0, 1, hours, minutes, seconds);
+  }
+
+  // Helper function to calculate the difference in hours between two times
+  function calculateHourDifference(startTime, endTime) {
+      const start = parseTime(startTime);
+      const end = parseTime(endTime);
+      const diffMs = end - start; // Difference in milliseconds
+      return (diffMs / (1000 * 60 * 60)).toFixed(2); // Convert to hours and round to 2 decimal places
+  }
+
+  // Calculate the difference in hours between wejscie and wejscie1
+  const hours = calculateHourDifference(wejscie, wyjscie);
     await db.updateOne(
       { date: date, entrence_time: wejscie },
       {
         $set: {
           exit_time: wyjscie,
+          hours: hours
         },
       },
     );
