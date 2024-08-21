@@ -1,11 +1,11 @@
 <script lang="ts">
   import Calendar from '@event-calendar/core';
   import TimeGrid from '@event-calendar/time-grid';
-  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
-
+  import { t, loadLanguage, currentLanguage } from '../../i18n.js'; // Importowanie funkcji i18n
   import { onMount, afterUpdate } from 'svelte';
   import tippy from 'tippy.js';
-  import 'tippy.js/dist/tippy.css'; // Import Tippy.js CSS
+  import 'tippy.js/dist/tippy.css'; // Importowanie stylów Tippy.js
+  import { writable } from 'svelte/store';
 
   interface Logowanie {
     _id: string;
@@ -13,10 +13,15 @@
     entrence_time: string;
     exit_time: string;
     hours: string;
+    komentarz: string;
   }
 
   export let logowania: Logowanie[] = [];
-  console.log(currentLanguage)
+  
+  // Zmienna do przechowywania wybranego logowania
+  let selectedLog = writable<Logowanie | null>(null);
+  let showModal = writable(false);  // Zmienna do kontroli widoczności okienka
+
   let plugins = [TimeGrid];
   let options = {
     initialView: 'timeGridWeek',
@@ -50,7 +55,16 @@
       });
     },
     displayEventTime: false,
-    eventContent: () => ''
+    eventContent: () => '',
+
+    // Obsługa kliknięcia na wydarzenie
+    eventClick: (info: any) => {
+      const clickedLog = logowania.find(log => log._id === info.event.id);
+      if (clickedLog) {
+        selectedLog.set(clickedLog);  // Ustawiamy wybrane logowanie
+        showModal.set(true);  // Pokaż modal
+      }
+    }
   };
 
   onMount(() => {
@@ -70,10 +84,9 @@
     options.events = logowania.map(log => {
       const startDateTime = `${log.date.split('T')[0]}T${log.entrence_time}`;
 
-      // Sprawdzenie, czy `exit_time` wynosi "Obecny" i zastąpienie go aktualnym czasem
       let endDateTime;
       let exitTime = log.exit_time;
-      let eventTitle =  `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
+      let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
       let backgroundColor = '#3b82f6';
 
       if (log.exit_time === "Obecny") {
@@ -91,14 +104,12 @@
       const hoursWorked = Math.round(parseHoursFromString(log.hours));
       const dayOfWeek = new Date(log.date).getDay();
 
-      if(log.exit_time !== "Obecny") {
-        if(hoursWorked < 8 && (dayOfWeek == 2 || dayOfWeek == 3 || dayOfWeek == 4)) {
+      if (log.exit_time !== "Obecny") {
+        if (hoursWorked < 8 && (dayOfWeek == 2 || dayOfWeek == 3 || dayOfWeek == 4)) {
           backgroundColor = '#d12e33';
-        }
-        else if(hoursWorked < 9 && dayOfWeek == 1) {
+        } else if (hoursWorked < 9 && dayOfWeek == 1) {
           backgroundColor = '#d12e33';
-        }
-        else if(hoursWorked < 7 && dayOfWeek == 5) {
+        } else if (hoursWorked < 7 && dayOfWeek == 5) {
           backgroundColor = '#d12e33';
         }
       }
@@ -117,8 +128,36 @@
       };
     });
   }
+
+  function closeModal() {
+    showModal.set(false);
+  }
+
+  function handleBackdropClick(event: MouseEvent) {
+    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
+      closeModal();
+    }
+  }
 </script>
 
+<!-- Modal do wyświetlania szczegółów logu -->
+{#if $showModal}
+  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-backdrop" on:click={handleBackdropClick}>
+    <div class="bg-white p-5 rounded shadow-lg max-w-md w-full">
+      <h2 class="text-xl font-bold mb-4">{t('selected')}</h2>
+      {#if $selectedLog}
+        <p><strong>{t('date')}:</strong> {$selectedLog.date}</p>
+        <p><strong>{t('entrance')}:</strong> {$selectedLog.entrence_time}</p>
+        <p><strong>{t('exit')}:</strong> {$selectedLog.exit_time}</p>
+        <p><strong>{t('hours')}:</strong> {$selectedLog.hours}</p>
+        <p><strong>{t('comment')}:</strong> {$selectedLog.komentarz || t('no_comment')}</p>
+      {/if}
+      <button class="mt-4 bg-blue-500 text-white py-2 px-4 rounded" on:click={closeModal}>{t('exit')}</button>
+    </div>
+  </div>
+{/if}
+
+<!-- Kalendarz -->
 <div class="flex flex-col m-5 z-90">
   <Calendar {plugins} {options} />
 </div>
