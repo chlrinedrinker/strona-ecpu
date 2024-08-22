@@ -7,11 +7,13 @@
     export let _id: string;
     export let selected: boolean = false;
     export let active: boolean = false;
+    import { exportDate } from "../stores/stores";
 
     const dispatch = createEventDispatcher();
 
     function handleClick() {
         dispatch("select", { imie, nazwisko, stanowisko, _id });
+        $exportDate=null
     }
 </script>
 

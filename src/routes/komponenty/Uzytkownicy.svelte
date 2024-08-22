@@ -7,6 +7,7 @@
   import { userType } from "../stores/stores";
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
+  import { totalHours, exportDate, showFiltered } from "../stores/stores";
 
   interface Pracownik {
     _id: string;
@@ -59,6 +60,10 @@
 
   async function handleSelect(event: CustomEvent<Pracownik>) {
     const selected = event.detail;
+    $exportDate=null
+    showFiltered.set(false)
+    totalHours.set(0);
+
 
     if (
       selectedUser &&
@@ -88,6 +93,9 @@
     selectedUser = null;
     showLogs.set(false);
     showUserList.set(true);
+    showFiltered.set(false);
+    totalHours.set(0);
+    
   }
 
   // Reactive statement to auto-select user if userType is 2

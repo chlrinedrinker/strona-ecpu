@@ -6,6 +6,7 @@
   import tippy from 'tippy.js';
   import 'tippy.js/dist/tippy.css'; // Importowanie stylów Tippy.js
   import { writable } from 'svelte/store';
+  import { exportDate } from '../stores/stores'; // Importujemy store
 
   interface Logowanie {
     _id: string;
@@ -62,6 +63,7 @@
       const clickedLog = logowania.find(log => log._id === info.event.id);
       if (clickedLog) {
         selectedLog.set(clickedLog);  // Ustawiamy wybrane logowanie
+        exportDate.set(clickedLog.date);  // Ustawiamy exportDate na datę klikniętego logu
         showModal.set(true);  // Pokaż modal
       }
     }
@@ -141,7 +143,7 @@
 </script>
 
 <!-- Modal do wyświetlania szczegółów logu -->
-{#if $showModal}
+<!-- {#if $showModal}
   <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-backdrop" on:click={handleBackdropClick}>
     <div class="bg-white p-5 rounded shadow-lg max-w-md w-full">
       <h2 class="text-xl font-bold mb-4">{t('selected')}</h2>
@@ -155,7 +157,7 @@
       <button class="mt-4 bg-blue-500 text-white py-2 px-4 rounded" on:click={closeModal}>{t('exit')}</button>
     </div>
   </div>
-{/if}
+{/if} -->
 
 <!-- Kalendarz -->
 <div class="flex flex-col m-5 z-90">
