@@ -15,6 +15,7 @@
     exit_time: string;
     hours: string;
     komentarz: string;
+    is_edit: boolean;
   }
 
   export let logowania: Logowanie[] = [];
@@ -28,7 +29,7 @@
     initialView: 'timeGridWeek',
     locale: currentLanguage,
     slotMinTime: '06:00:00',
-    slotMaxTime: '21:00:00',
+    slotMaxTime: '20:00:00',
     themeSystem: 'bootstrap',
     allDaySlot: false,
     editable: true,
@@ -83,53 +84,56 @@
   };
 
   function updateCalendarEvents() {
-    options.events = logowania.map(log => {
-      const startDateTime = `${log.date.split('T')[0]}T${log.entrence_time}`;
+  options.events = logowania.map(log => {
+    const startDateTime = `${log.date.split('T')[0]}T${log.entrence_time}`;
 
-      let endDateTime;
-      let exitTime = log.exit_time;
-      let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
-      let backgroundColor = '#3b82f6';
+    let endDateTime;
+    let exitTime = log.exit_time;
+    let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
+    let backgroundColor = '#3b82f6';
 
-      if (log.exit_time === "Obecny") {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        exitTime = `${hours}:${minutes}`;
-        endDateTime = `${log.date.split('T')[0]}T${exitTime}`;
-        eventTitle = "Obecny";  // Ustawienie tytułu na "Obecny"
-        backgroundColor = '#34d399'; // Zmieniamy kolor paska na zielony
-      } else {
-        endDateTime = `${log.date.split('T')[0]}T${log.exit_time}`;
+    if (log.exit_time === "Obecny") {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      exitTime = `${hours}:${minutes}`;
+      endDateTime = `${log.date.split('T')[0]}T${exitTime}`;
+      eventTitle = "Obecny";  // Ustawienie tytułu na "Obecny"
+      backgroundColor = '#34d399'; // Zmieniamy kolor paska na zielony
+    } else {
+      endDateTime = `${log.date.split('T')[0]}T${log.exit_time}`;
+    }
+
+    const hoursWorked = Math.round(parseHoursFromString(log.hours));
+    const dayOfWeek = new Date(log.date).getDay();
+
+    if (log.is_edit) {
+      backgroundColor = '#a855f7'; // Zmieniamy kolor paska na fioletowy, jeśli is_edit jest true
+    } else if (log.exit_time !== "Obecny") {
+      if (hoursWorked < 8 && (dayOfWeek == 2 || dayOfWeek == 3 || dayOfWeek == 4)) {
+        backgroundColor = '#d12e33';
+      } else if (hoursWorked < 9 && dayOfWeek == 1) {
+        backgroundColor = '#d12e33';
+      } else if (hoursWorked < 7 && dayOfWeek == 5) {
+        backgroundColor = '#d12e33';
       }
+    }
 
-      const hoursWorked = Math.round(parseHoursFromString(log.hours));
-      const dayOfWeek = new Date(log.date).getDay();
-
-      if (log.exit_time !== "Obecny") {
-        if (hoursWorked < 8 && (dayOfWeek == 2 || dayOfWeek == 3 || dayOfWeek == 4)) {
-          backgroundColor = '#d12e33';
-        } else if (hoursWorked < 9 && dayOfWeek == 1) {
-          backgroundColor = '#d12e33';
-        } else if (hoursWorked < 7 && dayOfWeek == 5) {
-          backgroundColor = '#d12e33';
-        }
+    return {
+      id: log._id,
+      title: eventTitle,  // Ustawienie poprawnego tytułu
+      start: startDateTime,
+      end: endDateTime,
+      allDay: false,
+      backgroundColor: backgroundColor,
+      extendedProps: {
+        entrence_time: log.entrence_time,
+        exit_time: exitTime
       }
+    };
+  });
+}
 
-      return {
-        id: log._id,
-        title: eventTitle,  // Ustawienie poprawnego tytułu
-        start: startDateTime,
-        end: endDateTime,
-        allDay: false,
-        backgroundColor: backgroundColor,
-        extendedProps: {
-          entrence_time: log.entrence_time,
-          exit_time: exitTime
-        }
-      };
-    });
-  }
 
   function closeModal() {
     showModal.set(false);
@@ -159,7 +163,28 @@
   </div>
 {/if} -->
 
+
 <!-- Kalendarz -->
-<div class="flex flex-col m-5 z-90">
-  <Calendar {plugins} {options} />
+<div class="flex flex-col m-1 z-90 mb-0">
+  <Calendar {plugins} {options} />  
 </div>
+
+<div class="mt-4 flex flex-col gap-2">
+  <div class="flex items-center">
+    <div class="w-4 h-4 bg-red-600 mr-2"></div>
+    <span>{t('insufficient_hours')}</span>
+  </div>
+  <div class="flex items-center">
+    <div class="w-4 h-4 bg-blue-500 mr-2"></div>
+    <span>{t('sufficient_hours')}</span>
+  </div>
+  <div class="flex items-center">
+    <div class="w-4 h-4 bg-green-500 mr-2"></div>
+    <span>{t('active')}</span>
+  </div>
+  <div class="flex items-center">
+    <div class="w-4 h-4 bg-purple-500 mr-2"></div>
+    <span>{t('edited')}</span>
+  </div>
+</div>
+

@@ -74,7 +74,10 @@
     "december": "Grudzień",
     "current_password": "Obecne hasło",
     "new_password": "Nowe hasło",
-    "login": "Logowanie"
+    "login": "Logowanie",
+    "insufficient_hours": "Niewystarczająca liczba godzin",
+    "sufficient_hours": "Odpowiednia liczba godzin",
+    "edited": "Edytowany"
 
   }
   

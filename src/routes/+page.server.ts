@@ -97,6 +97,7 @@ export const actions: Actions = {
         $set: {
           komentarz: komentarz,
           historia_komentarza: newCommentHistory,
+          is_edit: true,
         },
       },
     );
@@ -132,7 +133,9 @@ export const actions: Actions = {
         $set: {
           entrence_time: wejscie,
           exit_time: wejscie1,
-          hours: hours
+          hours: hours,
+          is_edit: true,
+
         },
       },
     );
@@ -166,7 +169,8 @@ export const actions: Actions = {
       {
         $set: {
           exit_time: wyjscie,
-          hours: hours
+          hours: hours,
+          is_edit: true,
         },
       },
     );
@@ -190,7 +194,6 @@ export const actions: Actions = {
   },
   PokazLogiUżytkownika: async (event) => {
     const data = await event.request.formData();
-
     try {
       const response = await fetch(
         `/endpoints/CzasPracy?imie=${encodeURIComponent(user.imie)}&nazwisko=${encodeURIComponent(user.nazwisko)}`,
@@ -225,7 +228,8 @@ export const actions: Actions = {
       exit_time,
       hours,
       komentarz,
-      historia_komentarza: komentarz ? new Date().toLocaleString() + " " + komentarz : ""
+      historia_komentarza: komentarz ? new Date().toLocaleString() + " " + komentarz : "",
+      is_edit: true,
     });
 
     return { success: true };

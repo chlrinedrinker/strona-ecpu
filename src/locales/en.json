@@ -74,6 +74,9 @@
     "no_second": "No second check",
     "current_password": "Current password",
     "new_password": "New password",
-    "login": "Login"
+    "login": "Login",
+    "insufficient_hours": "Insufficient hours",
+    "sufficient_hours": "Sufficient hours",
+    "edited": "Edited"
   }
   
