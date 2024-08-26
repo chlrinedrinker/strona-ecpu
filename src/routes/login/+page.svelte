@@ -4,7 +4,7 @@
     import { onMount } from "svelte"; // Svelte lifecycle hook
     import { isLoggedIn } from "../stores/stores"; // Store for login state
     export let form;
-
+    import { t, loadLanguage } from '../../i18n.js'; 
     // On mount, set the login state to false
     onMount(() => {
         $isLoggedIn = false;
@@ -12,14 +12,14 @@
 </script>
 
 <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
-    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    <h1 class="text-2xl font-bold mb-4">{t('login')}</h1>
     <form
         class="flex flex-col gap-4 p-8 bg-white rounded-lg shadow-md"
         method="post"
         use:enhance
     >
         <div>
-            <label for="username" class="block mb-2">Username:</label>
+            <label for="username" class="block mb-2">{t('username')}:</label>
             <input
                 type="text"
                 id="username"
@@ -29,7 +29,7 @@
             />
         </div>
         <div>
-            <label for="password" class="block mb-2">Password:</label>
+            <label for="password" class="block mb-2">{t('password')}:</label>
             <input
                 type="password"
                 id="password"

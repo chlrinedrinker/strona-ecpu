@@ -24,7 +24,7 @@
     "edit": "Edycja",
     "select_date_range": "Wybierz zakres dat",
     "add_comment": "Dodaj komentarz",
-
+    "no_second": "Brak drugiego odbicia",
     "start": "Początek",
     "end": "Koniec",
     "apply": "Zastosuj",
@@ -71,7 +71,13 @@
     "september": "Wrzesień",
     "october": "Październik",
     "november": "Listopad",
-    "december": "Grudzień"
+    "december": "Grudzień",
+    "current_password": "Obecne hasło",
+    "new_password": "Nowe hasło",
+    "login": "Logowanie",
+    "insufficient_hours": "Niewystarczająca liczba godzin",
+    "sufficient_hours": "Odpowiednia liczba godzin",
+    "edited": "Edytowany"
 
   }
   

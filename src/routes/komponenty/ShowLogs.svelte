@@ -6,11 +6,12 @@
   import "tippy.js/dist/tippy.css"; // Import Tippy.js CSS
   import { enhance } from "$app/forms";
   import { writable } from "svelte/store";
-  import { isLoggedIn, userType } from "../stores/stores";
+  import { totalHours,showFiltered, exportDate , userType } from "../stores/stores";
   import { generatePDF } from "./pdfUtils";
-  import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+  import { t } from '../../i18n.js'; // Importing the i18n functions
+  
 
-
+  
   export let logowania: {
     _id: string;
     date: string;
@@ -47,9 +48,7 @@
   let filteredLogowania = [];
   let customStartDate = "";
   let customEndDate = "";
-  let showFiltered = false;
-  let totalHours = 0;
-
+  
   const showModal = writable(false);
   const showReportModal = writable(false);
   const modalContent = writable("");
@@ -79,69 +78,102 @@
   };
 
   const filterLogs = async (range: string) => {
-    showFiltered = true;
+    // Reset eksportu i pokaż filtrowane wyniki
+    exportDate.set(null);
+    $showFiltered = true;
     hideCustomDateRange();
-    const now = new Date();
+
+    const now = new Date(); // Obecna data
     let startDate: Date;
     let endDate: Date = new Date(now);
 
+    // Ustalanie zakresów na podstawie wybranego filtru
     if (range === "today") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     } else if (range === "week") {
-      const startOfWeek = new Date(now);
-      const dayOfWeek = startOfWeek.getDay() || 7;
-      startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + 1);
-      startDate = new Date(
-        startOfWeek.getFullYear(),
-        startOfWeek.getMonth(),
-        startOfWeek.getDate()
-      );
+        const startOfWeek = new Date(now);
+        const dayOfWeek = startOfWeek.getDay() || 7; // Poniedziałek jako początek tygodnia
+        startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek + 1);
+        startDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
     } else if (range === "month") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1); // Początek miesiąca
     } else if (range === "custom") {
-      startDate = new Date(customStartDate);
-      endDate = new Date(customEndDate);
+        startDate = new Date(document.getElementById("customStartDate").value);
+        endDate = new Date(document.getElementById("customEndDate").value);
     } else {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1); // Domyślnie początek miesiąca
     }
 
+    // Filtrowanie logów na podstawie zakresu dat
+    filteredLogowania = logowania.filter((log) => {
+        const logDate = new Date(log.date);
+        return logDate >= startDate && logDate <= endDate;
+    });
+
+    // Obliczenie całkowitej liczby godzin
+    $totalHours = filteredLogowania.reduce(
+        (sum, log) => sum + parseHours(log.hours),
+        0
+    );
+
+    // Zaktualizowanie UI
+    await tick();
+    setupTooltips();
+};
+
+  // Nowa funkcja do filtrowania logów na podstawie `exportDate`
+  const filterLogsByExportDate = async (selectedDate: string) => {
+    const startDate = new Date(selectedDate);
+    const endDate = new Date(selectedDate);
+    $showFiltered = true;
+    // Filtrowanie logów na podstawie wybranej daty
     filteredLogowania = logowania.filter((log) => {
       const logDate = new Date(log.date);
       return logDate >= startDate && logDate <= endDate;
     });
 
-    totalHours = filteredLogowania.reduce(
+    // Obliczenie sumy godzin
+    $totalHours = filteredLogowania.reduce(
       (sum, log) => sum + parseHours(log.hours),
       0
     );
 
+    // Aktualizacja widoku
     await tick();
     setupTooltips();
   };
-  function extractLastPart(text: string): string {
-    // Usuń białe znaki na początku i końcu ciągu
-    const trimmedText = text.trim();
 
-    // Znajdź pozycję ostatniej spacji w ciągu
-    const lastSpaceIndex = trimmedText.lastIndexOf(" ");
-
-    // Jeśli spacja została znaleziona, zwróć wszystko po niej, w przeciwnym razie zwróć pusty ciąg
-    return lastSpaceIndex !== -1
-      ? trimmedText.substring(lastSpaceIndex + 1)
-      : "";
+  // Reaktywna deklaracja, która wywołuje `filterLogsByExportDate` za każdym razem, gdy `exportDate` się zmienia
+  $: {
+    if ($exportDate !== null) {
+      filterLogsByExportDate($exportDate);
+    }
   }
-  const setupDatePickers = () => {
-    flatpickr("#customStartDate", {
-      onChange: (selectedDates) => {
-        customStartDate = selectedDates[0].toISOString();
-      },
-    });
-    flatpickr("#customEndDate", {
-      onChange: (selectedDates) => {
-        customEndDate = selectedDates[0].toISOString();
-      },
-    });
-  };
+  // function extractLastPart(text: string): string {
+  //   // Usuń białe znaki na początku i końcu ciągu
+  //   const trimmedText = text.trim();
+
+  //   // Sprawdź, czy tekst ma co najmniej 18 znaków
+  //   if (trimmedText.length > 18) {
+  //       // Zwróć wszystko po 18. znaku
+  //       return trimmedText.substring(18);
+  //   } else {
+  //       // Jeśli tekst ma mniej niż 18 znaków, zwróć pusty ciąg
+  //       return "";
+  //   }
+  // }
+  // const setupDatePickers = () => {
+  //   flatpickr("#customStartDate", {
+  //     onChange: (selectedDates) => {
+  //       customStartDate = selectedDates[0].toISOString();
+  //     },
+  //   });
+  //   flatpickr("#customEndDate", {
+  //     onChange: (selectedDates) => {
+  //       customEndDate = selectedDates[0].toISOString();
+  //     },
+  //   });
+  // };
 
   const showCustomDateRange = () => {
     document.getElementById("customDateRange").style.display = "block";
@@ -206,10 +238,13 @@
   };
 
   onMount(() => {
-    setupDatePickers();
+    // setupDatePickers();
     setupTooltips();
+    showFiltered.set(false);
   });
-
+  $: {
+    $showFiltered; // Reakcja na zmiany w store
+  }
   const applyCustomDateFilter = () => {
     filterLogs("custom");
   };
@@ -217,7 +252,7 @@
   $: {
     if (logowania.length > 0 && !showFiltered) {
       filteredLogowania = [...logowania];
-      totalHours = filteredLogowania.reduce(
+      $totalHours = filteredLogowania.reduce(
         (sum, log) => sum + parseHours(log.hours),
         0
       );
@@ -281,7 +316,7 @@
     </div>
     {/if}
     <p class="font-bold text-center mt-2 text-xs md:text-sm">
-      {t('total_hours')}: {convertDecimalHoursToTime(totalHours)}
+      {t('total_hours')}: {convertDecimalHoursToTime($totalHours)}
     </p>
   </div>
   
@@ -289,21 +324,20 @@
   <div id="customDateRange" style="display: none;" class="mt-2">
     <label for="customStartDate" class="block text-xs">{t('start')}:</label>
     <input
-      id="customStartDate"
-      type="text"
-      class="w-full px-1 py-1 border rounded mb-1 text-xs"
+        id="customStartDate"
+        type="date" 
+        class="w-full px-1 py-1 border rounded mb-1 text-xs"
     />
     <label for="customEndDate" class="block text-xs">{t('end')}:</label>
     <input
-      id="customEndDate"
-      type="text"
-      class="w-full px-1 py-1 border rounded mb-1 text-xs"
+        id="customEndDate"
+        type="date" 
+        class="w-full px-1 py-1 border rounded mb-1 text-xs"
     />
     <button
-      class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-      on:click={() => applyCustomDateFilter()}>{t('apply')}</button
-    >
-  </div>
+        class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
+        on:click={() => filterLogs('custom')}>{t('apply')}</button>
+</div>
 
   <h2 class="text-center text-xs md:text-sm">
     {t('user_logins')}: <span
@@ -324,33 +358,51 @@
         </tr>
       </thead>
       <tbody>
-        {#if showFiltered}
-        {#each filteredLogowania as log}
-        <tr>
-          <td class="p-2 md:p-3">{log.date}</td>
-          <td class="p-2 md:p-3">{log.entrence_time}</td>
-          <td class="p-2 md:p-3">{log.exit_time}</td>
-          <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
-          <td class="p-2 md:p-3">{extractLastPart(String(log.komentarz)) || t('no_comment')}</td>
-          <td class="p-2 md:p-3">
-            <div class="flex justify-center items-center">
-              <button class="px-1 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>{t('edit')}</button>
-            </div>
-          </td>
-        </tr>
-      {/each}
+        {#if $showFiltered}
+          {#each filteredLogowania as log}
+            <tr>
+              <td class="p-2 md:p-3">{log.date}</td>
+              <td class="p-2 md:p-3">{log.entrence_time}</td>
+              <td class="p-2 md:p-3">
+                {#if log.exit_time === 'Obecny'}
+                  {t('active')}
+                {:else if log.exit_time === 'Brak drugiego odbicia'}
+                  {t('no_second')}
+                {:else}
+                  {log.exit_time}
+                {/if}
+              </td>
+              <td class="p-2 md:p-3 hidden md:table-cell">{log.hours}</td>
+              <td class="p-2 md:p-3 hidden md:table-cell">{log.komentarz || t('no_comment')}</td>
+              <td class="p-2 md:p-3">
+                <div class="flex justify-center items-center">
+                  <button class="px-8 py-1 bg-blue-500 text-white rounded comment-button text-xs" data-comment={log.komentarz || t('no_comment')} on:click={() => openModal(log)}>
+                    {t('edit')}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {/each}
         {:else}
           {#each logowania as log}
             <tr>
               <td>{log.date}</td>
               <td>{log.entrence_time}</td>
-              <td>{log.exit_time}</td>
+              <td class="p-2 md:p-3">
+                {#if log.exit_time === 'Obecny'}
+                  {t('active')}
+                {:else if log.exit_time === 'Brak drugiego odbicia'}
+                  {t('no_second')}
+                {:else}
+                  {log.exit_time}
+                {/if}
+              </td>
               <td
                 class="p-2 md:p-3 hidden md:table-cell"
               >{log.hours}</td>
               <td
                 class="p-2 md:p-3 hidden md:table-cell"
-                >{extractLastPart(String(log.komentarz)) ||
+                >{log.komentarz ||
                   t('no_comment')}</td
               >
               <td class="p-2 md:p-3">
@@ -449,12 +501,13 @@
                   formData.append("imie", selectedUser.imie);
                   formData.append("nazwisko", selectedUser.nazwisko);
                   formData.append("data", $currentLog.date);
+                  formData.append("wejscie1", $currentLog.entrence_time);
                   formData.append("wyjscie", $currentLog.exit_time);
                 }}
               >
                 <input
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
-                  type="text"
+                  type="time"
                   placeholder={t('entrance_time')} 
                   
                   name="entrance_time"
@@ -477,7 +530,7 @@
               >
                 <input
                   class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
-                  type="text"
+                  type="time"
                   placeholder={t('exit_time')} 
                   
                   name="exit_time"
