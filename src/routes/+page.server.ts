@@ -192,6 +192,20 @@ export const actions: Actions = {
       },
     );
   },
+  deleteLog: async (event) => {
+    const data = await event.request.formData();
+    const date = data.get("data");
+    const imie = data.get("imie");
+    const nazwisko = data.get("nazwisko");
+    const wejscie = data.get("wejscie");
+
+    const db = _czas_pracy.collection(imie + "_" + nazwisko);
+
+    // Usuń log na podstawie daty i godziny wejścia
+    await db.deleteOne({ date: date, entrence_time: wejscie });
+    return { success: true };
+},
+
   PokazLogiUżytkownika: async (event) => {
     const data = await event.request.formData();
     try {

@@ -77,6 +77,6 @@
     "login": "Login",
     "insufficient_hours": "Insufficient hours",
     "sufficient_hours": "Sufficient hours",
-    "edited": "Edited"
+    "edited": "Edited",
+    "delete_log": "Delate log"
   }
-  
