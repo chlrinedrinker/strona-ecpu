@@ -9,6 +9,7 @@
 
 <svelte:head>
   <title>{title}</title>
+  <meta name="description" content={title}>
 </svelte:head>
 
 <container class="flex flex-col relative w-full">
