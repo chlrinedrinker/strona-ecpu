@@ -2,6 +2,10 @@
   import "../app.css";
   import Navbar from './navbar/navbar.svelte'
   import { page } from "$app/stores";
+  import getI18nStore from "../i18n";
+  import { setContext } from "svelte";
+  
+  setContext('i18n', getI18nStore());
 
     const appName = "Ewidencja Czasu Pracy";
     $: title = [appName, ...$page.url.pathname.split("/").slice(1)].filter(Boolean).join(" - ");

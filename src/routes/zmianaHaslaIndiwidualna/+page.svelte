@@ -1,8 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { enhance } from "$app/forms";
-    import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
-
+    import { getContext } from "svelte";
 
     let successMessage = "";
     let errors = {

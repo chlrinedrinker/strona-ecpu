@@ -1,6 +1,9 @@
 import { json } from "@sveltejs/kit";
 import dotenv from "dotenv";
 import { _login } from "$db/mongo";
+import { createI18nStore } from "svelte-i18next";
+import { getContext } from "svelte";
+
 
 dotenv.config();
 const projection = {

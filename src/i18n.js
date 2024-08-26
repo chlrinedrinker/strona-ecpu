@@ -1,22 +1,21 @@
-let currentLanguage = 'pl'; // Domyślny język
-let translations = {};
+import i18next from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { createI18nStore } from "svelte-i18next";
 
-async function loadLanguage(language) {
-  currentLanguage = language;
-  translations = await import(`./locales/${language}.json`);
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('language', language);
+i18next.use(LanguageDetector)
+.use(HttpBackend)
+.init({
+ lng: 'en',
+ resources: {
+    en: {
+      translation: {
+        "key": "hello world"
+      }
+    }
+  },
+  interpolation: {
+    escapeValue: false, // not needed for svelte as it escapes by default
   }
-}
+});
 
-function t(key) {
-  return translations[key] || key;
-}
-
-// Inicjalizacja języka przy starcie aplikacji
-if (typeof window !== 'undefined') {
-  const savedLanguage = localStorage.getItem('language');
-  loadLanguage(savedLanguage || 'pl');
-}
-
-export { t, loadLanguage, currentLanguage };
+export default () => createI18nStore(i18next);

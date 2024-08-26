@@ -40,7 +40,7 @@
             />
         </div>
         <div>
-            <label for="zmianaHasła" class="block mb-2">{t('change_password')}</label>
+            <label for="zmianaHasła" class="block mb-2">t('change_password')</label>
             <input
                 type="password"
                 name="zmianaHasła"
