@@ -30,21 +30,16 @@ export async function GET({ url }: { url: URL }) {
     const db = _czas_pracy;
     const collection = db.collection(katalog);
 
-    // Retrieve logs from the collection and project the necessary fields
-    const logi = await collection.find().sort({ date: -1 }).toArray();
+    // Retrieve logs from the collection, sort by date and then by entryTime
+    const logi = await collection.find().sort({ date: -1, entrence_time: 1 }).toArray();
 
-    // Remove duplicates based on the 'date' field
-    const uniqueLogi = [];
-    const seen = new Set();
+    // Process logs and convert hours format
+    const uniqueLogi = logi.map(log => ({
+      ...log,
+      hours: convertDecimalHoursToTime(log.hours), // Convert hours format
+    }));
 
-    for (const log of logi) {
-      uniqueLogi.push({
-        ...log,
-        hours: convertDecimalHoursToTime(log.hours), // Convert hours format
-      });
-    }
-
-    // Return the unique logs
+    // Return the processed logs
     return json(uniqueLogi);
   } catch (error) {
     console.error("Błąd podczas pobierania logów:", error);

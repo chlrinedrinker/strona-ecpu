@@ -284,6 +284,7 @@
         closeAddLogModal();
     }
   }
+  
 </script>
 
 <div class="p-1 md:p-2 z-90">
@@ -580,6 +581,25 @@
                   type="submit">{t('save')}</button>
               </form>
               {/if}
+              <form
+                  action="?/deleteLog"
+                  method="post"
+                  use:enhance={({ formData }) => {
+                    formData.append("imie", selectedUser.imie);
+                    formData.append("nazwisko", selectedUser.nazwisko);
+                    formData.append("data", $currentLog.date);
+                    formData.append("wejscie", $currentLog.entrence_time);
+                  }}
+                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten log?');"
+                >
+                  <button
+                    class="w-full px-2 py-1 bg-red-500 text-white rounded text-xs md:text-sm"
+                    type="submit"
+                  >
+                    {t('delete_log')}
+                  </button>
+                </form>
+
             </div> 
           </div>
         {/if}

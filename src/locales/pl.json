@@ -77,7 +77,9 @@
     "login": "Logowanie",
     "insufficient_hours": "Niewystarczająca liczba godzin",
     "sufficient_hours": "Odpowiednia liczba godzin",
-    "edited": "Edytowany"
+    "edited": "Edytowany",
+    "delete_log": "Usuń log"
+
 
   }
   
