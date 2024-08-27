@@ -16,6 +16,7 @@
     hours: string;
     komentarz: string;
     is_edit: boolean;
+    type: string;
   }
 
   export let logowania: Logowanie[] = [];
@@ -84,55 +85,91 @@
   };
 
   function updateCalendarEvents() {
-  options.events = logowania.map(log => {
-    const startDateTime = `${log.date.split('T')[0]}T${log.entrence_time}`;
-
-    let endDateTime;
-    let exitTime = log.exit_time;
-    let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
-    let backgroundColor = '#3b82f6';
-
-    if (log.exit_time === "Obecny") {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      exitTime = `${hours}:${minutes}`;
-      endDateTime = `${log.date.split('T')[0]}T${exitTime}`;
-      eventTitle = "Obecny";  // Ustawienie tytułu na "Obecny"
-      backgroundColor = '#34d399'; // Zmieniamy kolor paska na zielony
-    } else {
-      endDateTime = `${log.date.split('T')[0]}T${log.exit_time}`;
+  // Mapa przechowująca sumę godzin pracy dla każdego dnia
+  const dailyHoursMap = logowania.reduce((acc, log) => {
+    const day = log.date.split('T')[0]; // Zapisujemy tylko dzień, bez godziny
+    const hours = parseHoursFromString(log.hours); // Parsowanie godzin dla pojedynczego logowania
+    
+    if (!acc[day]) {
+      acc[day] = 0; // Inicjalizacja sumy godzin dla tego dnia
     }
+    
+    acc[day] += hours; // Dodanie godzin do sumy dla danego dnia
+    
+    return acc;
+  }, {});
 
-    const hoursWorked = Math.round(parseHoursFromString(log.hours));
-    const dayOfWeek = new Date(log.date).getDay();
+  options.events = logowania
+    .map((log) => {
+      const startDateTime = `${log.date.split('T')[0]}T${log.entrence_time}`;
 
-    if (log.is_edit) {
-      backgroundColor = '#a855f7'; // Zmieniamy kolor paska na fioletowy, jeśli is_edit jest true
-    } else if (log.exit_time !== "Obecny") {
-      if (hoursWorked < 8 && (dayOfWeek == 2 || dayOfWeek == 3 || dayOfWeek == 4)) {
-        backgroundColor = '#d12e33';
-      } else if (hoursWorked < 9 && dayOfWeek == 1) {
-        backgroundColor = '#d12e33';
-      } else if (hoursWorked < 7 && dayOfWeek == 5) {
-        backgroundColor = '#d12e33';
+      let endDateTime;
+      let exitTime = log.exit_time;
+      let eventTitle = `Wejście: ${log.entrence_time} Wyjście: ${exitTime}`;
+      let backgroundColor = '#3b82f6'; // Domyślnie niebieski
+
+      if (log.exit_time === 'Obecny') {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        exitTime = `${hours}:${minutes}`;
+        endDateTime = `${log.date.split('T')[0]}T${exitTime}`;
+        eventTitle = 'Obecny'; // Ustawienie tytułu na "Obecny"
+        backgroundColor = '#34d399'; // Zielony dla aktywnego
+      } else {
+        endDateTime = `${log.date.split('T')[0]}T${log.exit_time}`;
       }
-    }
 
-    return {
-      id: log._id,
-      title: eventTitle,  // Ustawienie poprawnego tytułu
-      start: startDateTime,
-      end: endDateTime,
-      allDay: false,
-      backgroundColor: backgroundColor,
-      extendedProps: {
-        entrence_time: log.entrence_time,
-        exit_time: exitTime
+      const dayOfWeek = new Date(log.date).getDay();
+      const hoursWorked = Math.round(dailyHoursMap[log.date.split('T')[0]]); // Pobieranie sumy godzin z dailyHoursMap
+
+      // Sprawdzenie, czy logowanie zostało edytowane
+      if (log.is_edit) {
+        backgroundColor = '#a855f7'; // Fioletowy dla edytowanego
+      } else if (log.exit_time !== 'Obecny') {
+        if (
+          (dayOfWeek === 1 && hoursWorked < 9) || // Poniedziałek
+          ((dayOfWeek >= 2 && dayOfWeek <= 4) && hoursWorked < 8) || // Wtorek do czwartku
+          (dayOfWeek === 5 && hoursWorked < 7) // Piątek
+        ) {
+          backgroundColor = '#d12e33'; // Czerwony dla niewystarczającej liczby godzin
+        }
       }
-    };
-  });
+
+      // Sprawdzenie typu "w"
+      if (log.type === 'w') {
+        // Obsługa braku komentarza (czarny kolor)
+        if (!log.komentarz) {
+          backgroundColor = '#000000'; // Czarny, gdy brak komentarza
+        }
+
+        // Obsługa "Wyjścia Prywatnego" (brak wydarzenia)
+        if (log.komentarz === 'Wyjście Prywatne') {
+          return null; // Brak wydarzenia w kalendarzu
+        }
+
+        // Obsługa "Wyjścia Służbowego" (niebieski kolor)
+        if (log.komentarz === 'Wyjście Służbowe') {
+          backgroundColor = '#3b82f6'; // Niebieski dla wyjścia służbowego
+        }
+      }
+
+      return {
+        id: log._id,
+        title: eventTitle, // Ustawienie poprawnego tytułu
+        start: startDateTime,
+        end: endDateTime,
+        allDay: false,
+        backgroundColor: backgroundColor,
+        extendedProps: {
+          entrence_time: log.entrence_time,
+          exit_time: exitTime,
+        },
+      };
+    })
+    .filter((event) => event !== null); // Usuwanie null, czyli "Wyjścia Prywatne"
 }
+
 
 
   function closeModal() {
@@ -145,23 +182,6 @@
     }
   }
 </script>
-
-<!-- Modal do wyświetlania szczegółów logu -->
-<!-- {#if $showModal}
-  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-backdrop" on:click={handleBackdropClick}>
-    <div class="bg-white p-5 rounded shadow-lg max-w-md w-full">
-      <h2 class="text-xl font-bold mb-4">{t('selected')}</h2>
-      {#if $selectedLog}
-        <p><strong>{t('date')}:</strong> {$selectedLog.date}</p>
-        <p><strong>{t('entrance')}:</strong> {$selectedLog.entrence_time}</p>
-        <p><strong>{t('exit')}:</strong> {$selectedLog.exit_time}</p>
-        <p><strong>{t('hours')}:</strong> {$selectedLog.hours}</p>
-        <p><strong>{t('comment')}:</strong> {$selectedLog.komentarz || t('no_comment')}</p>
-      {/if}
-      <button class="mt-4 bg-blue-500 text-white py-2 px-4 rounded" on:click={closeModal}>{t('exit')}</button>
-    </div>
-  </div>
-{/if} -->
 
 
 <!-- Kalendarz -->
