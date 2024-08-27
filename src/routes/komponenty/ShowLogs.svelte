@@ -18,6 +18,7 @@
     entrence_time: string;
     exit_time: string;
     hours: string;
+    type: string;
     komentarz?: string;
     historia_komentarza?: string;
   }[] = [];
@@ -43,6 +44,18 @@
     { "value": "11", "name": t('december') },
   ];
 
+  let isActive = (log) => {
+    if(log.komentarz == null && log.type == "w"){
+      console.log(log.komentarz == null)
+      console.log(log.type == "w")
+      console.log(log.komentarz == null && log.type == "w")
+      return true;}
+    else {
+      return false;
+    }
+  }
+    
+
   // Wybrany miesiąc
   export let selectedMonth: string = "1"; // Domyślnie Styczeń
   let filteredLogowania = [];
@@ -61,6 +74,7 @@
     exit_time: "",
     hours: "",
     komentarz: "",
+    type: "",
     historia_komentarza: "",
   });
   const editField = writable("");
@@ -385,7 +399,7 @@
           {/each}
         {:else}
           {#each logowania as log}
-            <tr>
+            <tr class:bg-red-600={isActive(log)} class:text-neutral-50={isActive(log)}>
               <td>{log.date}</td>
               <td>{log.entrence_time}</td>
               <td class="p-2 md:p-3">
@@ -423,6 +437,8 @@
 
   <!-- Modal z komentarzem -->
   {#if $showModal}
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >
@@ -537,10 +553,34 @@
                 />
                 <button
                   class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">{t('save')}</button
-                >
+                  type="submit">{t('save')}</button>
               </form>
-            </div>
+              {#if $currentLog.type == "w" && $currentLog.komentarz == null}
+                <form
+                action="?/selectTypeOfBreak"
+                method="post"
+                use:enhance={({ formData }) => {
+                  formData.append("imie", selectedUser.imie);
+                  formData.append("nazwisko", selectedUser.nazwisko);
+                  formData.append("data", $currentLog.date);
+                  formData.append("wejscie", $currentLog.entrence_time);
+                  formData.append("wyjscie", $currentLog.exit_time);
+                }}
+              > 
+                <select
+                name="typ"
+                id="typ"
+                class="w-full p-2 border border-gray-300 rounded"
+                  > 
+                  <option value="0">Wyjscie Prywatne</option>
+                  <option value="1">Wyjscie Służbowe</option>
+                </select>
+                <button
+                  class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
+                  type="submit">{t('save')}</button>
+              </form>
+              {/if}
+            </div> 
           </div>
         {/if}
       </div>
@@ -551,6 +591,8 @@
 
 
 {#if $showReportModal}
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >
@@ -590,6 +632,8 @@
 {/if}
 
 {#if $showAddLogModal}
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
   >

@@ -216,7 +216,7 @@ export const actions: Actions = {
     const date = data.get("date");
     const entrance_time = data.get("entrance_time");
     const exit_time = data.get("exit_time");
-    const hours = parseFloat(data.get("hours"));
+    const hours = parseFloat(data.get("hours")!.toString());
     const komentarz = data.get("komentarz");
     const imie = data.get("imie")
     const nazwisko = data.get("nazwisko")
@@ -234,4 +234,55 @@ export const actions: Actions = {
 
     return { success: true };
   },
+  selectTypeOfBreak: async (event) => {
+    function parseTime(timeStr: string) {
+      const [hours, minutes, seconds = "00"] = timeStr.split(":").map(Number);
+      return new Date(1970, 0, 1, hours, minutes, seconds);
+    }
+
+    function calculateHourDifference(startTime: string, endTime: string) {
+      const start = parseTime(startTime);
+      const end = parseTime(endTime);
+      const diffMs = end - start; // Difference in milliseconds
+      return (diffMs / (1000 * 60 * 60)).toFixed(2); // Convert to hours and round to 2 decimal places
+  }
+
+    const data = await event.request.formData();
+    const date = data.get("data");
+    const entrance_time = data.get("wejscie");
+    const imie = data.get("imie")
+    const nazwisko = data.get("nazwisko")
+    const typ = parseInt(data.get("typ")!.toString())
+    const exit_time = data.get("wyjscie")
+    const db = _czas_pracy.collection(imie + "_" + nazwisko)
+
+    if (typ == 0){
+      await db.updateOne({
+        date: date,
+        entrence_time: entrance_time,
+    },
+    {
+      $set: {
+        hours: 0,
+        komentarz: "Wyjście Prywatne"
+      }
+    }
+    )
+    }
+    if (typ == 1){
+      await db.updateOne({
+        date: date,
+        entrence_time: entrance_time,
+    },
+    {
+      $set: {
+        komentarz: "Wyjście służbowe",
+        hours: calculateHourDifference(entrance_time, exit_time)
+      }
+    }
+    )
+    }
+
+    
+  }
 };

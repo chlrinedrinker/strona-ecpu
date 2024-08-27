@@ -52,7 +52,7 @@
 <div class="flex items-center justify-between p-2 md:p-4 bg-gray-100 border-b z-100 w-full">
   <div class="flex items-center space-x-2 md:space-x-4">
     <a href="/">
-      <img src="/herb.png" alt="Logo" class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12" />
+      <img src="/herb.webp" alt="Logo" class="h-6 w-5.5 sm:h-8 sm:w-8 md:w-11 md:h-12" />
     </a>
     <a href="/">
       <div class="text-sm sm:text-base md:text-lg">Gmina Łubnice</div>
