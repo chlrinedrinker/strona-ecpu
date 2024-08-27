@@ -7,7 +7,9 @@
   import { userType } from "../stores/stores";
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
+  export let form: ActionData;
   import { totalHours, exportDate, showFiltered } from "../stores/stores";
+    import type { ActionData } from "../$types";
 
   interface Pracownik {
     _id: string;
@@ -177,7 +179,7 @@
       class="lg:w-3/4 lg:flex lg:flex-col lg:overflow-auto lg:transition-transform lg:duration-200 lg:mb-0 overflow-hidden mb-10 z-90"
       transition:slide
     >
-      <ShowLogs logowania={$logowaniaStore[selectedUser._id]} {selectedUser} />
+      <ShowLogs logowania={$logowaniaStore[selectedUser._id]} form={form} {selectedUser} />
     </div>
 
     <!-- NavbarKalendarz Section -->

@@ -9,7 +9,10 @@
   import { totalHours,showFiltered, exportDate , userType } from "../stores/stores";
   import { generatePDF } from "./pdfUtils";
   import { t } from '../../i18n.js'; // Importing the i18n functions
+  import type { ActionData } from './$types';
+    import { page } from "$app/stores";
   
+  export let form: ActionData;
 
   
   export let logowania: {
@@ -375,7 +378,7 @@
       <tbody>
         {#if $showFiltered}
           {#each filteredLogowania as log}
-            <tr>
+            <tr class:bg-red-600={isActive(log)} class:text-neutral-50={isActive(log)}>
               <td class="p-2 md:p-3">{log.date}</td>
               <td class="p-2 md:p-3">{log.entrence_time}</td>
               <td class="p-2 md:p-3">
@@ -505,6 +508,35 @@
             <p class="mx-1 my-0 text-xs">{t('no_comment_history')}</p>
           {/if}
         </div>
+        {#if $currentLog.type == "w" && $currentLog.komentarz == null}
+          {#if form?.success}
+            <p class=text-green-200>Przerwa została opisana</p>
+          {/if}
+        <form
+        action="?/selectTypeOfBreak"
+        method="post"
+        use:enhance={({ formData }) => {
+          formData.append("imie", selectedUser.imie);
+          formData.append("nazwisko", selectedUser.nazwisko);
+          formData.append("data", $currentLog.date);
+          formData.append("wejscie", $currentLog.entrence_time);
+          formData.append("wyjscie", $currentLog.exit_time);
+        }}
+      > 
+        <select
+        name="typ"
+        id="typ"
+        class="w-full p-2 border border-gray-300 rounded"
+          > 
+          <option value="0">Wyjscie Prywatne</option>
+          <option value="1">Wyjscie Służbowe</option>
+        </select>
+        <button
+          class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
+          type="submit">{t('save')}</button>
+      </form>
+      {/if}
+
         {#if $userType == 0}
           <div class="w-full md:w-1/2">
             <h4 class="text-xs md:text-base">
@@ -556,30 +588,8 @@
                   class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
                   type="submit">{t('save')}</button>
               </form>
-              {#if $currentLog.type == "w" && $currentLog.komentarz == null}
-                <form
-                action="?/selectTypeOfBreak"
-                method="post"
-                use:enhance={({ formData }) => {
-                  formData.append("imie", selectedUser.imie);
-                  formData.append("nazwisko", selectedUser.nazwisko);
-                  formData.append("data", $currentLog.date);
-                  formData.append("wejscie", $currentLog.entrence_time);
-                  formData.append("wyjscie", $currentLog.exit_time);
-                }}
-              > 
-                <select
-                name="typ"
-                id="typ"
-                class="w-full p-2 border border-gray-300 rounded"
-                  > 
-                  <option value="0">Wyjscie Prywatne</option>
-                  <option value="1">Wyjscie Służbowe</option>
-                </select>
-                <button
-                  class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">{t('save')}</button>
-              </form>
+              {#if form?.success}
+                <p class="text-green-200">Pomyślnie usnięto log</p>
               {/if}
               <form
                   action="?/deleteLog"
