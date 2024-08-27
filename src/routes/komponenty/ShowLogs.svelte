@@ -31,6 +31,7 @@
     stanowisko: string;
   };
 
+
   // Tablica miesięcy
   const months = [
     { "value": "0", "name": t('january') },
@@ -57,7 +58,7 @@
       return false;
     }
   }
-    
+  let rok = new Date().getFullYear()
 
   // Wybrany miesiąc
   export let selectedMonth: string = "1"; // Domyślnie Styczeń
@@ -258,6 +259,7 @@
     // setupDatePickers();
     setupTooltips();
     showFiltered.set(false);
+    rok = new Date().getFullYear()
   });
   $: {
     $showFiltered; // Reakcja na zmiany w store
@@ -537,7 +539,7 @@
       </form>
       {/if}
 
-        {#if $userType == 0}
+        {#if $userType != 2}
           <div class="w-full md:w-1/2">
             <h4 class="text-xs md:text-base">
               <strong>{t('edit')}:</strong>
@@ -653,7 +655,7 @@
         <button
           class="w-full px-4 py-2 bg-blue-500 text-white rounded"
           on:click={() =>
-            generatePDF(selectedUser, logowania, 2024, Number(selectedMonth))}
+            generatePDF(selectedUser, logowania, rok, Number(selectedMonth))}
           >{t('get_user_report')}</button
         >
       </div>

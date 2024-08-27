@@ -63,12 +63,12 @@ export const actions: Actions = {
           message: "Niepoprawne haslo",
         });
       }
-      if (typeof imie !== "string" || !/^[a-zA-Z]+$/.test(imie)) {
+      if (typeof imie !== "string" || !/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ-]/.test(imie)) {
         return fail(400, {
           message: "Niepoprawne imie",
         });
       }
-      if (typeof nazwisko !== "string" || !/^[a-zA-Z]+$/.test(nazwisko)) {
+      if (typeof nazwisko !== "string" || !/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ-]/.test(nazwisko)) {
         return fail(400, {
           message: "Niepoprawne nazwisko",
         });
