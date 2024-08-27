@@ -130,9 +130,15 @@
 
     // Obliczenie całkowitej liczby godzin
     $totalHours = filteredLogowania.reduce(
-        (sum, log) => sum + parseHours(log.hours),
-        0
-    );
+    (sum, log) => {
+        // Sprawdzamy, czy log.hours istnieje i nie jest NaN, zanim dodamy do sumy
+        if (log.hours && !isNaN(parseHours(log.hours))) {
+            return sum + parseHours(log.hours);
+        }
+        return sum;
+    },
+    0
+);
 
     // Zaktualizowanie UI
     await tick();
@@ -152,9 +158,16 @@
 
     // Obliczenie sumy godzin
     $totalHours = filteredLogowania.reduce(
-      (sum, log) => sum + parseHours(log.hours),
-      0
-    );
+    (sum, log) => {
+        // Sprawdzamy, czy log.hours istnieje i nie jest NaN, zanim dodamy do sumy
+        if (log.hours && !isNaN(parseHours(log.hours))) {
+            return sum + parseHours(log.hours);
+        }
+        return sum;
+    },
+    0
+);
+
 
     // Aktualizacja widoku
     await tick();
@@ -266,7 +279,7 @@
   }
   const applyCustomDateFilter = () => {
     filterLogs("custom");
-  };
+  };  
 
   $: {
     if (logowania.length > 0 && !showFiltered) {
