@@ -2,9 +2,9 @@
     import { onMount } from "svelte";
     import { isLoggedIn, userType, imieNazwisko } from "./stores/stores";
     import Uzytkownicy from "./komponenty/Uzytkownicy.svelte";
-    import type { PageData } from "./$types";
+    import type { PageData, ActionData } from "./$types";
     export let data: PageData;
-
+    export let form: ActionData
     onMount(() => {
         $isLoggedIn = true;
         $userType = data.session!.ranga;
@@ -17,6 +17,7 @@
         <Uzytkownicy
             pracownicy={data.pracownicy}
             aktywniPracownicy={data.active}
+            form={form}
         />
         <!-- Schedule -->
         <div class="flex-grow">
