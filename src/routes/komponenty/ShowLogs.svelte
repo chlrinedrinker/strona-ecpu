@@ -207,11 +207,11 @@
   // };
 
   const showCustomDateRange = () => {
-    document.getElementById("customDateRange").style.display = "block";
+    document.getElementById("customDateRange")!.style.display = "block";
   };
 
   const hideCustomDateRange = () => {
-    document.getElementById("customDateRange").style.display = "none";
+    document.getElementById("customDateRange")!.style.display = "none";
   };
 
   const openModal = (log) => {
@@ -273,7 +273,7 @@
     setupTooltips();
     showFiltered.set(false);
     rok = new Date().getFullYear()
-  });
+    });
   $: {
     $showFiltered; // Reakcja na zmiany w store
   }
@@ -336,21 +336,23 @@
         >
       </li>
     </ul>
-    {#if $userType == 0}
     <div class="flex space-x-1 justify-center mt-2">
-      <button
-        class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-        on:click={openReportModal}>{t('generate_report')}</button
-      >
+    <button
+      class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
+      on:click={openReportModal}>{t('generate_report')}</button
+    >
+    {#if $userType != 2}
       <button
         class="px-1 py-1 md:px-2 md:py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
         on:click={openAddLogModal}>{t('add_log')}</button
       >
+      {/if}
     </div>
-    {/if}
+    {#if $showFiltered}
     <p class="font-bold text-center mt-2 text-xs md:text-sm">
       {t('total_hours')}: {convertDecimalHoursToTime($totalHours)}
     </p>
+    {/if}
   </div>
   
 
