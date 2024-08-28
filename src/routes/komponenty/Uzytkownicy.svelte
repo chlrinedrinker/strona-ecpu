@@ -27,6 +27,8 @@
     entrence_time: string;
     exit_time: string;
     hours: number;
+    komentarz?: string;
+    historia_komentarza?: string;
   }
   let logowaniaStore = writable<{ [key: string]: Logowanie[] }>({});
   let selectedUser: Pracownik | null = null;

@@ -20,7 +20,7 @@ interface LogEntry {
   entrence_time: string;
   exit_time: string;
   hours: string;
-  comment?: string; // Komentarz jest opcjonalny
+  komentarz?: string; // Komentarz jest opcjonalny
   historia_komentarza?: string;
 }
 
@@ -53,6 +53,7 @@ export function generatePDF(
   year: number,
   month: number,
 ) {
+  console.log(logowania)
   const filteredLogs = filterLogsByMonth(logowania, year, month);
   const totalHours = sumHours(filteredLogs);
 
@@ -86,7 +87,7 @@ export function generatePDF(
               log.entrence_time,
               log.exit_time,
               log.hours,
-              log.comment || "",
+              log.komentarz || "",
             ]),
           ],
         },

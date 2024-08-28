@@ -4,9 +4,16 @@ import { fail, redirect } from "@sveltejs/kit"; // SvelteKit utilities
 import { verify } from "@node-rs/argon2"; // Password hashing and verification
 import type { Actions } from "./$types"; // Type definitions for SvelteKit actions
 import { PrismaClient } from "@prisma/client"; // Prisma client for database operations
+import type { PageServerLoad } from "../$types";
 
 let prisma = new PrismaClient(); // Initialize Prisma client
 let ranga = 3;
+
+export const load: PageServerLoad = async (event) =>{
+  if (event.locals.user){
+    throw redirect(308, "/");
+  }
+}
 
 export const actions: Actions = {
   // Define default action for login
