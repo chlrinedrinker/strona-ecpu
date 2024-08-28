@@ -5,12 +5,15 @@
   import { slide } from "svelte/transition";
   import NavbarKalendarz from "./NavbarKalendarz.svelte";
   import { userType } from "../stores/stores";
+  import { onMount } from "svelte";
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
   export let form: ActionData;
-  import { totalHours, exportDate, showFiltered } from "../stores/stores";
+  import {pracownicyStore, totalHours, exportDate, showFiltered } from "../stores/stores";
     import type { ActionData } from "../$types";
-
+    onMount(() => {
+    pracownicyStore.set(pracownicy);
+  });
   interface Pracownik {
     _id: string;
     imie: string;
@@ -25,7 +28,6 @@
     exit_time: string;
     hours: number;
   }
-
   let logowaniaStore = writable<{ [key: string]: Logowanie[] }>({});
   let selectedUser: Pracownik | null = null;
   let error: string | null = null;
