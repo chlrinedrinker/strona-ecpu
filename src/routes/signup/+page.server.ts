@@ -5,6 +5,13 @@ import { hash } from "@node-rs/argon2";
 import type { Actions } from "./$types";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { _pracownicy, _czas_pracy } from "$db/mongo";
+import type { PageServerLoad } from "../$types";
+
+export const load: PageServerLoad = async (event) =>{
+  if (!event.locals.user){
+    throw redirect(308, "/login");
+  }
+}
 
 export const actions: Actions = {
   signup: async (event) => {
