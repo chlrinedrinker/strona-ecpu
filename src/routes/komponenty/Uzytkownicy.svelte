@@ -6,6 +6,7 @@
   import NavbarKalendarz from "./NavbarKalendarz.svelte";
   import { userType } from "../stores/stores";
   import { onMount } from "svelte";
+  import { invalidate } from '$app/navigation';
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
   export let form: ActionData;
@@ -13,6 +14,15 @@
     import type { ActionData } from "../$types";
     onMount(() => {
     pracownicyStore.set(pracownicy);
+
+		const interval = setInterval(() => {
+
+			invalidate('/api/now');
+		}, 60000);
+
+		return () => {
+			clearInterval(interval);
+		};
   });
   interface Pracownik {
     _id: string;
@@ -27,6 +37,7 @@
     entrence_time: string;
     exit_time: string;
     hours: number;
+    type: string;
     komentarz?: string;
     historia_komentarza?: string;
   }

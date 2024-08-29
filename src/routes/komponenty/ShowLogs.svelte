@@ -62,9 +62,7 @@
 
   // Wybrany miesiąc
   export let selectedMonth: string = "1"; // Domyślnie Styczeń
-  let filteredLogowania = [];
-  let customStartDate = "";
-  let customEndDate = "";
+  let filteredLogowania  = [];
   
   const showModal = writable(false);
   const showReportModal = writable(false);
@@ -81,8 +79,6 @@
     type: "",
     historia_komentarza: "",
   });
-  const editField = writable("");
-  const newValue = writable("");
 
   const parseHours = (time: string): number => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -180,31 +176,6 @@
       filterLogsByExportDate($exportDate);
     }
   }
-  // function extractLastPart(text: string): string {
-  //   // Usuń białe znaki na początku i końcu ciągu
-  //   const trimmedText = text.trim();
-
-  //   // Sprawdź, czy tekst ma co najmniej 18 znaków
-  //   if (trimmedText.length > 18) {
-  //       // Zwróć wszystko po 18. znaku
-  //       return trimmedText.substring(18);
-  //   } else {
-  //       // Jeśli tekst ma mniej niż 18 znaków, zwróć pusty ciąg
-  //       return "";
-  //   }
-  // }
-  // const setupDatePickers = () => {
-  //   flatpickr("#customStartDate", {
-  //     onChange: (selectedDates) => {
-  //       customStartDate = selectedDates[0].toISOString();
-  //     },
-  //   });
-  //   flatpickr("#customEndDate", {
-  //     onChange: (selectedDates) => {
-  //       customEndDate = selectedDates[0].toISOString();
-  //     },
-  //   });
-  // };
 
   const showCustomDateRange = () => {
     document.getElementById("customDateRange")!.style.display = "block";

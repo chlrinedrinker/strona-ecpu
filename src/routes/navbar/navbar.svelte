@@ -1,15 +1,14 @@
 <script lang="ts">
   import { enhance } from "$app/forms"; 
-  import { pracownicyStore, isLoggedIn, userType } from "../stores/stores"; 
+  import { pracownicyStore, isLoggedIn, userType, totalHours } from "../stores/stores"; 
   import { t, loadLanguage } from '../../i18n.js'; 
   import { onMount, onDestroy } from "svelte";
 
   interface Pracownik {
-    _id: string;
     imie: string;
     nazwisko: string;
     stanowisko: string;
-    active: string;
+    totalHours: string;
   }
 
   let pracownicy: Pracownik[] = [];
@@ -22,14 +21,6 @@
   const logged = isLoggedIn; 
 
   // Subscribe to the store
-  const unsubscribe = pracownicyStore.subscribe(value => {
-    pracownicy = value;
-    fetchHoursForAllUsers();
-  });
-
-  onDestroy(() => {
-    unsubscribe();
-  });
 
   function checkScreenSize() {
     isMobileView = window.innerWidth < 768; 
@@ -88,14 +79,10 @@
 
   async function fetchHoursForAllUsers() {
     if (!time_set) return; // Do not fetch if time_set is not set
-
-    hoursData = {}; // Reset hoursData
-
-    for (const user of pracownicy) {
-      const response = await fetch(`/endpoints/user-hours?imie=${encodeURIComponent(user.imie)}&nazwisko=${encodeURIComponent(user.nazwisko)}&period=${time_set}`);
+      const response = await fetch(`/endpoints/user-hours?&period=${time_set}`);
       const data = await response.json();
-      hoursData[user._id] = data.totalHours || "0:00";
-    }
+      pracownicy = data
+      console.log(pracownicy)
   }
 
   $: time_set, fetchHoursForAllUsers();
@@ -125,7 +112,9 @@
           </svg>
         </button>
 
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         {#if isDropdownOpen}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="fixed inset-0 z-10 overflow-auto" on:click={handleOutsideClick}>
             <div class="bg-white my-5 p-5 border border-gray-400 w-auto right-0 absolute mr-4 rounded-lg dropdown-content">
               <button on:click={closeDropdown}>
@@ -178,6 +167,7 @@
 </div>
 
 <!-- Modalne okienko z listą użytkowników -->
+ {#if $userType != 2}
 {#if isModalVisible}
   <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
     <div class="bg-white p-4 rounded-lg w-11/12 md:w-1/2 max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -196,29 +186,36 @@
       </div>
 
       <!-- Employee Hours Table -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr class="bg-gray-100 border-b">
-              <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('first_name')}</th>
-              <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('last_name')}</th>
-              <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('position')}</th>
-              <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('hours')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each pracownicy as pracownik (pracownik._id)}
-              <tr class="border-b hover:bg-gray-50">
-                <td class="py-2 px-4">{pracownik.imie}</td>
-                <td class="py-2 px-4">{pracownik.nazwisko}</td>
-                <td class="py-2 px-4">{pracownik.stanowisko}</td>
-                <td class="py-2 px-4">{hoursData[pracownik._id] || "0:00"}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+       {#await pracownicy}
+        <h2 class="text-xl font-bold">Raport Jest w Trakcie Tworzenia</h2>
+       {:then pracownicy} 
+       <div class="overflow-x-auto">
+         <table class="min-w-full bg-white border border-gray-300">
+           <thead>
+             <tr class="bg-gray-100 border-b">
+               <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('first_name')}</th>
+               <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('last_name')}</th>
+               <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('position')}</th>
+               <th class="py-2 px-4 text-left text-gray-600 font-semibold">{t('hours')}</th>
+             </tr>
+           </thead>
+           <tbody>
+             {#each pracownicy as pracownik}
+               <tr class="border-b hover:bg-gray-50">
+                 <td class="py-2 px-4">{pracownik.imie}</td>
+                 <td class="py-2 px-4">{pracownik.nazwisko}</td>
+                 <td class="py-2 px-4">{pracownik.stanowisko}</td>
+                 <td class="py-2 px-4">{pracownik.totalHours}</td>
+               </tr>
+             {/each}
+           </tbody>
+         </table>
+       </div>
+       {:catch}
+       <h2 class="text-xl font-bold">Błąd przy tworzeniu raportu</h2>
+       {/await}
     </div>
   </div>
+{/if}
 {/if}
 
