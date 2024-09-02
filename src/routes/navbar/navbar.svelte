@@ -18,9 +18,8 @@
   let isMobileView = false; 
   let time_set: 'month' | 'week' | null = null; // Zmienna dla ustawienia czasu
   let isModalVisible = false; // Stan dla widoczności modalnego okienka
+  let selectedMonth = ''; // Zmienna dla wybranego miesiąca
   const logged = isLoggedIn; 
-
-  // Subscribe to the store
 
   function checkScreenSize() {
     isMobileView = window.innerWidth < 768; 
@@ -48,19 +47,25 @@
 
   function toggleModal() {
     isModalVisible = !isModalVisible;
-    if (isModalVisible) fetchHoursForAllUsers(); // Fetch hours data when modal opens
   }
 
   function closeModal() {
     isModalVisible = false;
   }
-
+  function setToPreviousWeek() {
+    time_set = 'week';
+    selectedMonth = ''; // Clear selected month
+    fetchHoursForAllUsers('true'); // Pass 'true' to fetch previous week's data
+  }
   function setToCurrentMonth() {
     time_set = 'month';
+    selectedMonth = ''; // Clear selected month
   }
 
   function setToCurrentWeek() {
     time_set = 'week';
+    selectedMonth = ''; // Clear selected month
+    fetchHoursForAllUsers();
   }
 
   function handleOutsideClick(event) {
@@ -77,16 +82,31 @@
     location.reload(); 
   }
 
-  async function fetchHoursForAllUsers() {
+  async function fetchHoursForAllUsers(previousWeek = 'false') {
     if (!time_set) return; // Do not fetch if time_set is not set
-      const response = await fetch(`/endpoints/user-hours?&period=${time_set}`);
-      const data = await response.json();
-      pracownicy = data
-      console.log(pracownicy)
+
+    let query = `period=${time_set}&previous-week=${previousWeek}`;
+    if (time_set === 'month' && selectedMonth) {
+      query += `&month=${selectedMonth}`;
+    } else if (time_set === 'week' && previousWeek === 'false') {
+      // Add selected week to query if needed
+    }
+
+    const response = await fetch(`/endpoints/user-hours?${query}`);
+    const data = await response.json();
+    pracownicy = data;
+    console.log(pracownicy);
+  }
+
+  // Aktualizacja reakcji na kliknięcie przycisków
+  function handleClickPreviousWeek() {
+    setToPreviousWeek();
   }
 
   $: time_set, fetchHoursForAllUsers();
+  $: selectedMonth, fetchHoursForAllUsers();
 </script>
+
 
 <div class="flex items-center justify-between p-2 md:p-4 bg-gray-100 border-b z-100 w-full">
   <div class="flex items-center space-x-2 md:space-x-4">
@@ -169,7 +189,8 @@
 </div>
 
 <!-- Modalne okienko z listą użytkowników -->
- {#if $userType != 2}
+{#if $userType != 2}
+<!-- Przyciski w modalnym oknie -->
 {#if isModalVisible}
   <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
     <div class="bg-white p-4 rounded-lg w-11/12 md:w-1/2 max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -179,13 +200,32 @@
       </div>
 
       <div class="mb-4">
-        <button on:click={setToCurrentMonth} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded mr-2">
+        <button on:click={setToCurrentMonth} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
           {t('month')}
         </button>
         <button on:click={setToCurrentWeek} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
-          {t('week')}
+          {t('current_week')}
+        </button>
+        <button on:click={handleClickPreviousWeek} class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
+          {t('previous_week')}
         </button>
       </div>
+
+      
+
+      {#if time_set === 'month'}
+      <div class="mb-4">
+        <label for="monthPicker" class="block text-gray-600 mb-2">{t('select_month')}</label>
+        <input
+          id="monthPicker"
+          type="month"
+          class="px-2 py-1 border border-gray-300 rounded w-full"
+          bind:value={selectedMonth}
+        />
+      </div>
+      {/if}
+
+      
 
       <!-- Employee Hours Table -->
        {#await pracownicy}
@@ -220,4 +260,3 @@
   </div>
 {/if}
 {/if}
-

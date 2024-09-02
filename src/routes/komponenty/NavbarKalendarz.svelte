@@ -32,7 +32,7 @@
     selectable: true,
     customButtons: {
       widokMiesieczny: {
-        text: "Widok Miesięczny",
+        text: t('change_view'),
         click: () => {
           options.view == "timeGridWeek"
           ? options.view = "dayGridMonth"
@@ -176,7 +176,7 @@
         title: eventTitle, // Ustawienie poprawnego tytułu
         start: startDateTime,
         end: endDateTime,
-        allDay: false,
+        allDay: options.view === 'dayGridMonth', // Ustawienie całodniowe tylko dla widoku miesięcznego
         backgroundColor: backgroundColor,
         extendedProps: {
           entrence_time: log.entrence_time,
@@ -186,16 +186,6 @@
     })
     .filter((event) => event !== null); // Usuwanie null, czyli "Wyjścia Prywatne"
 }
-
-  function closeModal() {
-    showModal.set(false);
-  }
-
-  function handleBackdropClick(event: MouseEvent) {
-    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
-      closeModal();
-    }
-  }
 </script>
 
 
@@ -222,4 +212,6 @@
     <span>{t('edited')}</span>
   </div>
 </div>
+
+
 

@@ -78,5 +78,9 @@
     "insufficient_hours": "Insufficient hours",
     "sufficient_hours": "Sufficient hours",
     "edited": "Edited",
-    "delete_log": "Delate log"
+    "delete_log": "Delate log",
+    "previous_week": "Previous Week",
+    "current_week": "Current week",
+    "change_view": "Change_view"
+
   }

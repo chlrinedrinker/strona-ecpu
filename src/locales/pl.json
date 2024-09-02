@@ -78,7 +78,10 @@
     "insufficient_hours": "Niewystarczająca liczba godzin",
     "sufficient_hours": "Odpowiednia liczba godzin",
     "edited": "Edytowany",
-    "delete_log": "Usuń log"
+    "delete_log": "Usuń log",
+    "previous_week": "Poprzedni tydzień",
+    "current_week": "Obecny tydzień",
+    "change_view": "Zmnień widok"
 
 
   }
