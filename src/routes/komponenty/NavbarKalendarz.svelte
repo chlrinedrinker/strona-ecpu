@@ -1,6 +1,7 @@
 <script lang="ts">
   import Calendar from '@event-calendar/core';
   import TimeGrid from '@event-calendar/time-grid';
+  import DayGrid from '@event-calendar/day-grid';
   import { t, loadLanguage, currentLanguage } from '../../i18n.js'; // Importowanie funkcji i18n
   import { onMount, afterUpdate } from 'svelte';
   import tippy from 'tippy.js';
@@ -18,16 +19,10 @@
     is_edit: boolean;
     type: string;
   }
-
-  export let logowania: Logowanie[] = [];
-  
-  // Zmienna do przechowywania wybranego logowania
-  let selectedLog = writable<Logowanie | null>(null);
-  let showModal = writable(false);  // Zmienna do kontroli widoczności okienka
-
-  let plugins = [TimeGrid];
+  let cal;
+  let plugins = [TimeGrid, DayGrid]
   let options = {
-    initialView: 'timeGridWeek',
+    view: 'timeGridWeek',
     locale: currentLanguage,
     slotMinTime: '06:00:00',
     slotMaxTime: '20:00:00',
@@ -35,6 +30,21 @@
     allDaySlot: false,
     editable: true,
     selectable: true,
+    customButtons: {
+      widokMiesieczny: {
+        text: "Widok Miesięczny",
+        click: () => {
+          options.view == "timeGridWeek"
+          ? options.view = "dayGridMonth"
+          : options.view = "timeGridWeek";
+        }
+      }
+    },
+    headerToolbar: {
+      start: 'title widokMiesieczny',
+      center: '',
+      end: 'today prev,next'
+    },
     hiddenDays: [0, 6], // Ukryj sobotę (6) i niedzielę (0)
     events: [],
     eventDidMount: (info: any) => {
@@ -69,7 +79,14 @@
         showModal.set(true);  // Pokaż modal
       }
     }
-  };
+  }
+
+  export let logowania: Logowanie[] = [];
+  
+  // Zmienna do przechowywania wybranego logowania
+  let selectedLog = writable<Logowanie | null>(null);
+  let showModal = writable(false);  // Zmienna do kontroli widoczności okienka
+  
 
   onMount(() => {
     updateCalendarEvents();
@@ -170,8 +187,6 @@
     .filter((event) => event !== null); // Usuwanie null, czyli "Wyjścia Prywatne"
 }
 
-
-
   function closeModal() {
     showModal.set(false);
   }
@@ -186,7 +201,7 @@
 
 <!-- Kalendarz -->
 <div class="flex flex-col m-1 z-90 mb-0">
-  <Calendar {plugins} {options} />  
+  <Calendar bind:this={cal} {plugins} {options} />  
 </div>
 
 <div class="mt-4 flex flex-col gap-2">

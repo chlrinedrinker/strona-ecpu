@@ -7,10 +7,10 @@
   import { userType } from "../stores/stores";
   import { onMount } from "svelte";
   import { invalidate } from '$app/navigation';
+  import {pracownicyStore, totalHours, exportDate, showFiltered } from "../stores/stores";
   export let pracownicy;
   export let aktywniPracownicy: Pracownik[];
   export let form: ActionData;
-  import {pracownicyStore, totalHours, exportDate, showFiltered } from "../stores/stores";
     import type { ActionData } from "../$types";
     onMount(() => {
     pracownicyStore.set(pracownicy);
@@ -181,7 +181,7 @@
         class="lg:w-1/4 lg:flex lg:flex-col lg:justify-between lg:bg-white lg:overflow-auto lg:border-r lg:border-gray-200 max-w-full overflow-hidden z-90"
         transition:slide
       >
-        <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
+      <NavbarKalendarz logowania={$logowaniaStore[selectedUser._id]} />
       </div>
     </div>
   {/if}

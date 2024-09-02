@@ -6,11 +6,12 @@
   import "tippy.js/dist/tippy.css"; // Import Tippy.js CSS
   import { enhance } from "$app/forms";
   import { writable } from "svelte/store";
-  import { totalHours,showFiltered, exportDate , userType } from "../stores/stores";
+  import { totalHours,showFiltered, exportDate , userType} from "../stores/stores";
   import { generatePDF } from "./pdfUtils";
   import { t } from '../../i18n.js'; // Importing the i18n functions
   import type { ActionData } from './$types';
     import { page } from "$app/stores";
+  import NavbarKalendarz from "./NavbarKalendarz.svelte";
   
   export let form: ActionData;
 
@@ -276,7 +277,7 @@
   
 </script>
 
-<div class="p-1 md:p-2 z-90">
+<div class="p-1 md:p-2 z-90" >    
   <div class="mb-2">
     <h2 class="mb-2 text-xs md:text-base font-semibold text-center">
       {t('select_date_range')}
@@ -426,7 +427,6 @@
       </tbody>
     </table>
   </div>
-
   <!-- Modal z komentarzem -->
   {#if $showModal}
   <!-- svelte-ignore a11y-click-events-have-key-events -->

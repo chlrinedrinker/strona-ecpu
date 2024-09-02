@@ -141,7 +141,9 @@
           </div>
         {/if}
       {:else}
+        {#if $userType != 2}
         <button class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded" on:click={toggleModal}>{t('generate_report')}</button>
+        {/if}
         <button class="px-2 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded">
           <a href="/zmianaHaslaIndiwidualna">{t('change_password')}</a>
         </button>
