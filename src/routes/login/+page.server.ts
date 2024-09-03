@@ -52,7 +52,7 @@ export const actions: Actions = {
         username: username,
       },
     });
-
+    console.log(existingUser)
     // Check if user exists
     if (!existingUser) {
       return fail(400, {
@@ -79,7 +79,11 @@ export const actions: Actions = {
     const session = await lucia.createSession(existingUser.id, {
       ranga: ranga,
       imieNazwisko: existingUser.name,
+      organization: existingUser.organization
     });
+    
+    console.log(session)
+
     const sessionCookie = lucia.createSessionCookie(session.id);
     event.cookies.set(sessionCookie.name, sessionCookie.value, {
       path: ".",

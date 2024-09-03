@@ -1,7 +1,7 @@
 import { lucia } from "$lib/server/auth";
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { _czas_pracy } from "$db/mongo";
+import { client } from "$db/mongo";
 
 interface Pracownik {
   _id: string;
@@ -17,6 +17,10 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(308, "/login");
   }
 
+
+  
+  console.log(event.locals.user)
+  console.log(event.locals.session)
   let imie: string, nazwisko: string;
   let pracownicy: Pracownik[] = []; // Array to hold employees
   let tempPracownicy: Pracownik[] = [];

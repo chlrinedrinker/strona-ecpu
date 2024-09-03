@@ -15,6 +15,7 @@ model User {
   name String @unique
   username String @unique
   hash_password String
+  organization String @unique
 }
 
 model Session {
@@ -23,6 +24,7 @@ model Session {
   expiresAt DateTime
   ranga Int
   imieNazwisko String
+  organization String
 
   user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }

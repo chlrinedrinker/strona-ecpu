@@ -1,8 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { page } from "$app/stores";
     import { enhance } from "$app/forms";
-    import { t, loadLanguage,currentLanguage } from '../../i18n.js'; // Importing the i18n functions
+    import { t} from '../../i18n.js'; // Importing the i18n functions
 
     let successMessage = "";
     let errors = {
@@ -39,13 +38,13 @@
 
         // Imie validation
         const imie = formData.get("imie") as string | null;
-        if (!imie || !/^[a-zA-Z]+$/.test(imie)) {
+        if (!imie || !/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*/.test(imie)) {
             errors.imie = "Imię może zawierać tylko litery.";
         }
 
         // Nazwisko validation
         const nazwisko = formData.get("nazwisko") as string | null;
-        if (!nazwisko || !/^[a-zA-Z]+$/.test(nazwisko)) {
+        if (!nazwisko || !/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*/.test(nazwisko)) {
             errors.nazwisko = "Nazwisko może zawierać tylko litery.";
         }
 

@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 import dotenv from "dotenv";
-import { _pracownicy } from "$db/mongo";
+import { client } from "$db/mongo";
 
 dotenv.config();
 
@@ -13,14 +13,15 @@ let projections = {
   active: 1,
 };
 
-export async function GET() {
+export async function GET(event) {
   try {
-    const db = _pracownicy;
+    
+    const db = client.db(event.locals.session?.organization);
     const collection = db.collection("PracownicyID");
 
     // Retrieve the list of employees and project the necessary fields
     const pracownicy = await collection.find({},{sort: {imie: 1, nazwisko: 1}, projection: projections}).toArray();
-
+    console.log(json(pracownicy))
     // Return the list of employees
     return json(pracownicy);
   } catch (error) {

@@ -25,6 +25,7 @@ export const lucia = new Lucia(adapter, {
     return {
       ranga: attributes.ranga,
       imieNazwisko: attributes.imieNazwisko,
+      organization: attributes.organization
     };
   },
   sessionExpiresIn: new TimeSpan(1, "h"),
@@ -39,6 +40,7 @@ declare module "lucia" {
   interface DatabaseSessionAttributes {
     ranga: number;
     imieNazwisko: string;
+    organization: string;
   }
 }
 

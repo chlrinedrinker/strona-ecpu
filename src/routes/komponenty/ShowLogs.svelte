@@ -10,8 +10,6 @@
   import { generatePDF } from "./pdfUtils";
   import { t } from '../../i18n.js'; // Importing the i18n functions
   import type { ActionData } from './$types';
-    import { page } from "$app/stores";
-  import NavbarKalendarz from "./NavbarKalendarz.svelte";
   
   export let form: ActionData;
 

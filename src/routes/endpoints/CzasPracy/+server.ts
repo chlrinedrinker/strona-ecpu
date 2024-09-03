@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { _czas_pracy } from "$db/mongo";
+import { client } from "$db/mongo";
 import { json } from "@sveltejs/kit";
 
 dotenv.config();
@@ -13,8 +13,9 @@ function convertDecimalHoursToTime(decimalHours: number) {
   return `${hours}:${minutes.toString().padStart(2, "0")}`;
 }
 
-export async function GET({ url }: { url: URL }) {
+export async function GET({ url }: { url: URL }, event) {
   // Extract 'imie' and 'nazwisko' from query parameters
+  console.log(event)
   const imie = url.searchParams.get("imie");
   const nazwisko = url.searchParams.get("nazwisko");
 
@@ -27,7 +28,8 @@ export async function GET({ url }: { url: URL }) {
   const katalog = `${imie}_${nazwisko}`;
 
   try {
-    const db = _czas_pracy;
+    const db = client.db(event.locals.session.organization)
+    console.log(db)
     const collection = db.collection(katalog);
 
     // Retrieve logs from the collection, sort by date and then by entryTime
