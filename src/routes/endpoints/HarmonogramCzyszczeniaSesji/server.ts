@@ -1,7 +1,7 @@
 import { lucia } from "$lib/server/auth";
 import type { Config } from "@netlify/functions";
 
-export default async (req:Request) => {
+export async (req:Request) => {
   try {
     await lucia.deleteExpiredSessions()
   } catch (error) {
