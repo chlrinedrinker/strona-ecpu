@@ -78,7 +78,14 @@
     "insufficient_hours": "Niewystarczająca liczba godzin",
     "sufficient_hours": "Odpowiednia liczba godzin",
     "edited": "Edytowany",
-    "delete_log": "Usuń log"
+    "delete_log": "Usuń log",
+    "previous_week": "Poprzedni tydzień",
+    "current_week": "Obecny tydzień",
+    "select_break_type": "Wybierz typ wyjścia",
+    "private_exit": "Wyjście prywatne",
+    "business_exit": "Wyjście służbowe",
+
+    "change_view": "Zmień widok"
 
 
   }

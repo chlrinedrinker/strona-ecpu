@@ -429,25 +429,28 @@
   </div>
   <!-- Modal z komentarzem -->
   {#if $showModal}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
-    class="flex justify-center items-center fixed inset-0 z-10 overflow-auto bg-black/40" on:click={handleOutsideClick}
+    class="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-40"
+    on:click={handleOutsideClick}
   >
     <div
-      class="bg-white my-2 mx-4 p-4 border border-gray-400 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-lg dropdown-content"
+      class="relative w-full max-w-4xl p-6 bg-white rounded-lg mx-4 my-6"
+      on:click|stopPropagation
     >
-      <button on:click={closeModal}>
-        <span
-          class="text-gray-400 float-right text-xl font-bold hover:text-black hover:no-underline focus:text-black focus:no-underline cursor-pointer"
-          >&times;</span
-        >
-      </button>
-      <div
-        class="flex flex-col md:flex-row mt-2 space-y-2 md:space-y-0 md:space-x-2"
+      <button
+        class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-black focus:outline-none"
+        on:click={closeModal}
       >
+        &times;
+      </button>
+
+      <!-- Flex container for aligning the headers -->
+      <div class="flex flex-col md:flex-row gap-6 mt-8">
+        <!-- Comment Section -->
         <div class="w-full md:w-1/2">
-          <h2 class="text-xs md:text-base"><strong>{t('comment')}</strong></h2>
+          <div class="flex items-center mb-4">
+            <h2 class="text-lg font-semibold">{t('comment')}</h2>
+          </div>
           <form
             action="?/saveComment"
             method="post"
@@ -457,80 +460,97 @@
               formData.append("data", $currentLog.date);
               formData.append("wejscie", $currentLog.entrence_time);
             }}
+            class="space-y-4"
           >
             <input
               type="text"
-              class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
-              placeholder={t('add_comment')} 
               name="komentarz"
               bind:value={$currentLog.komentarz}
+              placeholder={t('add_comment')}
+              class="w-full px-4 py-2 border rounded-lg text-sm"
             />
             <button
-              class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-              type="submit">{t('save')}</button
+              type="submit"
+              class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg text-sm hover:bg-blue-600"
             >
+              {t('save')}
+            </button>
           </form>
-          <h3 class="text-xs md:text-base">
-            <strong>{t('comment_history')} </strong>
-          </h3>
+
+          <h3 class="mt-8 mb-4 text-lg font-semibold">{t('comment_history')}</h3>
           {#if $modalHistory}
-            <table class="w-full border-collapse mt-2 text-center text-xs md:text-sm">
-              <thead>
-                <tr>
-                  <th>{t('date')}</th>
-                  <th>{t('entrance_time')}</th>
-                  <th>{t('comment')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {#each parseHistory($modalHistory) as entry}
+            <div class="overflow-auto max-h-64">
+              <table class="w-full text-sm text-center border-collapse">
+                <thead class="bg-gray-100">
                   <tr>
-                    <td>{entry.date}</td>
-                    <td>{entry.time}</td>
-                    <td>{entry.comment}</td>
+                    <th class="px-4 py-2 border">{t('date')}</th>
+                    <th class="px-4 py-2 border">{t('entrance_time')}</th>
+                    <th class="px-4 py-2 border">{t('comment')}</th>
                   </tr>
-                {/each}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {#each parseHistory($modalHistory) as entry}
+                    <tr>
+                      <td class="px-4 py-2 border">{entry.date}</td>
+                      <td class="px-4 py-2 border">{entry.time}</td>
+                      <td class="px-4 py-2 border">{entry.comment}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           {:else}
-            <p class="mx-1 my-0 text-xs">{t('no_comment_history')}</p>
+            <p class="text-sm text-gray-500">{t('no_comment_history')}</p>
           {/if}
         </div>
-        {#if $currentLog.type == "w" && $currentLog.komentarz == null}
-          {#if form?.success}
-            <p class=text-green-200>Przerwa została opisana</p>
-          {/if}
-        <form
-        action="?/selectTypeOfBreak"
-        method="post"
-        use:enhance={({ formData }) => {
-          formData.append("imie", selectedUser.imie);
-          formData.append("nazwisko", selectedUser.nazwisko);
-          formData.append("data", $currentLog.date);
-          formData.append("wejscie", $currentLog.entrence_time);
-          formData.append("wyjscie", $currentLog.exit_time);
-        }}
-      > 
-        <select
-        name="typ"
-        id="typ"
-        class="w-full p-2 border border-gray-300 rounded"
-          > 
-          <option value="0">Wyjscie Prywatne</option>
-          <option value="1">Wyjscie Służbowe</option>
-        </select>
-        <button
-          class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-          type="submit">{t('save')}</button>
-      </form>
-      {/if}
 
+        <!-- Break Type Selection -->
+        {#if $currentLog.type == "w" && $currentLog.komentarz == null}
+          <div class="w-full md:w-1/2">
+            <div class="flex items-center mb-4">
+              <h2 class="text-lg font-semibold">{t('select_break_type')}</h2>
+            </div>
+            {#if form?.success}
+              <p class="mb-4 text-sm text-green-500">{t('break_described_successfully')}</p>
+            {/if}
+            <form
+              action="?/selectTypeOfBreak"
+              method="post"
+              use:enhance={({ formData }) => {
+                formData.append("imie", selectedUser.imie);
+                formData.append("nazwisko", selectedUser.nazwisko);
+                formData.append("data", $currentLog.date);
+                formData.append("wejscie", $currentLog.entrence_time);
+                formData.append("wyjscie", $currentLog.exit_time);
+              }}
+              class="space-y-4"
+            >
+              <select
+                name="typ"
+                id="typ"
+                class="w-full px-4 py-2 border rounded-lg text-sm"
+              >
+                <option value="0">{t('private_exit')}</option>
+                <option value="1">{t('business_exit')}</option>
+              </select>
+              <button
+                type="submit"
+                class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg text-sm hover:bg-blue-600"
+              >
+                {t('save')}
+              </button>
+            </form>
+          </div>
+        {/if}
+
+        <!-- Edit Section -->
         {#if $userType != 2}
           <div class="w-full md:w-1/2">
-            <h4 class="text-xs md:text-base">
-              <strong>{t('edit')}:</strong>
-            </h4>
-            <div class="mb-2">
+            <div class="flex items-center mb-4">
+              <h2 class="text-lg font-semibold">{t('edit')}</h2>
+            </div>
+            <div class="space-y-6">
+              <!-- Edit Entrance Time -->
               <form
                 action="?/editEntrenceHours"
                 method="post"
@@ -541,20 +561,22 @@
                   formData.append("wejscie1", $currentLog.entrence_time);
                   formData.append("wyjscie", $currentLog.exit_time);
                 }}
+                class="space-y-4"
               >
                 <input
-                  class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="time"
-                  placeholder={t('entrance_time')} 
-                  
                   name="entrance_time"
+                  class="w-full px-4 py-2 border rounded-lg text-sm"
                 />
                 <button
-                  class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">{t('save')}</button
+                  type="submit"
+                  class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg text-sm hover:bg-blue-600"
                 >
+                  {t('save')}
+                </button>
               </form>
-              <hr>
+
+              <!-- Edit Exit Time -->
               <form
                 action="?/editExitHours"
                 method="post"
@@ -564,47 +586,54 @@
                   formData.append("data", $currentLog.date);
                   formData.append("wejscie", $currentLog.entrence_time);
                 }}
+                class="space-y-4"
               >
                 <input
-                  class="w-full px-2 py-1 border rounded mb-2 text-xs md:text-sm"
                   type="time"
-                  placeholder={t('exit_time')} 
-                  
                   name="exit_time"
+                  class="w-full px-4 py-2 border rounded-lg text-sm"
                 />
                 <button
-                  class="w-full px-2 py-1 bg-blue-500 text-white rounded text-xs md:text-sm"
-                  type="submit">{t('save')}</button>
+                  type="submit"
+                  class="w-full px-4 py-2 text-white bg-blue-500 rounded-lg text-sm hover:bg-blue-600"
+                >
+                  {t('save')}
+                </button>
               </form>
+
+              <!-- Delete Log -->
               {#if form?.success}
-                <p class="text-green-200">Pomyślnie usnięto log</p>
+                <p class="text-sm text-green-500">{t('log_deleted_successfully')}</p>
               {/if}
               <form
-                  action="?/deleteLog"
-                  method="post"
-                  use:enhance={({ formData }) => {
-                    formData.append("imie", selectedUser.imie);
-                    formData.append("nazwisko", selectedUser.nazwisko);
-                    formData.append("data", $currentLog.date);
-                    formData.append("wejscie", $currentLog.entrence_time);
-                  }}
-                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten log?');"
+                action="?/deleteLog"
+                method="post"
+                use:enhance={({ formData }) => {
+                  formData.append("imie", selectedUser.imie);
+                  formData.append("nazwisko", selectedUser.nazwisko);
+                  formData.append("data", $currentLog.date);
+                  formData.append("wejscie", $currentLog.entrence_time);
+                }}
+                on:submit|preventDefault={() => {
+                  if (confirm(t('confirm_delete_log'))) {
+                    this.submit();
+                  }
+                }}
+              >
+                <button
+                  type="submit"
+                  class="w-full px-4 py-2 text-white bg-red-500 rounded-lg text-sm hover:bg-red-600"
                 >
-                  <button
-                    class="w-full px-2 py-1 bg-red-500 text-white rounded text-xs md:text-sm"
-                    type="submit"
-                  >
-                    {t('delete_log')}
-                  </button>
-                </form>
-
-            </div> 
+                  {t('delete_log')}
+                </button>
+              </form>
+            </div>
           </div>
         {/if}
       </div>
     </div>
   </div>
-  {/if}
+{/if}
 </div>
 
 

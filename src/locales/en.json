@@ -78,5 +78,12 @@
     "insufficient_hours": "Insufficient hours",
     "sufficient_hours": "Sufficient hours",
     "edited": "Edited",
-    "delete_log": "Delate log"
+    "delete_log": "Delate log",
+    "previous_week": "Previous Week",
+    "current_week": "Current week",
+    "select_break_type": "Select break type",
+    "private_exit": "Private exit",
+    "business_exit": "Bussines exit",
+    "change_view": "Change_view"
+
   }
