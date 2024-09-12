@@ -2,7 +2,7 @@ const { schedule } = require('@netlify/functions')
 
 // To learn about scheduled functions and supported cron extensions,
 // see: https://ntl.fyi/sched-func
-module.exports.handler = schedule('* * * * *', async (event) => {
+module.exports.handler = schedule('@monthly', async (event) => {
   try {
     await lucia.deleteExpiredSessions()
     const eventBody = JSON.parse(event.body)
