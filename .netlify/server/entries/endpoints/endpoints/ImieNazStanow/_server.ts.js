@@ -13,7 +13,7 @@ async function GET() {
   try {
     const db = _pracownicy;
     const collection = db.collection("PracownicyID");
-    const pracownicy = await collection.find().project(projections).toArray();
+    const pracownicy = await collection.find({}, { sort: { imie: 1, nazwisko: 1 }, projection: projections }).toArray();
     return json(pracownicy);
   } catch (error) {
     console.error(error);

@@ -1,10 +1,10 @@
-import * as server from '../entries/pages/zmianaHaseł/_page.server.ts.js';
+import * as server from '../entries/pages/zmianaHasel/_page.server.ts.js';
 
 export const index = 5;
 let component_cache;
-export const component = async () => component_cache ??= (await import('../entries/pages/zmianaHaseł/_page.svelte.js')).default;
+export const component = async () => component_cache ??= (await import('../entries/pages/zmianaHasel/_page.svelte.js')).default;
 export { server };
-export const server_id = "src/routes/zmianaHaseł/+page.server.ts";
-export const imports = ["_app/immutable/nodes/5.BbxlD0BO.js","_app/immutable/chunks/scheduler.CSB6Q-Hs.js","_app/immutable/chunks/index.BR2gqvZK.js","_app/immutable/chunks/index.B2P7k3KH.js","_app/immutable/chunks/forms.BgChqCnb.js","_app/immutable/chunks/entry.BnYB-byH.js"];
-export const stylesheets = ["_app/immutable/assets/5.BtSLurTb.css","_app/immutable/assets/index.B5SP-H43.css"];
+export const server_id = "src/routes/zmianaHasel/+page.server.ts";
+export const imports = ["_app/immutable/nodes/5.JnFs4BMX.js","_app/immutable/chunks/scheduler.D9eUT3Oo.js","_app/immutable/chunks/index.Bye0e5Z4.js","_app/immutable/chunks/each.Bz4FPqbm.js","_app/immutable/chunks/index.CH2x0n-5.js","_app/immutable/chunks/stores.FrZGAWq7.js","_app/immutable/chunks/entry.DGLoN6pP.js","_app/immutable/chunks/i18n.CiqHmo9q.js","_app/immutable/chunks/preload-helper.D6kgxu3v.js"];
+export const stylesheets = ["_app/immutable/assets/5.BzU6fktG.css"];
 export const fonts = [];

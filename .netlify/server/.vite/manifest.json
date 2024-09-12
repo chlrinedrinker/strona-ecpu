@@ -12,10 +12,8 @@
     "file": "chunks/Uzytkownik.js",
     "name": "Uzytkownik",
     "imports": [
-      "_ssr.js"
-    ],
-    "css": [
-      "_app/immutable/assets/Uzytkownik.B5SP-H43.css"
+      "_ssr.js",
+      "_stores2.js"
     ]
   },
   "_auth.js": {
@@ -35,6 +33,14 @@
   "_exports.js": {
     "file": "chunks/exports.js",
     "name": "exports"
+  },
+  "_i18n.js": {
+    "file": "chunks/i18n.js",
+    "name": "i18n",
+    "dynamicImports": [
+      "src/locales/en.json",
+      "src/locales/pl.json"
+    ]
   },
   "_index.js": {
     "file": "chunks/index.js",
@@ -73,6 +79,14 @@
     "file": "chunks/stores.js",
     "name": "stores",
     "imports": [
+      "_ssr.js",
+      "_client.js"
+    ]
+  },
+  "_stores2.js": {
+    "file": "chunks/stores2.js",
+    "name": "stores",
+    "imports": [
       "_index2.js"
     ]
   },
@@ -83,7 +97,7 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_client.js"
+      "_stores.js"
     ]
   },
   "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
@@ -109,6 +123,18 @@
       "_mongo.js"
     ]
   },
+  "src/locales/en.json": {
+    "file": "chunks/en.js",
+    "name": "en",
+    "src": "src/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "src/locales/pl.json": {
+    "file": "chunks/pl.js",
+    "name": "pl",
+    "src": "src/locales/pl.json",
+    "isDynamicEntry": true
+  },
   "src/routes/+layout.server.ts": {
     "file": "entries/pages/_layout.server.ts.js",
     "name": "entries/pages/_layout.server.ts",
@@ -123,10 +149,12 @@
     "imports": [
       "_ssr.js",
       "_client.js",
+      "_stores2.js",
+      "_i18n.js",
       "_stores.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.VtmGoWAP.css"
+      "_app/immutable/assets/_layout.zj4V0ITN.css"
     ]
   },
   "src/routes/+page.server.ts": {
@@ -147,13 +175,14 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_stores.js",
+      "_stores2.js",
       "_Uzytkownik.js",
       "_client.js",
-      "_index2.js"
+      "_index2.js",
+      "_i18n.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.COsOBVYF.css"
+      "_app/immutable/assets/_page.TtGKOtvh.css"
     ]
   },
   "src/routes/+page.ts": {
@@ -192,6 +221,36 @@
       "_mongo.js"
     ]
   },
+  "src/routes/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/+server.ts": {
+    "file": "entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/_server.ts.js",
+    "name": "entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/_server.ts",
+    "src": "src/routes/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/+server.ts",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_mongo.js"
+    ]
+  },
+  "src/routes/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/+server.ts": {
+    "file": "entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/_server.ts.js",
+    "name": "entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/_server.ts",
+    "src": "src/routes/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/+server.ts",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_mongo.js"
+    ]
+  },
+  "src/routes/endpoints/user-hours/+server.ts": {
+    "file": "entries/endpoints/endpoints/user-hours/_server.ts.js",
+    "name": "entries/endpoints/endpoints/user-hours/_server.ts",
+    "src": "src/routes/endpoints/user-hours/+server.ts",
+    "isEntry": true,
+    "imports": [
+      "_mongo.js",
+      "_index.js"
+    ]
+  },
   "src/routes/login/+page.server.ts": {
     "file": "entries/pages/login/_page.server.ts.js",
     "name": "entries/pages/login/_page.server.ts",
@@ -210,7 +269,8 @@
     "imports": [
       "_ssr.js",
       "_client.js",
-      "_stores.js"
+      "_stores2.js",
+      "_i18n.js"
     ]
   },
   "src/routes/signup/+page.server.ts": {
@@ -231,13 +291,14 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_client.js"
+      "_client.js",
+      "_i18n.js"
     ]
   },
-  "src/routes/zmianaHaseł/+page.server.ts": {
-    "file": "entries/pages/zmianaHaseł/_page.server.ts.js",
-    "name": "entries/pages/zmianaHaseł/_page.server.ts",
-    "src": "src/routes/zmianaHaseł/+page.server.ts",
+  "src/routes/zmianaHasel/+page.server.ts": {
+    "file": "entries/pages/zmianaHasel/_page.server.ts.js",
+    "name": "entries/pages/zmianaHasel/_page.server.ts",
+    "src": "src/routes/zmianaHasel/+page.server.ts",
     "isEntry": true,
     "imports": [
       "_index.js",
@@ -245,19 +306,42 @@
       "_mongo.js"
     ]
   },
-  "src/routes/zmianaHaseł/+page.svelte": {
-    "file": "entries/pages/zmianaHaseł/_page.svelte.js",
-    "name": "entries/pages/zmianaHaseł/_page.svelte",
-    "src": "src/routes/zmianaHaseł/+page.svelte",
+  "src/routes/zmianaHasel/+page.svelte": {
+    "file": "entries/pages/zmianaHasel/_page.svelte.js",
+    "name": "entries/pages/zmianaHasel/_page.svelte",
+    "src": "src/routes/zmianaHasel/+page.svelte",
     "isEntry": true,
     "imports": [
       "_ssr.js",
       "_Uzytkownik.js",
       "_client.js",
+      "_i18n.js",
       "_index2.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.BtSLurTb.css"
+      "_app/immutable/assets/_page.BzU6fktG.css"
+    ]
+  },
+  "src/routes/zmianaHaslaIndiwidualna/+page.server.ts": {
+    "file": "entries/pages/zmianaHaslaIndiwidualna/_page.server.ts.js",
+    "name": "entries/pages/zmianaHaslaIndiwidualna/_page.server.ts",
+    "src": "src/routes/zmianaHaslaIndiwidualna/+page.server.ts",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_auth.js",
+      "_mongo.js"
+    ]
+  },
+  "src/routes/zmianaHaslaIndiwidualna/+page.svelte": {
+    "file": "entries/pages/zmianaHaslaIndiwidualna/_page.svelte.js",
+    "name": "entries/pages/zmianaHaslaIndiwidualna/_page.svelte",
+    "src": "src/routes/zmianaHaslaIndiwidualna/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_ssr.js",
+      "_client.js",
+      "_i18n.js"
     ]
   }
 }

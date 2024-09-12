@@ -1,5 +1,6 @@
 function noop() {
 }
+const identity = (x) => x;
 function run(fn) {
   return fn();
 }
@@ -8,6 +9,9 @@ function blank_object() {
 }
 function run_all(fns) {
   fns.forEach(run);
+}
+function is_function(thing) {
+  return typeof thing === "function";
 }
 function safe_not_equal(a, b) {
   return a != a ? b == b : a !== b || a && typeof a === "object" || typeof a === "function";
@@ -21,6 +25,15 @@ function subscribe(store, ...callbacks) {
   }
   const unsub = store.subscribe(...callbacks);
   return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+}
+function get_store_value(store) {
+  let value;
+  subscribe(store, (_) => value = _)();
+  return value;
+}
+function set_store_value(store, ret, value) {
+  store.set(value);
+  return ret;
 }
 function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   return new CustomEvent(type, { detail, bubbles, cancelable });
@@ -78,6 +91,10 @@ function escape(value, is_attr = false) {
     last = i + 1;
   }
   return escaped + str.substring(last);
+}
+function escape_attribute_value(value) {
+  const should_escape = typeof value === "string" || value && typeof value === "object";
+  return should_escape ? escape(value, true) : value;
 }
 function each(items, fn) {
   items = ensure_array_like(items);
@@ -137,16 +154,43 @@ function create_ssr_component(fn) {
     $$render
   };
 }
+function add_attribute(name, value, boolean) {
+  if (value == null || boolean && !value)
+    return "";
+  const assignment = boolean && value === true ? "" : `="${escape(value, true)}"`;
+  return ` ${name}${assignment}`;
+}
+function add_classes(classes) {
+  return classes ? ` class="${classes}"` : "";
+}
+function style_object_to_string(style_object) {
+  return Object.keys(style_object).filter((key) => style_object[key] != null && style_object[key] !== "").map((key) => `${key}: ${escape_attribute_value(style_object[key])};`).join(" ");
+}
+function add_styles(style_object) {
+  const styles = style_object_to_string(style_object);
+  return styles ? ` style="${styles}"` : "";
+}
 export {
-  safe_not_equal as a,
-  each as b,
+  createEventDispatcher as a,
+  safe_not_equal as b,
   create_ssr_component as c,
-  createEventDispatcher as d,
+  add_attribute as d,
   escape as e,
-  setContext as f,
+  each as f,
   getContext as g,
+  setContext as h,
+  is_function as i,
+  set_current_component as j,
+  current_component as k,
+  get_store_value as l,
   missing_component as m,
   noop as n,
+  identity as o,
+  get_current_component as p,
+  add_styles as q,
+  run_all as r,
   subscribe as s,
+  set_store_value as t,
+  add_classes as u,
   validate_component as v
 };

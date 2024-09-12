@@ -1,23 +1,28 @@
 import { l as lucia } from "../../../chunks/auth.js";
-import { f as fail, r as redirect } from "../../../chunks/index.js";
+import { r as redirect, f as fail } from "../../../chunks/index.js";
 import { verify } from "@node-rs/argon2";
 import { PrismaClient } from "@prisma/client";
 let prisma = new PrismaClient();
 let ranga = 3;
+const load = async (event) => {
+  if (event.locals.user) {
+    throw redirect(308, "/");
+  }
+};
 const actions = {
   // Define default action for login
   default: async (event) => {
     const formData = await event.request.formData();
     const username = formData.get("username");
     const password = formData.get("password");
-    if (typeof username !== "string" || username.length < 3 || username.length > 31 || !/^[a-z0-9_-]+$/.test(username)) {
+    if (typeof username !== "string" || username.length < 3 || username.length > 31 || !/[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ-]/.test(username)) {
       return fail(400, {
-        message: "Invalid username"
+        message: "Błędny Login"
       });
     }
     if (typeof password !== "string" || password.length < 6 || password.length > 255) {
       return fail(400, {
-        message: "Invalid password"
+        message: "Hasło za krótkie"
       });
     }
     const existingUser = await prisma.user.findUnique({
@@ -27,7 +32,7 @@ const actions = {
     });
     if (!existingUser) {
       return fail(400, {
-        message: "Incorrect username or password"
+        message: "Błędny login lub hasło"
       });
     }
     const validPassword = await verify(existingUser.hash_password, password, {
@@ -55,5 +60,6 @@ const actions = {
   }
 };
 export {
-  actions
+  actions,
+  load
 };

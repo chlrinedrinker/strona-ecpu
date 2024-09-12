@@ -1,3 +1,24 @@
 
 
-* /.netlify/functions/sveltekit-render 200
+/ /.netlify/functions/sveltekit-index 200
+/__data.json /.netlify/functions/sveltekit-index 200
+/endpoints/CzasPracy /.netlify/functions/sveltekit-endpoints-CzasPracy 200
+/endpoints/CzasPracy/__data.json /.netlify/functions/sveltekit-endpoints-CzasPracy 200
+/endpoints/ImieNazStanow /.netlify/functions/sveltekit-endpoints-ImieNazStanow 200
+/endpoints/ImieNazStanow/__data.json /.netlify/functions/sveltekit-endpoints-ImieNazStanow 200
+/endpoints/SaveComment /.netlify/functions/sveltekit-endpoints-SaveComment 200
+/endpoints/SaveComment/__data.json /.netlify/functions/sveltekit-endpoints-SaveComment 200
+/endpoints/SpawdzanieUnikalnych/UnikalneLoginy /.netlify/functions/sveltekit-endpoints-SpawdzanieUnikalnych-UnikalneLoginy 200
+/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/__data.json /.netlify/functions/sveltekit-endpoints-SpawdzanieUnikalnych-UnikalneLoginy 200
+/endpoints/SpawdzanieUnikalnych/UnikalneNazwy /.netlify/functions/sveltekit-endpoints-SpawdzanieUnikalnych-UnikalneNazwy 200
+/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/__data.json /.netlify/functions/sveltekit-endpoints-SpawdzanieUnikalnych-UnikalneNazwy 200
+/endpoints/user-hours /.netlify/functions/sveltekit-endpoints-user-hours 200
+/endpoints/user-hours/__data.json /.netlify/functions/sveltekit-endpoints-user-hours 200
+/login /.netlify/functions/sveltekit-login 200
+/login/__data.json /.netlify/functions/sveltekit-login 200
+/signup /.netlify/functions/sveltekit-signup 200
+/signup/__data.json /.netlify/functions/sveltekit-signup 200
+/zmianaHasel /.netlify/functions/sveltekit-zmianaHasel 200
+/zmianaHasel/__data.json /.netlify/functions/sveltekit-zmianaHasel 200
+/zmianaHaslaIndiwidualna /.netlify/functions/sveltekit-zmianaHaslaIndiwidualna 200
+/zmianaHaslaIndiwidualna/__data.json /.netlify/functions/sveltekit-zmianaHaslaIndiwidualna 200

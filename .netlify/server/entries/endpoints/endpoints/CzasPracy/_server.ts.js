@@ -17,16 +17,12 @@ async function GET({ url }) {
   try {
     const db = _czas_pracy;
     const collection = db.collection(katalog);
-    const logi = await collection.find().sort({ date: -1 }).toArray();
-    const uniqueLogi = [];
-    const seen = /* @__PURE__ */ new Set();
-    for (const log of logi) {
-      uniqueLogi.push({
-        ...log,
-        hours: convertDecimalHoursToTime(log.hours)
-        // Convert hours format
-      });
-    }
+    const logi = await collection.find().sort({ date: -1, entrence_time: 1 }).toArray();
+    const uniqueLogi = logi.map((log) => ({
+      ...log,
+      hours: convertDecimalHoursToTime(log.hours)
+      // Convert hours format
+    }));
     return json(uniqueLogi);
   } catch (error) {
     console.error("Błąd podczas pobierania logów:", error);

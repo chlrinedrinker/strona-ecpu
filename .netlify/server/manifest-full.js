@@ -7,17 +7,18 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["favicon.png","herb.png","user.png"]),
-	mimeTypes: {".png":"image/png"},
+	assets: new Set(["favicon.png","herb.webp","user.png"]),
+	mimeTypes: {".png":"image/png",".webp":"image/webp"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.H3tDN-sP.js","app":"_app/immutable/entry/app.9qv0-aZI.js","imports":["_app/immutable/entry/start.H3tDN-sP.js","_app/immutable/chunks/entry.BnYB-byH.js","_app/immutable/chunks/scheduler.CSB6Q-Hs.js","_app/immutable/entry/app.9qv0-aZI.js","_app/immutable/chunks/scheduler.CSB6Q-Hs.js","_app/immutable/chunks/index.BR2gqvZK.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.BK7hTiuW.js","app":"_app/immutable/entry/app.C9perdSE.js","imports":["_app/immutable/entry/start.BK7hTiuW.js","_app/immutable/chunks/entry.DGLoN6pP.js","_app/immutable/chunks/scheduler.D9eUT3Oo.js","_app/immutable/entry/app.C9perdSE.js","_app/immutable/chunks/preload-helper.D6kgxu3v.js","_app/immutable/chunks/scheduler.D9eUT3Oo.js","_app/immutable/chunks/index.Bye0e5Z4.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
 			__memo(() => import('./nodes/2.js')),
 			__memo(() => import('./nodes/3.js')),
 			__memo(() => import('./nodes/4.js')),
-			__memo(() => import('./nodes/5.js'))
+			__memo(() => import('./nodes/5.js')),
+			__memo(() => import('./nodes/6.js'))
 		],
 		routes: [
 			{
@@ -49,6 +50,27 @@ return {
 				endpoint: __memo(() => import('./entries/endpoints/endpoints/SaveComment/_server.ts.js'))
 			},
 			{
+				id: "/endpoints/SpawdzanieUnikalnych/UnikalneLoginy",
+				pattern: /^\/endpoints\/SpawdzanieUnikalnych\/UnikalneLoginy\/?$/,
+				params: [],
+				page: null,
+				endpoint: __memo(() => import('./entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneLoginy/_server.ts.js'))
+			},
+			{
+				id: "/endpoints/SpawdzanieUnikalnych/UnikalneNazwy",
+				pattern: /^\/endpoints\/SpawdzanieUnikalnych\/UnikalneNazwy\/?$/,
+				params: [],
+				page: null,
+				endpoint: __memo(() => import('./entries/endpoints/endpoints/SpawdzanieUnikalnych/UnikalneNazwy/_server.ts.js'))
+			},
+			{
+				id: "/endpoints/user-hours",
+				pattern: /^\/endpoints\/user-hours\/?$/,
+				params: [],
+				page: null,
+				endpoint: __memo(() => import('./entries/endpoints/endpoints/user-hours/_server.ts.js'))
+			},
+			{
 				id: "/login",
 				pattern: /^\/login\/?$/,
 				params: [],
@@ -63,10 +85,17 @@ return {
 				endpoint: null
 			},
 			{
-				id: "/zmianaHaseł",
-				pattern: /^\/zmianaHaseł\/?$/,
+				id: "/zmianaHasel",
+				pattern: /^\/zmianaHasel\/?$/,
 				params: [],
 				page: { layouts: [0,], errors: [1,], leaf: 5 },
+				endpoint: null
+			},
+			{
+				id: "/zmianaHaslaIndiwidualna",
+				pattern: /^\/zmianaHaslaIndiwidualna\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 6 },
 				endpoint: null
 			}
 		],

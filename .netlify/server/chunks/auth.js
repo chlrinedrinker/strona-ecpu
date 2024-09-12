@@ -1,4 +1,4 @@
-import { Lucia } from "lucia";
+import { Lucia, TimeSpan } from "lucia";
 import { D as DEV } from "./prod-ssr.js";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { PrismaClient } from "@prisma/client";
@@ -23,7 +23,8 @@ const lucia = new Lucia(adapter, {
       ranga: attributes.ranga,
       imieNazwisko: attributes.imieNazwisko
     };
-  }
+  },
+  sessionExpiresIn: new TimeSpan(1, "h")
 });
 export {
   lucia as l
