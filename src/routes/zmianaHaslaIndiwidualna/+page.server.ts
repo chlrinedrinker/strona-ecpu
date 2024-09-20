@@ -44,7 +44,7 @@ export const actions: Actions = {
     });
     return redirect(302, "/login");
   },
-  ZmianaHasła: async (event) => {
+  ZmianaHasla: async (event) => {
     const data = await event.request.formData();
     const password = data.get("password");
     const password_repeat = data.get("password_repeat");
@@ -58,12 +58,12 @@ export const actions: Actions = {
       password_repeat.length > 255
     ) {
       return fail(400, {
-        message: "Niepoprawne haslo",
+        invalid: "Niepoprawne haslo",
       });
     }
     if (password !== password_repeat) {
       return fail(400, {
-        message: "Hasła nie są te same",
+        notsame: "Hasła nie są te same",
       });
     }
     console.log(event.locals.user!.username);
@@ -86,5 +86,6 @@ export const actions: Actions = {
         upsert: true,
       },
     );
+    return {succes: true}
   },
 };
