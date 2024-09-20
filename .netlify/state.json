@@ -1,0 +1,20 @@
+{
+	"siteId": "8f1f19fc-8d70-4a80-b1f7-d87ce491f5d9",
+	"geolocation": {
+		"data": {
+			"city": "Wieruszów",
+			"country": {
+				"code": "PL",
+				"name": "Poland"
+			},
+			"subdivision": {
+				"code": "10",
+				"name": "Łódź Voivodeship"
+			},
+			"timezone": "Europe/Warsaw",
+			"latitude": 51.2962,
+			"longitude": 18.1484
+		},
+		"timestamp": 1726641714405
+	}
+}
